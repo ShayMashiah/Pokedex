@@ -22,8 +22,10 @@ function DropdownMenuTrigger({
   children,
   className,
   isOpen,
+  error,
 }: React.ComponentProps<typeof DropdownMenuPrimitive.Trigger> & {
   isOpen: boolean;
+  error?: boolean;
 }) {
   return (
     <DropdownMenuPrimitive.Trigger
@@ -37,7 +39,7 @@ function DropdownMenuTrigger({
         "bg-neturals-white text-neutrals-400 text-bodyRegular",
         "hover:border-neutrals-500 hover:text-neutrals-700",
         "data-[state=open]:border-neutrals-600",
-        "disabled:text-neutrals-500 disabled:cursor-not-allowed disabled:border-neutrals-500",
+        error ? "border-extendedPalette-error-red" : "border-neturals-400",
         className
       )}
     >
