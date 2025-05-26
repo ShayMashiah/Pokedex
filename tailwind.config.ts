@@ -10,11 +10,16 @@ export default {
   ],
   theme: {
     extend: {
+      display: ['data-state'],
       colors,
       fontSize,
       fontFamily,
     },
   },
   plugins: [],
+  safelist: [
+    'data-[state=open]:block',
+    'data-[state=open]:hidden',
+  ],
 }
  
