@@ -1,9 +1,11 @@
 import { Button } from "../src/components/ui/button"
+import { Input } from "../src/components/ui/input"
 
 function App() {
   return (
     <div className="flex flex-col items-center justify-center min-h-svh">
       <Button>Click me</Button>
+      <Input placeholder="Search" ></Input>
     </div>
   )
 }
