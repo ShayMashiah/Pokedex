@@ -1,4 +1,4 @@
-const fontSize = {
+export const fontSize = {
     headingXlgBold: ['28px', { lineHeight: '37px', letterSpacing: '0px', fontWeight: '700'}],
     headingXLgMedium: ['28px', { lineHeight: '37px', fontWeight: '500' }],
     headingLgBold: ['24px', { lineHeight: '34px', fontWeight: '700' }],
@@ -22,5 +22,3 @@ const fontSize = {
     btnMdBig: ['16px', { lineHeight: '20px', fontWeight: '400' }],
     btnMdSmall: ['14px', { lineHeight: '14px', fontWeight: '400' }],
 }
-
-export default fontSize
