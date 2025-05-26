@@ -1,0 +1,26 @@
+const fontSize = {
+    headingXlgBold: ['28px', { lineHeight: '37px', letterSpacing: '0px', fontWeight: '700'}],
+    headingXLgMedium: ['28px', { lineHeight: '37px', fontWeight: '500' }],
+    headingLgBold: ['24px', { lineHeight: '34px', fontWeight: '700' }],
+    headingLgMedium: ['24px', { lineHeight: '34px', fontWeight: '500' }],
+    headingLgRegular: ['24px', { lineHeight: '34px', fontWeight: '400' }],
+    headingMdBold: ['18px', { lineHeight: '27px', fontWeight: '700' }],
+    headingMdMedium: ['18px', { lineHeight: '27px', fontWeight: '500' }],
+    headingMdRegular: ['18px', { lineHeight: '27px', fontWeight: '400' }],
+    subheadingBold: ['16px', { lineHeight: '24px', fontWeight: '700' }],
+    subheadingMedium: ['16px', { lineHeight: '24px', fontWeight: '500' }],
+    subheadingRegular: ['16px', { lineHeight: '24px', fontWeight: '400' }],
+    bodyBold: ['14px', { lineHeight: '22px', fontWeight: '700' }],
+    bodyMedium: ['14px', { lineHeight: '22px', fontWeight: '500' }],
+    bodyRegular: ['14px', { lineHeight: '22px', fontWeight: '400' }],
+    captionBold: ['12px', { lineHeight: '19px', fontWeight: '700' }],
+    captionMedium: ['12px', { lineHeight: '19px', fontWeight: '500' }],
+    captionRegular: ['12px', { lineHeight: '19px', fontWeight: '400' }],
+    xSmallBold: ['11px', { lineHeight: '16px', fontWeight: '700' }],
+    xSmallMedium: ['11px', { lineHeight: '16px', fontWeight: '500' }],
+    xSmallRegular: ['11px', { lineHeight: '16px', fontWeight: '400' }],
+    btnMdBig: ['16px', { lineHeight: '20px', fontWeight: '400' }],
+    btnMdSmall: ['14px', { lineHeight: '14px', fontWeight: '400' }],
+}
+
+export default fontSize
