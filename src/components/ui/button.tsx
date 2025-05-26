@@ -1,7 +1,6 @@
 import * as React from "react";
 import { Slot } from "@radix-ui/react-slot";
 import { cva, type VariantProps } from "class-variance-authority";
-
 import { cn } from "@/lib/utils";
 
 const buttonVariants = cva(
@@ -9,19 +8,11 @@ const buttonVariants = cva(
   {
     variants: {
       variant: {
-        default:
-          "bg-primary text-primary-foreground shadow-xs hover:bg-primary/90",
         primary:
-          "bg-[#3B5AA6] text-white hover:bg-[#324c8b] active:bg-[#182442] active:shadow-[inset_4px_4px_13px_0px_#0000000D] disabled:bg-[#E3E6E9] disabled:text-gray-500 disabled:cursor-not-allowed aria-disabled:bg-[#E3E6E9] aria-disabled:text-gray-500",
-        destructive:
-          "bg-destructive text-white shadow-xs hover:bg-destructive/90 focus-visible:ring-destructive/20 dark:focus-visible:ring-destructive/40 dark:bg-destructive/60",
-        outline:
-          "border bg-background shadow-xs hover:bg-accent hover:text-accent-foreground dark:bg-input/30 dark:border-input dark:hover:bg-input/50",
+          "bg-primary-300 text-neutrals-white hover:primary-400 active:bg-primary-500 active:shadow-[inset_4px_4px_13px_0px_#0000000D] disabled:bg-neutrals-100 disabled:border disabled:border-neutrals-200 disabled:text-neutrals-400 disabled:cursor-not-allowed",
         secondary:
-          "bg-secondary text-secondary-foreground shadow-xs hover:bg-secondary/80",
-        ghost:
-          "hover:bg-accent hover:text-accent-foreground dark:hover:bg-accent/50",
-        link: "text-primary underline-offset-4 hover:underline",
+          "bg-neutrals-white text-primary-300 border border-primary-300 rounded-md hover:bg-primary-50 active:bg-primary-100 active:shadow-[inset_4px_4px_13px_0px_#0000000D] disabled:border-neutrals-300 disabled:text-neutrals-300 disabled:cursor-not-allowed"
+
       },
       size: {
         default: "h-9 px-4 py-2 has-[>svg]:px-3",
@@ -32,7 +23,7 @@ const buttonVariants = cva(
       },
     },
     defaultVariants: {
-      variant: "default",
+      variant: "primary",
       size: "default",
     },
   }
