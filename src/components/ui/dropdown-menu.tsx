@@ -109,6 +109,7 @@ function DropdownMenuItem({
       className={cn(
         "relative flex cursor-default items-center justify-between gap-2 rounded-sm px-2 py-1.5 text-sm outline-none select-none",
         "focus:bg-accent focus:text-accent-foreground",
+        "hover:bg-neutrals-100 hover:text-neutrals-500",
         "data-[variant=destructive]:text-destructive data-[variant=destructive]:focus:bg-destructive/10 dark:data-[variant=destructive]:focus:bg-destructive/20 data-[variant=destructive]:focus:text-destructive",
         "data-[variant=destructive]:*:[svg]:!text-destructive [&_svg:not([class*='text-'])]:text-muted-foreground",
         "data-[disabled]:pointer-events-none data-[disabled]:opacity-50",
