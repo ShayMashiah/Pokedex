@@ -23,6 +23,7 @@ function DropdownMenuTrigger({
   className,
   isOpen,
   error,
+  
 }: React.ComponentProps<typeof DropdownMenuPrimitive.Trigger> & {
   isOpen: boolean;
   error?: boolean;
@@ -32,9 +33,9 @@ function DropdownMenuTrigger({
       data-slot="dropdown-menu-trigger"
       className={cn(
         "flex items-center justify-between",
-        "w-[195px] h-[40px]",
-        "px-[9px] pr-[6px] py-[9px]",
-        "gap-4 rounded-[8px]",
+        "w-195 h-40",
+        "px-9 pr-6 py-9",
+        "gap-4 rounded-[4px]",
         "border border-neturals-400",
         "bg-neturals-white text-neutrals-400 text-bodyRegular",
         "hover:border-neutrals-500 hover:text-neutrals-700",
@@ -47,9 +48,9 @@ function DropdownMenuTrigger({
 
       <span className="ml-auto flex items-center">
         {isOpen ? (
-          <ChevronUp className="size-4" />
+          <ChevronUp className="size-16" />
         ) : (
-          <ChevronDown className="size-4 disabled:text-neutrals-500" />
+          <ChevronDown className="size-16 disabled:text-neutrals-500" />
         )}
       </span>
     </DropdownMenuPrimitive.Trigger>
@@ -88,10 +89,17 @@ function DropdownMenuItem({
   className,
   inset,
   variant = "default",
+  icon,
+  label,
+  value,
+  children,
   ...props
 }: React.ComponentProps<typeof DropdownMenuPrimitive.Item> & {
   inset?: boolean;
   variant?: "default" | "destructive";
+  icon?: React.ReactNode;
+  label?: React.ReactNode;
+  value?: React.ReactNode;
 }) {
   return (
     <DropdownMenuPrimitive.Item
@@ -99,13 +107,31 @@ function DropdownMenuItem({
       data-inset={inset}
       data-variant={variant}
       className={cn(
-        "focus:bg-accent focus:text-accent-foreground data-[variant=destructive]:text-destructive data-[variant=destructive]:focus:bg-destructive/10 dark:data-[variant=destructive]:focus:bg-destructive/20 data-[variant=destructive]:focus:text-destructive data-[variant=destructive]:*:[svg]:!text-destructive [&_svg:not([class*='text-'])]:text-muted-foreground relative flex cursor-default items-center gap-2 rounded-sm px-2 py-1.5 text-sm outline-hidden select-none data-[disabled]:pointer-events-none data-[disabled]:opacity-50 data-[inset]:pl-8 [&_svg]:pointer-events-none [&_svg]:shrink-0 [&_svg:not([class*='size-'])]:size-4",
+        "relative flex cursor-default items-center justify-between gap-2 rounded-sm px-2 py-1.5 text-sm outline-none select-none",
+        "focus:bg-accent focus:text-accent-foreground",
+        "data-[variant=destructive]:text-destructive data-[variant=destructive]:focus:bg-destructive/10 dark:data-[variant=destructive]:focus:bg-destructive/20 data-[variant=destructive]:focus:text-destructive",
+        "data-[variant=destructive]:*:[svg]:!text-destructive [&_svg:not([class*='text-'])]:text-muted-foreground",
+        "data-[disabled]:pointer-events-none data-[disabled]:opacity-50",
+        "data-[inset]:pl-8",
+        "[&_svg]:pointer-events-none [&_svg]:shrink-0 [&_svg:not([class*='size-'])]:size-4",
         className
       )}
       {...props}
-    />
+    >
+      {children ? (
+        children
+      ) : (
+        <div className="flex items-center gap-2">
+          {icon && <div className="w-20 h-20 rounded-full">{icon}</div>}
+          {label && <span className="text-bodyRegular">{label}</span>}
+        </div>
+      )}
+      {value && <span className="text-xSmallBold">{value}xp</span>}
+    </DropdownMenuPrimitive.Item>
   );
 }
+
+
 
 function DropdownMenuCheckboxItem({
   className,
@@ -123,7 +149,7 @@ function DropdownMenuCheckboxItem({
       checked={checked}
       {...props}
     >
-      <span className="pointer-events-none absolute left-2 flex size-3.5 items-center justify-center">
+      <span className="pointer-events-none left-2 flex size-3.5 items-center justify-center">
         <DropdownMenuPrimitive.ItemIndicator>
           <CheckIcon className="size-4" />
         </DropdownMenuPrimitive.ItemIndicator>
@@ -158,7 +184,7 @@ function DropdownMenuRadioItem({
       )}
       {...props}
     >
-      <span className="pointer-events-none absolute left-2 flex size-3.5 items-center justify-center">
+      <span className="pointer-events-none left-2 flex size-3.5 items-center justify-center">
         <DropdownMenuPrimitive.ItemIndicator>
           <CircleIcon className="size-2 fill-current" />
         </DropdownMenuPrimitive.ItemIndicator>

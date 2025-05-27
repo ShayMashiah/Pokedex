@@ -1,6 +1,8 @@
 import { colors } from "./src/tailwind/colors/colors";
 import { fontFamily } from "./src/tailwind/typography/fontFamily";
 import { fontSize } from "./src/tailwind/typography/fontSize";
+import { spacing } from "./src/tailwind/spacing/spacing";
+import { borderRadius } from "./src/tailwind/spacing/borderRadius";
 
 /** @type {import('tailwindcss').Config} */
 export default {
@@ -11,6 +13,8 @@ export default {
   theme: {
     extend: {
       display: ['data-state'],
+      borderRadius,
+      spacing,
       colors,
       fontSize,
       fontFamily,
