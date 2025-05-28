@@ -1,5 +1,8 @@
 export const spacing = {
+  4: "4px",
+  6: "6px",
   8: "8px",
+  9: "9px",
   10: "10px",
   12: "12px",
   14: "14px",
@@ -11,4 +14,8 @@ export const spacing = {
   32: "32px",
   36: "36px",
   40: "40px",
+  76: "76px",
+  82: "82px",
+  195: "195px",
+  206: "206px",
 };

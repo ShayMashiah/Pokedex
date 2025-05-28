@@ -12,6 +12,7 @@ export default {
   ],
   theme: {
     extend: {
+      display: ['data-state'],
       borderRadius,
       spacing,
       colors,
@@ -20,5 +21,9 @@ export default {
     },
   },
   plugins: [],
+  safelist: [
+    'data-[state=open]:block',
+    'data-[state=open]:hidden',
+  ],
 }
  

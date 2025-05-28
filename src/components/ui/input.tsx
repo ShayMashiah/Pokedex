@@ -3,36 +3,52 @@ import { cn } from "@/lib/utils";
 import { Search, X } from "lucide-react";
 import { useState } from "react";
 
+type InputProps = React.ComponentProps<"input"> & {
+  variant?: "default" | "dropdown-input";
+};
+
 function Input({
   className,
-  type = "text",
+  variant = "default",
   ...props
-}: React.ComponentProps<"input">) {
+}: InputProps) {
   const [value, setValue] = useState("");
 
+  const isDropdown = variant === "dropdown-input";
+
   return (
-    <div className="relative w-[293.17px] h-38">
+    <div
+      className={cn(
+        "relative",
+        isDropdown ? "w-206 h-38" : "w-[293.17px] h-38"
+      )}
+    >
       <Search
         className={cn(
-          "absolute left-12 top-1/2 -translate-y-1/2 size-4 pointer-events-none transition-colors hover:text-neutrals-800 disabled:cursor-not-allowed disabled:text-neutrals-300", 
-          value ? "text-neutrals-900" : "text-neutrals-600"
+          "absolute top-1/2 -translate-y-1/2 size-16 pointer-events-none transition-colors",
+          isDropdown ? "left-12" : "left-12",
+          value ? "text-neutrals-500" : "text-neutrals-600"
         )}
       />
 
       <input
-        type={type}
+        type="text"
         value={value}
         onChange={(e) => setValue(e.target.value)}
         placeholder="Search"
         className={cn(
-          "peer w-full h-full pl-32 pr-32 py-8 rounded-k border",
+          "peer w-full h-full rounded-k border pr-[80px] py-8",
+          isDropdown ? "pl-40" : "pl-32",
+
           value
-            ? "border-neutrals-900 text-neutrals-900 placeholder-transparent"
+            ? "border-neutrals-500 text-neutrals-500 placeholder-transparent"
             : "border-neutrals-200 text-neutrals-600 placeholder:text-neutrals-600",
-          "focus:outline-none focus:border-neutrals-500 focus:placeholder-transparent focus:text-neutrals-900",
+
+          "focus:outline-none focus:border-neutrals-500 focus:placeholder-transparent focus:text-neutrals-500",
           "hover:border-neutrals-600 hover:text-neutrals-800 hover:placeholder:text-neutrals-800",
-          "active:border-neutrals-500 active:text-neutrals-900",
+          "active:border-neutrals-500 active:text-neutrals-500",
           "disabled:cursor-not-allowed disabled:placeholder:text-neutrals-300 disabled:bg-neutrals-100 disabled:border-neutrals-100",
+
           className
         )}
         {...props}
@@ -42,7 +58,7 @@ function Input({
         <button
           type="button"
           onClick={() => setValue("")}
-          className="absolute right-8 top-1/2 -translate-y-1/2 text-neutrals-400 hover:text-neutrals-600 transition-colors"
+          className="absolute right-12 top-1/2 -translate-y-1/2 text-neutrals-400 hover:text-neutrals-600 transition-colors"
         >
           <X size={16} />
         </button>
