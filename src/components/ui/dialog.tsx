@@ -3,6 +3,7 @@ import * as DialogPrimitive from "@radix-ui/react-dialog";
 import { XIcon } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { Button } from "./button";
+import { Variant } from "../../lib/types";
 
 function Dialog({
   ...props
@@ -54,7 +55,7 @@ function DialogContent({
   onStartBattle,
   ...props
 }: React.ComponentProps<typeof DialogPrimitive.Content> & {
-  variant?: "default" | "poke-info" | "my-pokemons";
+  variant?: Variant;
   pokemon?: {
     id: number;
     name: string;
@@ -74,14 +75,17 @@ function DialogContent({
   onStartBattle?: () => void;
 }) {
   const perRow = 3;
-  if(!pokemons)
-    return;
-  
-  const fullRows = Math.floor(pokemons.length / perRow);
-  const lastRowStart = fullRows * perRow;
-  const fullItems = pokemons.slice(0, lastRowStart);
-  const remainingItems = pokemons.slice(lastRowStart);
-  
+  let fullItems: typeof pokemons = [];
+  let remainingItems: typeof pokemons = [];
+
+  if (variant === Variant.MyPokemons && pokemons) {
+    const fullRows = Math.floor(pokemons.length / perRow);
+    const lastRowStart = fullRows * perRow;
+    fullItems = pokemons.slice(0, lastRowStart);
+    remainingItems = pokemons.slice(lastRowStart);
+  }
+
+  console.log(pokemon, variant);
 
   return (
     <DialogPortal>
@@ -90,50 +94,63 @@ function DialogContent({
         data-slot="dialog-content"
         className={cn(
           "bg-neutrals-white data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 data-[state=closed]:zoom-out-95 data-[state=open]:zoom-in-95 fixed top-[50%] left-[50%] z-50 grid w-full max-w-[calc(100%-2rem)] translate-x-[-50%] translate-y-[-50%] gap-4 rounded-lg border p-6 shadow-lg duration-200 sm:max-w-lg",
-          variant === "poke-info" && "sm:max-w-md p-6",
+          variant === Variant.PokeInfo && "sm:max-w-md p-6",
           className
         )}
         {...props}
       >
-        {/* {variant === "poke-info" && pokemon ? (
-          <div className="space-y-4">
-            <div className="text-end text-muted-foreground text-sm">
+        {variant === Variant.PokeInfo && pokemon ? (
+          <div className="space-y-6">
+            <div className="text-start text-muted-foreground text-subheadingRegular text-neutral-200 w-48 h-26">
               #{String(pokemon.id).padStart(4, "0")}
             </div>
-            <DialogHeader className="items-center text-center">
-              <DialogTitle className="text-2xl font-semibold">
+            <DialogHeader className="items-start border-b border-neutrals-light pb-4 font-mulish">
+              <DialogTitle className="text-pokemonModalTitle h-26 w-428 text-neutrals-500 font-mulish">
                 {pokemon.name}
               </DialogTitle>
             </DialogHeader>
             <img
               src={pokemon.image}
               alt={pokemon.name}
-              className="mx-auto w-32 h-32"
+              className="mx-auto w-158 h-158 pt-10 pb-10"
             />
-            <div className="bg-muted text-muted-foreground p-4 rounded-md text-sm text-center">
-              {pokemon.description}
+            <div className="bg-neutrals-900 p-4 space-y-4 font-mulish text-sm text-neutrals-500">
+              <p>{pokemon.description}</p>
+
+              <hr className="border-t border-[#A8AEB5]" />
+
+              <div className="grid grid-cols-4 gap-24">
+                <div className="flex flex-col  gap-6">
+                  <span className="text-pokemonModalFields text-neutrals-400 w-36 h-18 font-mulish">Height</span>
+                  <span className="text-pokemonModalStats font-mulish text-neutrals-500 ">
+                    {pokemon.height}
+                  </span>
+                </div>
+                <div className="flex flex-col gap-6">
+                  <span className="text-pokemonModalFields text-neutrals-400 w-36 h-18 font-mulish">Weight</span>
+                  <span className="text-pokemonModalStats text-neutrals-500 font-mulish">
+                    {pokemon.weight}
+                  </span>
+                </div>
+                <div className="flex flex-col gap-6">
+                  <span className="text-pokemonModalFields text-neutrals-400 w-36 h-18 font-mulish">Category</span>
+                  <span className="text-pokemonModalStats text-neutrals-500 font-mulish">
+                    {pokemon.category}
+                  </span>
+                </div>
+                <div className="flex flex-col gap-6">
+                  <span className="text-pokemonModalFields text-neutrals-400 w-36 h-18 font-mulish">
+                    Abilities
+                  </span>
+                  <span className="text-pokemonModalStats  text-neutrals-500 font-mulish">
+                    {pokemon.abilities}
+                  </span>
+                </div>
+              </div>
             </div>
-            <div className="grid grid-cols-2 gap-4 text-sm">
-              <div className="flex flex-col items-center">
-                <span className="font-semibold">Height</span>
-                <span>{pokemon.height}</span>
-              </div>
-              <div className="flex flex-col items-center">
-                <span className="font-semibold">Weight</span>
-                <span>{pokemon.weight}</span>
-              </div>
-              <div className="flex flex-col items-center">
-                <span className="font-semibold">Category</span>
-                <span>{pokemon.category}</span>
-              </div>
-              <div className="flex flex-col items-center">
-                <span className="font-semibold">Abilities</span>
-                <span>{pokemon.abilities}</span>
-              </div>
-            </div>
-          </div> */}
-        {/* ) */}
-         {/* : variant === "my-pokemons" && pokemons ? ( */}
+          </div>
+        ) : // MyPokemons variant
+        variant === Variant.MyPokemons && pokemons ? (
           <div className="space-y-6">
             <DialogHeader className="text-center">
               <DialogTitle className="text-headingLgMedium text-neutrals-500">
@@ -176,12 +193,14 @@ function DialogContent({
             )}
 
             <DialogFooter className="flex justify-center border-t border-neutrals-light pt-16">
-              <Button variant="primary" size="xlg">Start battle</Button>
+              <Button variant="primary" size="xlg">
+                Start battle
+              </Button>
             </DialogFooter>
           </div>
-        {/* ) : (
+        ) : (
           children
-        ) */}
+        )}
 
         <DialogPrimitive.Close className="absolute top-4 right-4 opacity-70 transition-opacity hover:opacity-100 focus:outline-none">
           <XIcon />
@@ -206,10 +225,7 @@ function DialogFooter({ className, ...props }: React.ComponentProps<"div">) {
   return (
     <div
       data-slot="dialog-footer"
-      className={cn(
-        "flex flex-col-reverse gap-2 sm:flex-row",
-        className
-      )}
+      className={cn("flex flex-col-reverse gap-2 sm:flex-row", className)}
       {...props}
     />
   );
