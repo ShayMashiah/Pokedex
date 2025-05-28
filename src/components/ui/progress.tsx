@@ -3,6 +3,12 @@ import * as ProgressPrimitive from "@radix-ui/react-progress"
 
 import { cn } from "@/lib/utils"
 
+function getIndicatorColor(value: number): string {
+  if (value < 33) return "bg-extendedPalette-error-red";
+  if (value < 66) return "bg-extendedPalette-warning-yellow";
+  return "bg-extendedPalette-success-green";
+}
+
 function Progress({
   className,
   value,
@@ -10,13 +16,6 @@ function Progress({
 }: React.ComponentProps<typeof ProgressPrimitive.Root> & {
   value: number;
 }) {
-    const indicatorColor =
-    value < 33
-      ? "bg-extendedPalette-error-red"
-      : value < 66
-      ? "bg-extendedPalette-warning-yellow"
-      : "bg-extendedPalette-success-green";
-
   return (
     <ProgressPrimitive.Root
       data-slot="progress"
@@ -32,7 +31,7 @@ function Progress({
         data-slot="progress-indicator"
         className={cn(
           "h-full flex-1 transition-transform",
-          indicatorColor
+          getIndicatorColor(value),
         )}
         style={{ transform: `translateX(-${100 - value}%)` }}
       />
