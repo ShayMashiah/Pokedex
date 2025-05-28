@@ -1,5 +1,5 @@
 import { useState } from "react";
-import type { Pokemon } from "@/lib/types";
+import type { PokemonRow } from "@/lib/types";
 import pokemonData from "../../data/pokemon_.json";
 
 function Table({ className, ...props }: React.ComponentProps<"table">) {
@@ -95,7 +95,7 @@ function PokemonTable() {
         </TableHeader>
 
         <TableBody>
-          {paginatedData.map((pokemon: Pokemon) => (
+          {paginatedData.map((pokemon: PokemonRow) => (
             <TableRow key={pokemon.id}>
               <TableCell>
                 <div className="flex items-center gap-3">

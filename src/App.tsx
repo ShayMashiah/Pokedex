@@ -1,18 +1,9 @@
-import { useState, useEffect } from "react";
-import { Progress } from "./components/ui/progress";
+import PokemonTable from "./components/ui/table";
 
 function App() {
-  const [progress, setProgress] = useState(100);
-
-  console.log("Progress value:", progress);
-
-  useEffect(() => {
-    const timer = setTimeout(() => setProgress(10), 500);
-    console.log(progress);
-    return () => clearTimeout(timer);
-  }, []);
-
-  return <Progress value={progress} className="w-[60%]" />;
+  return (
+    <PokemonTable></PokemonTable>
+  );
 }
 
 export default App;
