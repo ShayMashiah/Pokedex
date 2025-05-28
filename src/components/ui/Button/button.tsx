@@ -9,23 +9,27 @@ const buttonVariants = cva(
     variants: {
       variant: {
         primary:
-          "bg-primary-300 text-neutrals-white hover:primary-400 active:bg-primary-500 active:shadow-[inset_4px_4px_13px_0px_#0000000D] disabled:bg-neutrals-100 disabled:border disabled:border-neutrals-200 disabled:text-neutrals-400 disabled:cursor-not-allowed",
+          "bg-primary-300 text-neutrals-white hover:bg-primary-400 active:bg-primary-500 active:shadow-[inset_4px_4px_13px_0px_#0000000D] disabled:bg-neutrals-100 disabled:border disabled:border-neutrals-200 disabled:text-neutrals-400 disabled:cursor-not-allowed",
         secondary:
           "bg-neutrals-white text-primary-300 border border-primary-300 rounded-md hover:bg-primary-50 active:bg-primary-100 active:shadow-[inset_4px_4px_13px_0px_#0000000D] disabled:border-neutrals-300 disabled:text-neutrals-300 disabled:cursor-not-allowed"
 
       },
       size: {
-        default: "h-9 px-4 py-2 has-[>svg]:px-3",
+    
         sm: "w-76 h-32 pt-9 pb-9 pr-16 pl-16 gap-4 rounded-s",
         md: "w-82 h-36 pt-10 pb-10 pr-16 pl-16 gap-4 rounded-s",
         lg: "w-82 h-40 pt-12 pb-12 pr-16 pl-16 gap-4 rounded-s",
         xlg:"w-106 h-40 pt-12 pb-12 pr-16 pl-16 gap-4 rounded-s",
+<<<<<<< HEAD:src/components/ui/button.tsx
         icon: "size-9",
+=======
+
+>>>>>>> a1d51dc (feat: add storybook to button and dialog component):src/components/ui/Button/button.tsx
       },
     },
     defaultVariants: {
       variant: "primary",
-      size: "default",
+      size: "sm",
     },
   }
 );
