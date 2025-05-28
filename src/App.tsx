@@ -9,8 +9,7 @@ import {
 import {Variant} from "../src/lib/types";
 
 function App() {
-  return (
-  );
+  return;
 }
 
 export default App;
