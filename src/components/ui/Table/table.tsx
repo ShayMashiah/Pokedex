@@ -1,6 +1,5 @@
 import { useMemo, useState } from "react";
 import type { PokemonRow } from "@/lib/types";
-import pokemonData from "../../../data/pokemon_.json";
 import {
   Tooltip,
   TooltipContent,
