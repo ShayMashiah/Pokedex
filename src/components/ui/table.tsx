@@ -1,6 +1,12 @@
-import { useState } from "react";
+import { useMemo, useState } from "react";
 import type { PokemonRow } from "@/lib/types";
 import pokemonData from "../../data/pokemon_.json";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
 
 function Table({ className, ...props }: React.ComponentProps<"table">) {
   return (
@@ -16,13 +22,11 @@ function Table({ className, ...props }: React.ComponentProps<"table">) {
     </div>
   );
 }
-
 function TableHeader({ className, ...props }: React.ComponentProps<"thead">) {
   return (
     <thead className={"[&_tr]:border-b " + (className || "")} {...props} />
   );
 }
-
 function TableBody({ className, ...props }: React.ComponentProps<"tbody">) {
   return (
     <tbody
@@ -31,7 +35,6 @@ function TableBody({ className, ...props }: React.ComponentProps<"tbody">) {
     />
   );
 }
-
 function TableRow({ className, ...props }: React.ComponentProps<"tr">) {
   return (
     <tr
@@ -43,7 +46,6 @@ function TableRow({ className, ...props }: React.ComponentProps<"tr">) {
     />
   );
 }
-
 function TableHead({ className, ...props }: React.ComponentProps<"th">) {
   return (
     <th
@@ -55,7 +57,6 @@ function TableHead({ className, ...props }: React.ComponentProps<"th">) {
     />
   );
 }
-
 function TableCell({ className, ...props }: React.ComponentProps<"td">) {
   return (
     <td
@@ -66,18 +67,36 @@ function TableCell({ className, ...props }: React.ComponentProps<"td">) {
 }
 
 function TableFooter({ children }: { children: React.ReactNode }) {
-  return <tfoot><TableRow><TableCell colSpan={5}>{children}</TableCell></TableRow></tfoot>;
+  return (
+    <tfoot>
+      <TableRow>
+        <TableCell colSpan={5}>{children}</TableCell>
+      </TableRow>
+    </tfoot>
+  );
 }
 
 function PokemonTable() {
+  const pageSizeOptions = [10, 20, 30];
   const [currentPage, setCurrentPage] = useState(1);
   const [itemsPerPage, setItemsPerPage] = useState(10);
 
-  const totalPages = Math.ceil(pokemonData.length / itemsPerPage);
-  const paginatedData = pokemonData.slice(
-    (currentPage - 1) * itemsPerPage,
-    currentPage * itemsPerPage
-  );
+  const totalPages = useMemo(() => {
+    return Math.ceil(pokemonData.length / itemsPerPage);
+  }, [pokemonData.length, itemsPerPage]);
+
+  const paginatedData = useMemo(() => {
+    const startIndex = (currentPage - 1) * itemsPerPage;
+    const endIndex = currentPage * itemsPerPage;
+    return pokemonData.slice(startIndex, endIndex);
+  }, [pokemonData, currentPage, itemsPerPage]);
+
+  const displayRangeText = useMemo(() => {
+    const startIndex = (currentPage - 1) * itemsPerPage + 1;
+    const endIndex = Math.min(currentPage * itemsPerPage, pokemonData.length);
+    const totalItems = pokemonData.length;
+    return `${startIndex}-${endIndex} of ${totalItems} items`;
+  }, [currentPage, itemsPerPage, pokemonData.length]);
 
   return (
     <div className="max-w-1376 mx-auto border border-neturals-100 rounded-k p-4">
@@ -104,19 +123,35 @@ function PokemonTable() {
                     alt={pokemon.name.english}
                     className="w-20 h-20 object-contain rounded-full"
                   />
-                  <span className="text-headingMdRegular font-mulish">{pokemon.name.english}</span>
+                  <span className="text-headingMdRegular font-mulish">
+                    {pokemon.name.english}
+                  </span>
                 </div>
               </TableCell>
-              <TableCell className="text-bodyRegular font-mulish">{pokemon.id}</TableCell>
-              <TableCell className="max-w-[400px] truncate font-mulish text-bodyRegular">
-                {pokemon.description}
+              <TableCell className="text-bodyRegular font-mulish">
+                {pokemon.id}
               </TableCell>
-              <TableCell className="font-mulish text-bodyRegular">{pokemon.base.Attack}</TableCell>
-              <TableCell className="font-mulish text-bodyRegular ">{pokemon.base.HP}</TableCell>
+              <TooltipProvider>
+                <Tooltip>
+                  <TooltipTrigger asChild>
+                    <TableCell className="max-w-[400px] truncate font-mulish text-bodyRegular">
+                      {pokemon.description}
+                    </TableCell>
+                  </TooltipTrigger>
+                  <TooltipContent className="w-345 h-full bg-neutrals-1000 text-neutral-100">
+                    <p>{pokemon.description}</p>
+                  </TooltipContent>
+                </Tooltip>
+              </TooltipProvider>
+              <TableCell className="font-mulish text-bodyRegular">
+                {pokemon.base.Attack}
+              </TableCell>
+              <TableCell className="font-mulish text-bodyRegular ">
+                {pokemon.base.HP}
+              </TableCell>
             </TableRow>
           ))}
         </TableBody>
-
         <TableFooter>
           <div className="flex justify-between items-center px-2 py-2 text-sm text-muted-foreground border-t border-neutrals-100">
             <div className="flex items-center text-neutrals-600 gap-2">
@@ -125,23 +160,23 @@ function PokemonTable() {
                 value={itemsPerPage}
                 onChange={(e) => {
                   setItemsPerPage(Number(e.target.value));
-                  setCurrentPage(1); 
+                  setCurrentPage(1);
                 }}
                 className="border border-neutrals-200 rounded px-2 py-1 text-sm"
               >
-                <option value={10}>10</option>
-                <option value={20}>20</option>
-                <option value={30}>30</option>
+                {pageSizeOptions.map((size) => (
+                  <option key={size} value={size}>
+                    {size}
+                  </option>
+                ))}
               </select>
             </div>
-          
+
             <div className="flex gap-4 text-neutrals-600">
-              <span className="mr-2">
-              {`${(currentPage - 1) * itemsPerPage + 1}-${Math.min(
-                currentPage * itemsPerPage,
-                pokemonData.length
-              )} of ${pokemonData.length} items`}
-            </span>
+              <span className="text-muted-foreground text-sm">
+                {displayRangeText}
+              </span>
+
               <button
                 onClick={() => setCurrentPage((p) => Math.max(p - 1, 1))}
                 disabled={currentPage === 1}
@@ -150,7 +185,9 @@ function PokemonTable() {
                 &lt;
               </button>
               <button
-                onClick={() => setCurrentPage((p) => Math.min(p + 1, totalPages))}
+                onClick={() =>
+                  setCurrentPage((p) => Math.min(p + 1, totalPages))
+                }
                 disabled={currentPage === totalPages}
                 className="disabled:opacity-50"
               >
@@ -163,5 +200,4 @@ function PokemonTable() {
     </div>
   );
 }
-
 export default PokemonTable;
