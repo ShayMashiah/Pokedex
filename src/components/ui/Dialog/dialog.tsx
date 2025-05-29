@@ -1,9 +1,9 @@
 import * as React from "react";
 import * as DialogPrimitive from "@radix-ui/react-dialog";
 import { XIcon } from "lucide-react";
-import { cn } from "@/lib/utils";
-import { Button } from "./button";
-import { Variant } from "../../lib/types";
+import { cn } from "../../../lib/utils";
+import { Button } from "../Button/button";
+import { Variant, type PokemonModal } from "../../../lib/types";
 
 function Dialog({
   ...props
@@ -56,21 +56,8 @@ function DialogContent({
   ...props
 }: React.ComponentProps<typeof DialogPrimitive.Content> & {
   variant?: Variant;
-  pokemon?: {
-    id: number;
-    name: string;
-    image: string;
-    description: string;
-    height: string;
-    weight: string;
-    category: string;
-    abilities: string;
-  };
-  pokemons?: {
-    id: number;
-    name: string;
-    image: string;
-  }[];
+  pokemon?: PokemonModal;
+  pokemons?: PokemonModal[];
   onSelectPokemon?: (pokemonId: number) => void;
   onStartBattle?: () => void;
 }) {
@@ -84,8 +71,6 @@ function DialogContent({
     fullItems = pokemons.slice(0, lastRowStart);
     remainingItems = pokemons.slice(lastRowStart);
   }
-
-  console.log(pokemon, variant);
 
   return (
     <DialogPortal>
