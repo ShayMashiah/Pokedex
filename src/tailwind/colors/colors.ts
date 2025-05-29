@@ -11,7 +11,8 @@ export const colors = {
     800: "#22375F",
     900: "#EBEFF699",
     black: "#0B0C0D",
-    light:"#EDEFF1"
+    light:"#EDEFF1",
+    1000:"#43464F"
 
   },
     primary: {
