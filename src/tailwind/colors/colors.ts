@@ -9,7 +9,9 @@ export const colors = {
     600: "#536482",
     700: "#3A4D71",
     800: "#22375F",
-    black: "#0B0C0D"
+    900: "#EBEFF699",
+    black: "#0B0C0D",
+    light:"#EDEFF1"
 
   },
     primary: {
