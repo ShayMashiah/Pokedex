@@ -6,6 +6,7 @@ export const Variant = {
 
 export type Variant = (typeof Variant)[keyof typeof Variant];
 
+
 export interface PokemonRow {
   id: number;
   name: { english: string };
