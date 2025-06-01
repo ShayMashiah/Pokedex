@@ -1,5 +1,5 @@
 import type { Meta, StoryObj } from "@storybook/react";
-import { PokemonNavbar } from "./navigation-menu";
+import  PokemonNavbar  from "./PokemonNavbar";
 
 const meta: Meta<typeof PokemonNavbar> = {
   title: "UI/PokemonNavbar",
