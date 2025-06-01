@@ -25,3 +25,8 @@ export interface PokemonModal {
   category?: string;
   abilities?: string;
 }
+
+export interface PokemonNavbarProps {
+  activeItem: "all" | "my";
+  onChange: (value: "all" | "my") => void;
+}
