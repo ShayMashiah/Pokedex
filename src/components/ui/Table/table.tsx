@@ -138,11 +138,11 @@ function PokemonTable({ data }: PokemonTableProps) {
               <TooltipProvider>
                 <Tooltip>
                   <TooltipTrigger asChild>
-                    <TableCell className="max-w-[400px] truncate font-mulish text-bodyRegular">
+                    <TableCell className="max-w-400 truncate font-mulish text-bodyRegular">
                       {pokemon.description}
                     </TableCell>
                   </TooltipTrigger>
-                  <TooltipContent className="w-345 h-full bg-neutrals-1000 text-center text-neutral-100 gap-10 pt-5 pb-5 pl-10 pr-10">
+                  <TooltipContent className="w-345 h-full bg-neutrals-1000 text-center text-neutral-100 gap-10 py-5 px-5">
                     <p>{pokemon.description}</p>
                   </TooltipContent>
                 </Tooltip>
