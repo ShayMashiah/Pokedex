@@ -1,8 +1,8 @@
-import { PokemonNavbar } from "@/components/ui/NavBar/navigation-menu";
-import { useState } from "react";
-
+import HomePage from "./pages/HomePage";
 function App() {
-  return <PokemonNavbar></PokemonNavbar>;
+    return (
+        <HomePage />
+    )
 }
 
 export default App;

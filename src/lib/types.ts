@@ -1,3 +1,6 @@
+import * as DialogPrimitive from '@radix-ui/react-dialog';
+import type { ComponentProps } from 'react';
+
 export const Variant = {
   Default: "default",
   PokeInfo: "poke-info",
@@ -5,6 +8,15 @@ export const Variant = {
 } as const;
 
 export type Variant = (typeof Variant)[keyof typeof Variant];
+
+export interface CustomDialogContentProps
+  extends ComponentProps<typeof DialogPrimitive.Content> {
+  variant?: Variant;
+  pokemon?: PokemonModal;
+  pokemons?: PokemonModal[];
+  onSelectPokemon?: (pokemonId: number) => void;
+  onStartBattle?: () => void;
+}
 
 
 export interface PokemonRow {
@@ -25,3 +37,20 @@ export interface PokemonModal {
   category?: string;
   abilities?: string;
 }
+
+export interface PokemonNavbarProps {
+  activeItem: Tab;
+  onChange: (value: Tab) => void;
+}
+
+export const Tab = {
+  All : "all",
+  User : "user",
+} as const;
+
+export type Tab = (typeof Tab)[keyof typeof Tab];
+
+export const TAB_LABELS: Record<Tab, string> = {
+  [Tab.All]: "All Pokemons",
+  [Tab.User]: "My Pokemons",
+};

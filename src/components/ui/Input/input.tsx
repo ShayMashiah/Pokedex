@@ -20,6 +20,7 @@ function Input({
     <div
       className={cn(
         "relative",
+        "mb-6",
         isDropdown ? "w-206 h-38" : "w-[293.17px] h-38"
       )}
     >

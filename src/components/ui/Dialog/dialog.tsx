@@ -4,6 +4,7 @@ import { XIcon } from "lucide-react";
 import { cn } from "../../../lib/utils";
 import { Button } from "../Button/button";
 import { Variant, type PokemonModal } from "../../../lib/types";
+import type { CustomDialogContentProps } from "../../../lib/types";
 
 function Dialog({
   ...props
@@ -54,13 +55,7 @@ function DialogContent({
   onSelectPokemon,
   onStartBattle,
   ...props
-}: React.ComponentProps<typeof DialogPrimitive.Content> & {
-  variant?: Variant;
-  pokemon?: PokemonModal;
-  pokemons?: PokemonModal[];
-  onSelectPokemon?: (pokemonId: number) => void;
-  onStartBattle?: () => void;
-}) {
+}: CustomDialogContentProps) {
   const perRow = 3;
   let fullItems: typeof pokemons = [];
   let remainingItems: typeof pokemons = [];
@@ -106,19 +101,25 @@ function DialogContent({
 
               <div className="grid grid-cols-4 gap-24">
                 <div className="flex flex-col  gap-6">
-                  <span className="text-pokemonModalFields text-neutrals-400 w-36 h-18 font-mulish">Height</span>
+                  <span className="text-pokemonModalFields text-neutrals-400 w-36 h-18 font-mulish">
+                    Height
+                  </span>
                   <span className="text-pokemonModalStats font-mulish text-neutrals-500 ">
                     {pokemon.height}
                   </span>
                 </div>
                 <div className="flex flex-col gap-6">
-                  <span className="text-pokemonModalFields text-neutrals-400 w-36 h-18 font-mulish">Weight</span>
+                  <span className="text-pokemonModalFields text-neutrals-400 w-36 h-18 font-mulish">
+                    Weight
+                  </span>
                   <span className="text-pokemonModalStats text-neutrals-500 font-mulish">
                     {pokemon.weight}
                   </span>
                 </div>
                 <div className="flex flex-col gap-6">
-                  <span className="text-pokemonModalFields text-neutrals-400 w-36 h-18 font-mulish">Category</span>
+                  <span className="text-pokemonModalFields text-neutrals-400 w-36 h-18 font-mulish">
+                    Category
+                  </span>
                   <span className="text-pokemonModalStats text-neutrals-500 font-mulish">
                     {pokemon.category}
                   </span>
@@ -134,8 +135,7 @@ function DialogContent({
               </div>
             </div>
           </div>
-        ) : // MyPokemons variant
-        variant === Variant.MyPokemons && pokemons ? (
+        ) : variant === Variant.MyPokemons && pokemons ? (
           <div className="space-y-6">
             <DialogHeader className="text-center">
               <DialogTitle className="text-headingLgMedium text-neutrals-500">
@@ -178,7 +178,7 @@ function DialogContent({
             )}
 
             <DialogFooter className="flex justify-center border-t border-neutrals-light pt-16">
-              <Button variant="primary" size="xlg">
+              <Button variant="primary" size="xlg" onClick={onStartBattle}>
                 Start battle
               </Button>
             </DialogFooter>
