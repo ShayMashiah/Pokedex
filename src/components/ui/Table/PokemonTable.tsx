@@ -28,7 +28,9 @@ type PokemonTableProps = {
 };
 
 function PokemonTable({ data }: PokemonTableProps) {
-  const [selectedPokemon, setSelectedPokemon] = useState<PokemonRow | null>(null);
+  const [selectedPokemon, setSelectedPokemon] = useState<PokemonRow | null>(
+    null
+  );
 
   const [currentPage, setCurrentPage] = useState(1);
   const [itemsPerPage, setItemsPerPage] = useState(10);
@@ -50,7 +52,6 @@ function PokemonTable({ data }: PokemonTableProps) {
     return `${startIndex}-${endIndex} of ${totalItems} items`;
   }, [currentPage, itemsPerPage, data.length]);
 
-
   return (
     <div className="max-w-1376 mx-auto border border-neturals-100 rounded-k p-4">
       <Dialog>
@@ -68,49 +69,60 @@ function PokemonTable({ data }: PokemonTableProps) {
           </TableHeader>
 
           <TableBody>
-            {paginatedData.map((pokemon: PokemonRow) => (
-              <DialogTrigger
-                asChild
-                key={pokemon.id}
-                onClick={() => setSelectedPokemon(pokemon)}
-              >
-                <TableRow className="bg-neutrals-white border-neutrals-100 hover:bg-primary-50 cursor-pointer w-1376 h-72">
-                  <TableCell>
-                    <div className="flex items-center gap-3">
-                      <img
-                        src={pokemon.image?.thumbnail ?? ""}
-                        alt={pokemon.name.english}
-                        className="w-20 h-20 object-contain rounded-full"
-                      />
-                      <span className="text-headingMdRegular font-mulish">
-                        {pokemon.name.english}
-                      </span>
-                    </div>
-                  </TableCell>
-                  <TableCell className="text-bodyRegular font-mulish">
-                    {pokemon.id}
-                  </TableCell>
-                  <TooltipProvider>
-                    <Tooltip>
-                      <TooltipTrigger asChild>
-                        <TableCell className="max-w-[400px] truncate font-mulish text-bodyRegular">
-                          {pokemon.description}
-                        </TableCell>
-                      </TooltipTrigger>
-                      <TooltipContent className="w-345 h-full bg-neutrals-1000 text-center text-neutral-100 gap-10 py-5 px-10">
-                        <p>{pokemon.description}</p>
-                      </TooltipContent>
-                    </Tooltip>
-                  </TooltipProvider>
-                  <TableCell className="font-mulish text-bodyRegular">
-                    {pokemon.base.Attack}
-                  </TableCell>
-                  <TableCell className="font-mulish text-bodyRegular">
-                    {pokemon.base.HP}
-                  </TableCell>
-                </TableRow>
-              </DialogTrigger>
-            ))}
+            {paginatedData.length === 0 ? (
+              <TableRow className="bg-neutrals-white border-neutrals-100 h-158 text-neutrals-800 text-headingMdRegular">
+                <TableCell
+                  colSpan={5}
+                  className="text-center py-10 text-muted-foreground"
+                >
+                  No Pokemons exist
+                </TableCell>
+              </TableRow>
+            ) : (
+              paginatedData.map((pokemon: PokemonRow) => (
+                <DialogTrigger
+                  asChild
+                  key={pokemon.id}
+                  onClick={() => setSelectedPokemon(pokemon)}
+                >
+                  <TableRow className="bg-neutrals-white border-neutrals-100 hover:bg-primary-50 cursor-pointer w-1376 h-72">
+                    <TableCell>
+                      <div className="flex items-center gap-3">
+                        <img
+                          src={pokemon.image?.thumbnail ?? ""}
+                          alt={pokemon.name.english}
+                          className="w-20 h-20 object-contain rounded-full"
+                        />
+                        <span className="text-headingMdRegular font-mulish">
+                          {pokemon.name.english}
+                        </span>
+                      </div>
+                    </TableCell>
+                    <TableCell className="text-bodyRegular font-mulish">
+                      {pokemon.id}
+                    </TableCell>
+                    <TooltipProvider>
+                      <Tooltip>
+                        <TooltipTrigger asChild>
+                          <TableCell className="max-w-[400px] truncate font-mulish text-bodyRegular">
+                            {pokemon.description}
+                          </TableCell>
+                        </TooltipTrigger>
+                        <TooltipContent className="w-345 h-full bg-neutrals-1000 text-center text-neutral-100 gap-10 py-5 px-10">
+                          <p>{pokemon.description}</p>
+                        </TooltipContent>
+                      </Tooltip>
+                    </TooltipProvider>
+                    <TableCell className="font-mulish text-bodyRegular">
+                      {pokemon.base.Attack}
+                    </TableCell>
+                    <TableCell className="font-mulish text-bodyRegular">
+                      {pokemon.base.HP}
+                    </TableCell>
+                  </TableRow>
+                </DialogTrigger>
+              ))
+            )}
           </TableBody>
 
           <TableFooter>
