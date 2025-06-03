@@ -2,7 +2,8 @@ import { Input } from "@/components/ui/Input/input";
 import PokemonNavbar from "@/components/ui/NavBar/PokemonNavbar";
 import PokemonTable from "@/components/ui/Table/PokemonTable";
 import PokemonData from "@/data/pokemon_.json";
-import { useState } from "react";
+import MyPokemonData from "@/data/mypokemons_.json";
+import { useEffect, useState } from "react";
 import { Tab, TAB_LABELS } from "@/lib/types";
 import {
   DropdownMenu,
@@ -20,8 +21,24 @@ function HomePage() {
     SortOption.default
   );
   const [pokemonData, setPokemonData] = useState(PokemonData);
-  const [originalData] = useState(PokemonData);
+  const [tabPokemonData, setTabPokemonData] = useState(PokemonData);
   const [searchTerm, setSearchTerm] = useState("");
+
+  useEffect(() => {
+    let sourceData;
+
+    switch (activeTab) {
+      case Tab.User:
+        setPokemonData(MyPokemonData);
+        sourceData = MyPokemonData;
+        break;
+      case Tab.All:
+      default:
+        setPokemonData(PokemonData);
+        sourceData = PokemonData;
+    }
+    setTabPokemonData(sourceData);
+  }, [activeTab]);
 
   const handleSelect = (value: SortOption) => {
     let sortedData = [...pokemonData];
@@ -57,7 +74,7 @@ function HomePage() {
   const onInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const value = e.target.value.toLowerCase();
     setSearchTerm(value);
-    const filteredData = originalData.filter((pokemon) =>
+    const filteredData = tabPokemonData.filter((pokemon) =>
       pokemon.name.english.toLowerCase().includes(value)
     );
     setPokemonData(filteredData);
