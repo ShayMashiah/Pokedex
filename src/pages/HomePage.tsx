@@ -10,15 +10,57 @@ import {
   DropdownMenuContent,
   DropdownMenuItem,
 } from "@/components/ui/DropDown/dropdown-menu";
+import { SortOption } from "@/lib/types";
+import { SORT_OPTIONS } from "@/lib/constants";
 
 function HomePage() {
   const [activeTab, setActiveTab] = useState<Tab>(Tab.All);
   const [isOpen, setIsOpen] = useState(false);
-  const [selectedOption, setSelectedOption] = useState<string>("Sort By");
+  const [selectedOption, setSelectedOption] = useState<SortOption>(
+    SortOption.default
+  );
+  const [pokemonData, setPokemonData] = useState(PokemonData);
+  const [originalData] = useState(PokemonData);
+  const [searchTerm, setSearchTerm] = useState("");
 
-  const handleSelect = (value: string) => {
+  const handleSelect = (value: SortOption) => {
+    let sortedData = [...pokemonData];
+
+    switch (value) {
+      case SortOption.AZ:
+        sortedData.sort((a, b) => a.name.english.localeCompare(b.name.english));
+        break;
+      case SortOption.ZA:
+        sortedData.sort((a, b) => b.name.english.localeCompare(a.name.english));
+        break;
+      case SortOption.PowerHighLow:
+        sortedData.sort((a, b) => b.base.Attack - a.base.Attack);
+        break;
+      case SortOption.PowerLowHigh:
+        sortedData.sort((a, b) => a.base.Attack - b.base.Attack);
+        break;
+      case SortOption.HPHighLow:
+        sortedData.sort((a, b) => b.base.HP - a.base.HP);
+        break;
+      case SortOption.HPLowHigh:
+        sortedData.sort((a, b) => a.base.HP - b.base.HP);
+        break;
+      default:
+        break;
+    }
+
+    setPokemonData(sortedData);
     setSelectedOption(value);
     setIsOpen(false);
+  };
+
+  const onInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const value = e.target.value.toLowerCase();
+    setSearchTerm(value);
+    const filteredData = originalData.filter((pokemon) =>
+      pokemon.name.english.toLowerCase().includes(value)
+    );
+    setPokemonData(filteredData);
   };
 
   return (
@@ -31,38 +73,28 @@ function HomePage() {
         </h1>
 
         <div className="flex items-center justify-between mb-6">
-          <Input placeholder="Search Pokemon" />
+          <Input
+            placeholder="Search Pokemon"
+            onChange={onInputChange}
+            value={searchTerm}
+          />
           <DropdownMenu open={isOpen} onOpenChange={setIsOpen}>
-            <DropdownMenuTrigger isOpen={isOpen} >
+            <DropdownMenuTrigger isOpen={isOpen}>
               {selectedOption}
             </DropdownMenuTrigger>
             <DropdownMenuContent>
-              <DropdownMenuItem
-                onSelect={() => handleSelect("A-Z")}
-              >
-                Alphabetical A-Z
-              </DropdownMenuItem>
-              <DropdownMenuItem
-                onSelect={() => handleSelect("Z-A")}
-              >
-                Alphabetical A-Z
-              </DropdownMenuItem>
-              <DropdownMenuItem onSelect={() => handleSelect("Power H-L")}>
-                Power (High to low)
-              </DropdownMenuItem>
-              <DropdownMenuItem onSelect={() => handleSelect("Power L-H")}>
-                Power (Low to high)
-              </DropdownMenuItem>
-              <DropdownMenuItem onSelect={() => handleSelect("HP H-L")}>
-                HP (High to low)
-              </DropdownMenuItem>
-              <DropdownMenuItem onSelect={() => handleSelect("hp L-H")}>
-                HP (Low to high)
-              </DropdownMenuItem>
+              {SORT_OPTIONS.map((option) => (
+                <DropdownMenuItem
+                  key={option.value}
+                  onSelect={() => handleSelect(option.value)}
+                >
+                  {option.label}
+                </DropdownMenuItem>
+              ))}
             </DropdownMenuContent>
           </DropdownMenu>
         </div>
-        <PokemonTable data={PokemonData} />
+        <PokemonTable data={pokemonData} />
       </main>
     </div>
   );
