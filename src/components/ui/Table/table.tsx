@@ -1,12 +1,12 @@
 import { useMemo, useState } from "react";
 import type { PokemonRow } from "@/lib/types";
-import pokemonData from "../../data/pokemon_.json";
+import pokemonData from "../../../data/pokemon_.json";
 import {
   Tooltip,
   TooltipContent,
   TooltipProvider,
   TooltipTrigger,
-} from "@/components/ui/tooltip";
+} from "@/components/ui/Table/tooltip";
 
 function Table({ className, ...props }: React.ComponentProps<"table">) {
   return (
@@ -76,27 +76,31 @@ function TableFooter({ children }: { children: React.ReactNode }) {
   );
 }
 
-function PokemonTable() {
+type PokemonTableProps = {
+  data: PokemonRow[];
+};
+
+function PokemonTable({ data }: PokemonTableProps) {
   const pageSizeOptions = [10, 20, 30];
   const [currentPage, setCurrentPage] = useState(1);
   const [itemsPerPage, setItemsPerPage] = useState(10);
 
   const totalPages = useMemo(() => {
-    return Math.ceil(pokemonData.length / itemsPerPage);
-  }, [pokemonData.length, itemsPerPage]);
+    return Math.ceil(data.length / itemsPerPage);
+  }, [data.length, itemsPerPage]);
 
   const paginatedData = useMemo(() => {
     const startIndex = (currentPage - 1) * itemsPerPage;
     const endIndex = currentPage * itemsPerPage;
-    return pokemonData.slice(startIndex, endIndex);
-  }, [pokemonData, currentPage, itemsPerPage]);
+    return data.slice(startIndex, endIndex);
+  }, [data, currentPage, itemsPerPage]);
 
   const displayRangeText = useMemo(() => {
     const startIndex = (currentPage - 1) * itemsPerPage + 1;
-    const endIndex = Math.min(currentPage * itemsPerPage, pokemonData.length);
-    const totalItems = pokemonData.length;
+    const endIndex = Math.min(currentPage * itemsPerPage, data.length);
+    const totalItems = data.length;
     return `${startIndex}-${endIndex} of ${totalItems} items`;
-  }, [currentPage, itemsPerPage, pokemonData.length]);
+  }, [currentPage, itemsPerPage, data.length]);
 
   return (
     <div className="max-w-1376 mx-auto border border-neturals-100 rounded-k p-4">
@@ -134,11 +138,11 @@ function PokemonTable() {
               <TooltipProvider>
                 <Tooltip>
                   <TooltipTrigger asChild>
-                    <TableCell className="max-w-[400px] truncate font-mulish text-bodyRegular">
+                    <TableCell className="max-w-400 truncate font-mulish text-bodyRegular">
                       {pokemon.description}
                     </TableCell>
                   </TooltipTrigger>
-                  <TooltipContent className="w-345 h-full bg-neutrals-1000 text-neutral-100">
+                  <TooltipContent className="w-345 h-full bg-neutrals-1000 text-center text-neutral-100 gap-10 py-5 px-5">
                     <p>{pokemon.description}</p>
                   </TooltipContent>
                 </Tooltip>
