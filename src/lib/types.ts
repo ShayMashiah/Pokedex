@@ -12,7 +12,7 @@ export type Variant = (typeof Variant)[keyof typeof Variant];
 export interface CustomDialogContentProps
   extends ComponentProps<typeof DialogPrimitive.Content> {
   variant?: Variant;
-  pokemon?: PokemonModal;
+  pokemon?: { id: number };
   pokemons?: PokemonModal[];
   onSelectPokemon?: (pokemonId: number) => void;
   onStartBattle?: () => void;
@@ -34,7 +34,7 @@ export interface PokemonModal {
   description?: string;
   height?: string;
   weight?: string;
-  category?: string;
+  category?: string[];
   abilities?: string;
 }
 

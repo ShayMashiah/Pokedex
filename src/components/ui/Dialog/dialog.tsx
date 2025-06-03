@@ -5,6 +5,7 @@ import { cn } from "../../../lib/utils";
 import { Button } from "../Button/button";
 import { Variant, type PokemonModal } from "../../../lib/types";
 import type { CustomDialogContentProps } from "../../../lib/types";
+import pokemonData from "../../../data/pokemon_.json";
 
 function Dialog({
   ...props
@@ -67,6 +68,30 @@ function DialogContent({
     remainingItems = pokemons.slice(lastRowStart);
   }
 
+  const selectedPokemon = React.useMemo(() => {
+    if (!pokemon?.id) return null;
+
+    return pokemonData.find((p) => p.id === pokemon.id) ?? null;
+  }, [pokemon]);
+
+  const selectedPokemonModal: PokemonModal | null = React.useMemo(() => {
+    if (!selectedPokemon) return null;
+
+    return {
+      id: selectedPokemon.id,
+      name: selectedPokemon.name.english,
+      image: selectedPokemon.image?.thumbnail ?? "",
+      description: selectedPokemon.description,
+      height: selectedPokemon.profile?.height ?? "Unknown",
+      weight: selectedPokemon.profile?.weight ?? "Unknown",
+      category: selectedPokemon.type ?? "Unknown",
+      abilities:
+        selectedPokemon.profile?.ability
+          ?.map((a: string[]) => a[0].split(",")[0].trim())
+          .join(", ") ?? "Unknown",
+    };
+  }, [selectedPokemon]);
+
   return (
     <DialogPortal>
       <DialogOverlay />
@@ -79,23 +104,23 @@ function DialogContent({
         )}
         {...props}
       >
-        {variant === Variant.PokeInfo && pokemon ? (
+        {variant === Variant.PokeInfo && selectedPokemonModal ? (
           <div className="space-y-6">
             <div className="text-start text-muted-foreground text-subheadingRegular text-neutral-200 w-48 h-26">
-              #{String(pokemon.id).padStart(4, "0")}
+              #{String(selectedPokemonModal.id).padStart(4, "0")}
             </div>
             <DialogHeader className="items-start border-b border-neutrals-light pb-4 font-mulish">
               <DialogTitle className="text-pokemonModalTitle h-26 w-428 text-neutrals-500 font-mulish">
-                {pokemon.name}
+                {selectedPokemonModal.name}
               </DialogTitle>
             </DialogHeader>
             <img
-              src={pokemon.image}
-              alt={pokemon.name}
+              src={selectedPokemonModal.image}
+              alt={selectedPokemonModal.name}
               className="mx-auto w-158 h-158 pt-10 pb-10"
             />
             <div className="bg-neutrals-900 p-4 space-y-4 font-mulish text-sm text-neutrals-500">
-              <p>{pokemon.description}</p>
+              <p>{selectedPokemonModal.description}</p>
 
               <hr className="border-t border-[#A8AEB5]" />
 
@@ -105,7 +130,7 @@ function DialogContent({
                     Height
                   </span>
                   <span className="text-pokemonModalStats font-mulish text-neutrals-500 ">
-                    {pokemon.height}
+                    {selectedPokemonModal.height}
                   </span>
                 </div>
                 <div className="flex flex-col gap-6">
@@ -113,7 +138,7 @@ function DialogContent({
                     Weight
                   </span>
                   <span className="text-pokemonModalStats text-neutrals-500 font-mulish">
-                    {pokemon.weight}
+                    {selectedPokemonModal.weight}
                   </span>
                 </div>
                 <div className="flex flex-col gap-6">
@@ -121,7 +146,7 @@ function DialogContent({
                     Category
                   </span>
                   <span className="text-pokemonModalStats text-neutrals-500 font-mulish">
-                    {pokemon.category}
+                    {selectedPokemonModal.category}
                   </span>
                 </div>
                 <div className="flex flex-col gap-6">
@@ -129,7 +154,7 @@ function DialogContent({
                     Abilities
                   </span>
                   <span className="text-pokemonModalStats  text-neutrals-500 font-mulish">
-                    {pokemon.abilities}
+                    {selectedPokemonModal.abilities}
                   </span>
                 </div>
               </div>
