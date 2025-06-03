@@ -1,3 +1,6 @@
+import * as DialogPrimitive from '@radix-ui/react-dialog';
+import type { ComponentProps } from 'react';
+
 export const Variant = {
   Default: "default",
   PokeInfo: "poke-info",
@@ -5,6 +8,15 @@ export const Variant = {
 } as const;
 
 export type Variant = (typeof Variant)[keyof typeof Variant];
+
+export interface CustomDialogContentProps
+  extends ComponentProps<typeof DialogPrimitive.Content> {
+  variant?: Variant;
+  pokemon?: PokemonModal;
+  pokemons?: PokemonModal[];
+  onSelectPokemon?: (pokemonId: number) => void;
+  onStartBattle?: () => void;
+}
 
 
 export interface PokemonRow {
