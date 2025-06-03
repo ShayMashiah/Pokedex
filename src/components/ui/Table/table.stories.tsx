@@ -1,6 +1,6 @@
 // PokemonTable.stories.tsx
 import type { Meta, StoryObj } from "@storybook/react";
-import PokemonTable from "./table";
+import PokemonTable from "./PokemonTable";
 import pokemonData from "@/data/pokemon_.json";
 
 
