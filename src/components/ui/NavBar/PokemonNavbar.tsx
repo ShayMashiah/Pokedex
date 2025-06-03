@@ -4,6 +4,8 @@ import {
   NavigationMenuList,
 } from "@/components/ui/NavBar/";
 import type { PokemonNavbarProps } from "../../../lib/types";
+import {Tab} from "../../../lib/types";
+import PokemonLogo from "@/assets/pokemon_logo.png";
 
 function PokemonNavbar({ activeItem, onChange }: PokemonNavbarProps) {
   return (
@@ -11,16 +13,16 @@ function PokemonNavbar({ activeItem, onChange }: PokemonNavbarProps) {
       <div className="w-full mx-auto flex items-center justify-between">
         <NavigationMenuList className="flex items-center ">
           <img
-            src="src/assets/pokemon_logo.png"
+            src={PokemonLogo}
             alt="Pokemon"
             className="w-149.44 h-55"
           />
 
           <NavigationMenuItem>
             <button
-              onClick={() => onChange("all")}
+              onClick={() => onChange(Tab.All)}
               className={`w-120 h-38 rounded-s px-4 py-2 flex items-center text-bodyRegular text-primary-300 justify-center hover:underline ml-40 ${
-                activeItem === "all" ? "bg-primary-50 text-bodyBold" : ""
+                activeItem === Tab.All ? "bg-primary-50 text-bodyBold" : ""
               }`}
             >
               All Pokemons
@@ -29,9 +31,9 @@ function PokemonNavbar({ activeItem, onChange }: PokemonNavbarProps) {
 
           <NavigationMenuItem>
             <button
-              onClick={() => onChange("my")}
+              onClick={() => onChange(Tab.User)}
               className={`w-120 h-38 rounded-s px-4 py-2 flex items-center text-bodyRegular  text-primary-300 justify-center hover:underline ml-20 ${
-                activeItem === "my" ? "bg-primary-50 text-bodyBold" : ""
+                activeItem === Tab.User ? "bg-primary-50 text-bodyBold" : ""
               }`}
             >
               My Pokemons

@@ -27,6 +27,18 @@ export interface PokemonModal {
 }
 
 export interface PokemonNavbarProps {
-  activeItem: "all" | "my";
-  onChange: (value: "all" | "my") => void;
+  activeItem: Tab;
+  onChange: (value: Tab) => void;
 }
+
+export const Tab = {
+  All : "all",
+  User : "user",
+} as const;
+
+export type Tab = (typeof Tab)[keyof typeof Tab];
+
+export const TAB_LABELS: Record<Tab, string> = {
+  [Tab.All]: "All Pokemons",
+  [Tab.User]: "My Pokemons",
+};
