@@ -1,4 +1,5 @@
 export const fontSize = {
+    headingXXLgBold: ['40px', {lineHeight: '43px',fontWeight: '700',letterSpacing: '0px'}],
     headingXlgBold: ['28px', { lineHeight: '37px', letterSpacing: '0px', fontWeight: '700'}],
     headingXLgMedium: ['28px', { lineHeight: '37px', fontWeight: '500' }],
     headingLgBold: ['24px', { lineHeight: '34px', fontWeight: '700' }],
@@ -8,6 +9,7 @@ export const fontSize = {
     headingMdBold: ['18px', { lineHeight: '27px', fontWeight: '700' }],
     headingMdMedium: ['18px', { lineHeight: '27px', fontWeight: '500' }],
     headingMdRegular: ['18px', { lineHeight: '27px', fontWeight: '400' }],
+    textBaseRegular: ['18px', {lineHeight: '22px',fontWeight: '400',letterSpacing: '0px',}],
     pokemonModalStats: ['14px', { lineHeight: '16px', fontWeight: '400' }],
     subheadingBold: ['16px', { lineHeight: '24px', fontWeight: '700' }],
     subheadingMedium: ['16px', { lineHeight: '24px', fontWeight: '500' }],

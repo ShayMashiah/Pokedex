@@ -23,6 +23,9 @@ export const colors = {
         400: "#293F74",
         500: "#182442",
     },
+    secondary:{
+        300:"#FFCB05",
+    },
     extendedPalette: {
         success:{
             green:"#51FF4E",

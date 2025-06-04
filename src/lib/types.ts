@@ -14,8 +14,6 @@ export interface CustomDialogContentProps
   variant?: Variant;
   pokemon?: { id: number };
   pokemons?: PokemonModal[];
-  onSelectPokemon?: (pokemonId: number) => void;
-  onStartBattle?: () => void;
 }
 
 
@@ -46,6 +44,7 @@ export interface PokemonNavbarProps {
 export const Tab = {
   All : "all",
   User : "user",
+  Null : "null",
 } as const;
 
 export type Tab = (typeof Tab)[keyof typeof Tab];
@@ -53,6 +52,7 @@ export type Tab = (typeof Tab)[keyof typeof Tab];
 export const TAB_LABELS: Record<Tab, string> = {
   [Tab.All]: "All Pokemons",
   [Tab.User]: "My Pokemons",
+  [Tab.Null]: "No Pokemons",
 };
 
 export const SortOption = {

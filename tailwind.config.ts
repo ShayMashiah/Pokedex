@@ -20,7 +20,8 @@ export default {
       fontFamily,
     },
   },
-  plugins: [],
+  plugins: [
+  ],
   safelist: [
     'data-[state=open]:block',
     'data-[state=open]:hidden',
