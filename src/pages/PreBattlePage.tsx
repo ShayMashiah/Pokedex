@@ -1,12 +1,12 @@
 import PokemonNavbar from "@/components/ui/NavBar/PokemonNavbar";
 import { Tab } from "@/lib/types";
-import { useLocation, useNavigate } from "react-router-dom"; // ✅ ייבוא navigate
+import { useLocation, useNavigate } from "react-router-dom"; 
 import { useEffect, useState } from "react";
 import pokemonData from "../data/pokemon_.json";
 
 function PreBattlePage() {
   const [rivalPokemon, setRivalPokemon] = useState<any>(null);
-  const navigate = useNavigate(); // ✅ יצירת הפונקציה
+  const navigate = useNavigate();
 
   const location = useLocation();
   const { selectedPokemon } = location.state || {};

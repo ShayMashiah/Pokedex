@@ -85,7 +85,7 @@ function PokemonTable({ data }: PokemonTableProps) {
                   key={pokemon.id}
                   onClick={() => setSelectedPokemon(pokemon)}
                 >
-                  <TableRow className="bg-neutrals-white border-neutrals-100 hover:bg-primary-50 cursor-pointer w-1376 h-72">
+                  <TableRow className="bg-neutrals-white border-neutrals-100 hover:bg-neutrals-100 cursor-pointer w-1376 h-72">
                     <TableCell>
                       <div className="flex items-center gap-3">
                         <img

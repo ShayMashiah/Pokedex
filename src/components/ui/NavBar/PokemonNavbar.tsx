@@ -11,6 +11,7 @@ import { Dialog, DialogContent, DialogTrigger } from "../Dialog/dialog";
 import { Button } from "../Button/button";
 import myPokemonsData from "../../../data/mypokemons_.json";
 import type { PokemonModal } from "../../../lib/types";
+import { Link } from "react-router-dom";
 
 function PokemonNavbar({ activeItem, onChange }: PokemonNavbarProps) {
   const myPokemons: PokemonModal[] = myPokemonsData.map((p) => ({
@@ -23,7 +24,9 @@ function PokemonNavbar({ activeItem, onChange }: PokemonNavbarProps) {
     <NavigationMenu className="w-full max-w-screen bg-neutrals-white py-6 shadow-sm  pl-128">
       <div className="w-full mx-auto flex items-center justify-between">
         <NavigationMenuList className="flex items-center ">
-          <img src={PokemonLogo} alt="Pokemon" className="w-149.44 h-55" />
+          <Link to="/">
+            <img src={PokemonLogo} alt="Pokemon" className="w-149.44 h-55" />
+          </Link>
 
           <NavigationMenuItem>
             <button
@@ -59,8 +62,7 @@ function PokemonNavbar({ activeItem, onChange }: PokemonNavbarProps) {
           <DialogContent
             variant={Variant.MyPokemons}
             pokemons={myPokemons}
-            onSelectPokemon={(id) => alert("Selected Pokémon ID: " + id)}
-          />
+           />
         </Dialog>
       </div>
     </NavigationMenu>
