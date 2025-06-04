@@ -1,6 +1,7 @@
 import { useMemo, useState } from "react";
 import type { PokemonRow } from "@/lib/types";
 import { pageSizeOptions } from "../../../lib/constants";
+import { ChevronLeft, ChevronRight } from "lucide-react";
 import {
   Table,
   TableHeader,
@@ -53,12 +54,12 @@ function PokemonTable({ data }: PokemonTableProps) {
   }, [currentPage, itemsPerPage, data.length]);
 
   return (
-    <div className="max-w-1376 mx-auto border border-neturals-100 rounded-k p-4">
+    <div className="max-w-1376 mx-auto p-4">
       <Dialog>
-        <Table>
+        <Table className="rounded-k overflow-hidden border border-neutrals-200">
           <TableHeader>
-            <TableRow className="bg-primary-50 border border-naturals-100">
-              <TableHead className="w-408 h-48 pt-4 pl-10">
+            <TableRow className="bg-primary-50 border border-naturals-100 ">
+              <TableHead className="w-408 h-48 pt-4 pl-10 ">
                 Pokemon name
               </TableHead>
               <TableHead className="w-170 h-48 pt-4">ID</TableHead>
@@ -88,18 +89,20 @@ function PokemonTable({ data }: PokemonTableProps) {
                   <TableRow className="bg-neutrals-white border-neutrals-100 hover:bg-primary-50 cursor-pointer w-1376 h-72">
                     <TableCell>
                       <div className="flex items-center gap-3">
-                        <img
-                          src={pokemon.image?.thumbnail ?? ""}
-                          alt={pokemon.name.english}
-                          className="w-20 h-20 object-contain rounded-full"
-                        />
+                        <div className="bg-neutrals-900 rounded-xxl">
+                          <img
+                            src={pokemon.image?.thumbnail ?? ""}
+                            alt={pokemon.name.english}
+                            className="w-54 h-54 object-contain rounded-full"
+                          />
+                        </div>
                         <span className="text-headingMdRegular font-mulish">
                           {pokemon.name.english}
                         </span>
                       </div>
                     </TableCell>
                     <TableCell className="text-bodyRegular font-mulish">
-                      {pokemon.id}
+                      #{String(pokemon.id).padStart(4, "0")}
                     </TableCell>
                     <TooltipProvider>
                       <Tooltip>
@@ -117,7 +120,7 @@ function PokemonTable({ data }: PokemonTableProps) {
                       {pokemon.base.Attack}
                     </TableCell>
                     <TableCell className="font-mulish text-bodyRegular">
-                      {pokemon.base.HP}
+                      {pokemon.base.HP} HP
                     </TableCell>
                   </TableRow>
                 </DialogTrigger>
@@ -126,7 +129,7 @@ function PokemonTable({ data }: PokemonTableProps) {
           </TableBody>
 
           <TableFooter>
-            <div className="flex justify-between items-center px-2 py-2 text-sm text-muted-foreground border-t border-neutrals-100">
+            <div className="flex justify-between items-center py-10 px-10  rounded-b-k text-sm text-muted-foreground bg-neutrals-white ">
               <div className="flex items-center text-neutrals-600 gap-2">
                 <span>Rows per page:</span>
                 <select
@@ -135,7 +138,7 @@ function PokemonTable({ data }: PokemonTableProps) {
                     setItemsPerPage(Number(e.target.value));
                     setCurrentPage(1);
                   }}
-                  className="border border-neutrals-200 rounded px-2 py-1 text-sm"
+                  className=" rounded px-2 py-1 text-sm"
                 >
                   {pageSizeOptions.map((size) => (
                     <option key={size} value={size}>
@@ -145,7 +148,7 @@ function PokemonTable({ data }: PokemonTableProps) {
                 </select>
               </div>
 
-              <div className="flex gap-4 text-neutrals-600">
+              <div className="flex text-neutrals-600 gap-32">
                 <span className="text-muted-foreground text-sm">
                   {displayRangeText}
                 </span>
@@ -155,16 +158,16 @@ function PokemonTable({ data }: PokemonTableProps) {
                   disabled={currentPage === 1}
                   className="disabled:opacity-50"
                 >
-                  &lt;
+                  <ChevronLeft size={16} />
                 </button>
                 <button
                   onClick={() =>
                     setCurrentPage((p) => Math.min(p + 1, totalPages))
                   }
                   disabled={currentPage === totalPages}
-                  className="disabled:opacity-50"
+                  className="disabled:opacity-50 gap-20"
                 >
-                  &gt;
+                  <ChevronRight size={16} />
                 </button>
               </div>
             </div>

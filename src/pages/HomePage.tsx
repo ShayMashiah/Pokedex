@@ -82,14 +82,14 @@ function HomePage() {
 
   return (
     <div className="bg-neutrals-100 min-h-screen">
-      <PokemonNavbar activeItem={activeTab} onChange={setActiveTab} />
+      <PokemonNavbar activeItem={activeTab} onChange={setActiveTab}/>
 
-      <main className="max-w-1440 mx-auto px-10">
-        <h1 className="text-headingLgMedium text-neutrals-400 mt-10 mb-6">
+      <main className="max-w-1376 mx-auto px-10">
+        <h1 className="text-headingLgMedium text-neutrals-400 mt-32 mb-6">
           {TAB_LABELS[activeTab]}
         </h1>
 
-        <div className="flex items-center justify-between mb-6">
+        <div className="flex items-center justify-between mt-6 mb-16">
           <Input
             placeholder="Search Pokemon"
             onChange={onInputChange}
