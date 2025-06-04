@@ -69,7 +69,7 @@ function DialogContent({
   const handleStartBattle = () => {
     const selected = pokemons?.find((p) => p.id === selectedPokemonForBattle);
     if (!selected) return;
-    navigate("/battle", { state: { selectedPokemon: selected } });
+    navigate("/prebattle", { state: { selectedPokemon: selected } });
   };
 
   const onSelectPokemon = (id: number) => {
