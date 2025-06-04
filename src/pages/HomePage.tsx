@@ -2,27 +2,116 @@ import { Input } from "@/components/ui/Input/input";
 import PokemonNavbar from "@/components/ui/NavBar/PokemonNavbar";
 import PokemonTable from "@/components/ui/Table/PokemonTable";
 import PokemonData from "@/data/pokemon_.json";
-import { useState } from "react";
+import MyPokemonData from "@/data/mypokemons_.json";
+import { useEffect, useState } from "react";
 import { Tab, TAB_LABELS } from "@/lib/types";
-
-
+import {
+  DropdownMenu,
+  DropdownMenuTrigger,
+  DropdownMenuContent,
+  DropdownMenuItem,
+} from "@/components/ui/DropDown/dropdown-menu";
+import { SortOption } from "@/lib/types";
+import { SORT_OPTIONS } from "@/lib/constants";
 
 function HomePage() {
   const [activeTab, setActiveTab] = useState<Tab>(Tab.All);
+  const [isOpen, setIsOpen] = useState(false);
+  const [selectedOption, setSelectedOption] = useState<SortOption>(
+    SortOption.default
+  );
+  const [pokemonData, setPokemonData] = useState(PokemonData);
+  const [tabPokemonData, setTabPokemonData] = useState(PokemonData);
+  const [searchTerm, setSearchTerm] = useState("");
+
+  useEffect(() => {
+    let sourceData;
+
+    switch (activeTab) {
+      case Tab.User:
+        setPokemonData(MyPokemonData);
+        sourceData = MyPokemonData;
+        break;
+      case Tab.All:
+      default:
+        setPokemonData(PokemonData);
+        sourceData = PokemonData;
+    }
+    setTabPokemonData(sourceData);
+  }, [activeTab]);
+
+  const handleSelect = (value: SortOption) => {
+    let sortedData = [...pokemonData];
+
+    switch (value) {
+      case SortOption.AZ:
+        sortedData.sort((a, b) => a.name.english.localeCompare(b.name.english));
+        break;
+      case SortOption.ZA:
+        sortedData.sort((a, b) => b.name.english.localeCompare(a.name.english));
+        break;
+      case SortOption.PowerHighLow:
+        sortedData.sort((a, b) => b.base.Attack - a.base.Attack);
+        break;
+      case SortOption.PowerLowHigh:
+        sortedData.sort((a, b) => a.base.Attack - b.base.Attack);
+        break;
+      case SortOption.HPHighLow:
+        sortedData.sort((a, b) => b.base.HP - a.base.HP);
+        break;
+      case SortOption.HPLowHigh:
+        sortedData.sort((a, b) => a.base.HP - b.base.HP);
+        break;
+      default:
+        break;
+    }
+
+    setPokemonData(sortedData);
+    setSelectedOption(value);
+    setIsOpen(false);
+  };
+
+  const onInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const value = e.target.value.toLowerCase();
+    setSearchTerm(value);
+    const filteredData = tabPokemonData.filter((pokemon) =>
+      pokemon.name.english.toLowerCase().includes(value)
+    );
+    setPokemonData(filteredData);
+  };
 
   return (
     <div className="bg-neutrals-100 min-h-screen">
       <PokemonNavbar activeItem={activeTab} onChange={setActiveTab} />
 
       <main className="max-w-1440 mx-auto px-10">
-          <h1 className="text-headingLgMedium text-neutrals-400 mt-10 mb-6">
-            {TAB_LABELS[activeTab]}
-          </h1>
+        <h1 className="text-headingLgMedium text-neutrals-400 mt-10 mb-6">
+          {TAB_LABELS[activeTab]}
+        </h1>
 
+        <div className="flex items-center justify-between mb-6">
           <Input
-            placeholder="Search Pokemon" 
+            placeholder="Search Pokemon"
+            onChange={onInputChange}
+            value={searchTerm}
           />
-        <PokemonTable data={PokemonData} />
+          <DropdownMenu open={isOpen} onOpenChange={setIsOpen}>
+            <DropdownMenuTrigger isOpen={isOpen}>
+              {selectedOption}
+            </DropdownMenuTrigger>
+            <DropdownMenuContent>
+              {SORT_OPTIONS.map((option) => (
+                <DropdownMenuItem
+                  key={option.value}
+                  onSelect={() => handleSelect(option.value)}
+                >
+                  {option.label}
+                </DropdownMenuItem>
+              ))}
+            </DropdownMenuContent>
+          </DropdownMenu>
+        </div>
+        <PokemonTable data={pokemonData} />
       </main>
     </div>
   );

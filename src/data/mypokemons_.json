@@ -165,5 +165,163 @@
       "thumbnail": "https://raw.githubusercontent.com/Purukitto/pokemon-data.json/master/images/pokedex/thumbnails/003.png",
       "hires": "https://raw.githubusercontent.com/Purukitto/pokemon-data.json/master/images/pokedex/hires/003.png"
     }
+  },
+  {
+    "id": 9,
+    "name": {
+      "english": "Blastoise",
+      "japanese": "カメックス",
+      "chinese": "水箭龟",
+      "french": "Tortank"
+    },
+    "type": [
+      "Water"
+    ],
+    "base": {
+      "HP": 79,
+      "Attack": 83,
+      "Defense": 100,
+      "Sp. Attack": 85,
+      "Sp. Defense": 105,
+      "Speed": 78
+    },
+    "species": "Shellfish Pokémon",
+    "description": "Blastoise has water spouts that protrude from its shell. The water spouts are very accurate. They can shoot bullets of water with enough accuracy to strike empty cans from a distance of over 160 feet.",
+    "evolution": {
+      "prev": [
+        "8",
+        "Level 36"
+      ]
+    },
+    "profile": {
+      "height": "1.6 m",
+      "weight": "85.5 kg",
+      "egg": [
+        "Monster",
+        "Water 1"
+      ],
+      "ability": [
+        [
+          "Torrent",
+          "false"
+        ],
+        [
+          "Rain Dish",
+          "true"
+        ]
+      ],
+      "gender": "87.5:12.5"
+    },
+    "image": {
+      "sprite": "https://raw.githubusercontent.com/Purukitto/pokemon-data.json/master/images/pokedex/sprites/009.png",
+      "thumbnail": "https://raw.githubusercontent.com/Purukitto/pokemon-data.json/master/images/pokedex/thumbnails/009.png",
+      "hires": "https://raw.githubusercontent.com/Purukitto/pokemon-data.json/master/images/pokedex/hires/009.png"
+    }
+  },
+  {
+    "id": 10,
+    "name": {
+      "english": "Caterpie",
+      "japanese": "キャタピー",
+      "chinese": "绿毛虫",
+      "french": "Chenipan"
+    },
+    "type": [
+      "Bug"
+    ],
+    "base": {
+      "HP": 45,
+      "Attack": 30,
+      "Defense": 35,
+      "Sp. Attack": 20,
+      "Sp. Defense": 20,
+      "Speed": 45
+    },
+    "species": "Worm Pokémon",
+    "description": "Its body is soft and weak. In nature, its perpetual fate is to be seen by others as food.",
+    "evolution": {
+      "next": [
+        [
+          "11",
+          "Level 7"
+        ]
+      ]
+    },
+    "profile": {
+      "height": "0.3 m",
+      "weight": "2.9 kg",
+      "egg": [
+        "Bug"
+      ],
+      "ability": [
+        [
+          "Shield Dust",
+          "false"
+        ],
+        [
+          "Run Away",
+          "true"
+        ]
+      ],
+      "gender": "50:50"
+    },
+    "image": {
+      "sprite": "https://raw.githubusercontent.com/Purukitto/pokemon-data.json/master/images/pokedex/sprites/010.png",
+      "thumbnail": "https://raw.githubusercontent.com/Purukitto/pokemon-data.json/master/images/pokedex/thumbnails/010.png",
+      "hires": "https://raw.githubusercontent.com/Purukitto/pokemon-data.json/master/images/pokedex/hires/010.png"
+    }
+  },
+  {
+    "id": 11,
+    "name": {
+      "english": "Metapod",
+      "japanese": "トランセル",
+      "chinese": "铁甲蛹",
+      "french": "Chrysacier"
+    },
+    "type": [
+      "Bug"
+    ],
+    "base": {
+      "HP": 50,
+      "Attack": 20,
+      "Defense": 55,
+      "Sp. Attack": 25,
+      "Sp. Defense": 25,
+      "Speed": 30
+    },
+    "species": "Cocoon Pokémon",
+    "description": "Its hard shell doesn’t crack a bit even if Pikipek pecks at it, but it will tip over, spilling out its insides.",
+    "evolution": {
+      "prev": [
+        "10",
+        "Level 7"
+      ],
+      "next": [
+        [
+          "12",
+          "Level 10"
+        ]
+      ]
+    },
+    "profile": {
+      "height": "0.7 m",
+      "weight": "9.9 kg",
+      "egg": [
+        "Bug"
+      ],
+      "ability": [
+        [
+          "Shed Skin",
+          "false"
+        ]
+      ],
+      "gender": "50:50"
+    },
+    "image": {
+      "sprite": "https://raw.githubusercontent.com/Purukitto/pokemon-data.json/master/images/pokedex/sprites/011.png",
+      "thumbnail": "https://raw.githubusercontent.com/Purukitto/pokemon-data.json/master/images/pokedex/thumbnails/011.png",
+      "hires": "https://raw.githubusercontent.com/Purukitto/pokemon-data.json/master/images/pokedex/hires/011.png"
+    }
   }
 ]

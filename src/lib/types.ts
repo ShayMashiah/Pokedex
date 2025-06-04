@@ -12,7 +12,7 @@ export type Variant = (typeof Variant)[keyof typeof Variant];
 export interface CustomDialogContentProps
   extends ComponentProps<typeof DialogPrimitive.Content> {
   variant?: Variant;
-  pokemon?: PokemonModal;
+  pokemon?: { id: number };
   pokemons?: PokemonModal[];
   onSelectPokemon?: (pokemonId: number) => void;
   onStartBattle?: () => void;
@@ -34,7 +34,7 @@ export interface PokemonModal {
   description?: string;
   height?: string;
   weight?: string;
-  category?: string;
+  category?: string[];
   abilities?: string;
 }
 
@@ -54,3 +54,15 @@ export const TAB_LABELS: Record<Tab, string> = {
   [Tab.All]: "All Pokemons",
   [Tab.User]: "My Pokemons",
 };
+
+export const SortOption = {
+  default: "Sort By",
+  AZ :"A-Z",
+  ZA : "Z-A",
+  PowerHighLow : "Power H-L",
+  PowerLowHigh : "Power L-H",
+  HPHighLow : "HP H-L",
+  HPLowHigh : "HP L-H",
+} as const;
+
+export type SortOption = (typeof SortOption)[keyof typeof SortOption];
