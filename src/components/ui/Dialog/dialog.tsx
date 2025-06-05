@@ -193,11 +193,11 @@ function DialogContent({
                   onClick={() => onSelectPokemon?.(p.id)}
                   className="rounded-full border-2 mt-16 border-transparent hover:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-500 transition"
                 >
-                  <div className="bg-neutrals-900 rounded-full">
+                  <div className="bg-neutrals-900 w-102.35 h-102.35 rounded-full flex items-center justify-center">
                     <img
                       src={p.image}
                       alt={p.name}
-                      className="w-102.35 h-102.35 rounded-full"
+                      className="object-cover w-76 h-76"
                     />
                   </div>
                 </button>
