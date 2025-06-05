@@ -84,8 +84,8 @@ function HomePage() {
     <div className="bg-neutrals-100 min-h-screen">
       <PokemonNavbar activeItem={activeTab} onChange={setActiveTab}/>
 
-      <main className="max-w-1376 mx-auto px-10">
-        <h1 className="text-headingLgMedium text-neutrals-400 mt-32 mb-6">
+      <main className="max-w-1360 mx-auto px-10">
+        <h1 className="text-headingLgMedium font-mulish text-neutrals-400 mt-32 mb-10">
           {TAB_LABELS[activeTab]}
         </h1>
 
@@ -94,6 +94,7 @@ function HomePage() {
             placeholder="Search Pokemon"
             onChange={onInputChange}
             value={searchTerm}
+            className="font-roboto text-bodyRegular"
           />
           <DropdownMenu open={isOpen} onOpenChange={setIsOpen}>
             <DropdownMenuTrigger isOpen={isOpen}>

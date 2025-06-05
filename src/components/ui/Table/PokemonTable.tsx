@@ -59,7 +59,7 @@ function PokemonTable({ data }: PokemonTableProps) {
         <Table className="rounded-k overflow-hidden border border-neutrals-200">
           <TableHeader>
             <TableRow className="bg-primary-50 border border-naturals-100 ">
-              <TableHead className="w-408 h-48 pt-4 pl-10 ">
+              <TableHead className="w-408 h-48 pt-4 pl-66 ">
                 Pokemon name
               </TableHead>
               <TableHead className="w-170 h-48 pt-4">ID</TableHead>
@@ -89,12 +89,14 @@ function PokemonTable({ data }: PokemonTableProps) {
                   <TableRow className="bg-neutrals-white border-neutrals-100 hover:bg-primary-50 cursor-pointer w-1376 h-72">
                     <TableCell>
                       <div className="flex items-center gap-3">
-                        <div className="bg-neutrals-900 rounded-xxl">
-                          <img
-                            src={pokemon.image?.thumbnail ?? ""}
-                            alt={pokemon.name.english}
-                            className="w-54 h-54 object-contain rounded-full"
-                          />
+                        <div className="py-9 pl-16 pr-13.5 w-54 h-54">
+                          <div className="bg-neutrals-900 rounded-xxl">
+                            <img
+                              src={pokemon.image?.thumbnail ?? ""}
+                              alt={pokemon.name.english}
+                              className=" object-contain rounded-full"
+                            />
+                          </div>
                         </div>
                         <span className="text-headingMdRegular font-mulish">
                           {pokemon.name.english}
@@ -111,7 +113,7 @@ function PokemonTable({ data }: PokemonTableProps) {
                             {pokemon.description}
                           </TableCell>
                         </TooltipTrigger>
-                        <TooltipContent className="w-345 h-full bg-neutrals-1000 text-center text-neutral-100 gap-10 py-5 px-10">
+                        <TooltipContent className="w-345 h-full bg-neutrals-1000 text-center font-mulish text-neutral-100">
                           <p>{pokemon.description}</p>
                         </TooltipContent>
                       </Tooltip>

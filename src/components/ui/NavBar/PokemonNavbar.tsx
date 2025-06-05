@@ -55,7 +55,7 @@ function PokemonNavbar({ activeItem, onChange }: PokemonNavbarProps) {
       <div>
         <Dialog>
           <DialogTrigger asChild>
-            <Button variant="primary" size="xlg" className="">
+            <Button variant="primary" size="xlg" className="text-subheadingRegular font-mulish text-neutrals-white">
               Start a Fight
             </Button>
           </DialogTrigger>

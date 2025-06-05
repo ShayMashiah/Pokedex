@@ -35,7 +35,7 @@ function DropdownMenuTrigger({
         "flex items-center justify-between",
         "w-101 h-38",
         "px-9 pr-6 py-9",
-        "gap-4 rounded-[4px]",
+        "gap-4 rounded-k",
         "border",
         "data-[state=closed]:border-neutrals-200",
         "bg-neturals-white text-neutrals-400 text-bodyRegular",
