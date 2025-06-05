@@ -13,8 +13,6 @@ function PreBattlePage() {
   const location = useLocation();
   const { selectedPokemon } = location.state || {};
 
-  console.log("Selected Pokemon:", selectedPokemon);
-
   useEffect(() => {
     const randomIndex = Math.floor(Math.random() * pokemonData.length);
     const randomPokemon = pokemonData[randomIndex] as Pokemon;
