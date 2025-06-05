@@ -21,6 +21,7 @@ function Input({
       className={cn(
         "relative",
         "mb-6",
+    
         isDropdown ? "w-206 h-38" : "w-[293.17px] h-38"
       )}
     >
@@ -38,7 +39,7 @@ function Input({
         onChange={(e) => setValue(e.target.value)}
         placeholder="Search"
         className={cn(
-          "peer w-full h-full rounded-k border pr-[80px] py-8",
+          "peer w-full h-full rounded-k border pr-[80px] py-8 bg-neutral-100",
           isDropdown ? "pl-40" : "pl-32",
 
           value

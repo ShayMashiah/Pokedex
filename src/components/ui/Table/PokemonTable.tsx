@@ -1,6 +1,7 @@
 import { useMemo, useState } from "react";
 import type { PokemonRow } from "@/lib/types";
 import { pageSizeOptions } from "../../../lib/constants";
+import { ChevronLeft, ChevronRight } from "lucide-react";
 import {
   Table,
   TableHeader,
@@ -53,12 +54,12 @@ function PokemonTable({ data }: PokemonTableProps) {
   }, [currentPage, itemsPerPage, data.length]);
 
   return (
-    <div className="max-w-1376 mx-auto border border-neturals-100 rounded-k p-4">
+    <div className="max-w-1376 mx-auto p-4">
       <Dialog>
-        <Table>
+        <Table className="rounded-xl overflow-hidden w-1376 border border-neutrals-200">
           <TableHeader>
-            <TableRow className="bg-primary-50 border border-naturals-100">
-              <TableHead className="w-408 h-48 pt-4 pl-10">
+            <TableRow className="bg-primary-50 border border-naturals-100 font-mulish text-bodyBold">
+              <TableHead className="w-408 h-48 pt-4 pl-66 ">
                 Pokemon name
               </TableHead>
               <TableHead className="w-170 h-48 pt-4">ID</TableHead>
@@ -85,30 +86,34 @@ function PokemonTable({ data }: PokemonTableProps) {
                   key={pokemon.id}
                   onClick={() => setSelectedPokemon(pokemon)}
                 >
-                  <TableRow className="bg-neutrals-white border-neutrals-100 hover:bg-neutrals-100 cursor-pointer w-1376 h-72">
+                  <TableRow className="bg-neutrals-white text-neutrals-300  border-neutrals-100 hover:bg-primary-50 cursor-pointer w-1376 h-72">
                     <TableCell>
                       <div className="flex items-center gap-3">
-                        <img
-                          src={pokemon.image?.thumbnail ?? ""}
-                          alt={pokemon.name.english}
-                          className="w-20 h-20 object-contain rounded-full"
-                        />
+                        <div className="py-9 pl-16 pr-13.5 ">
+                          <div className="bg-neutrals-900 rounded-full w-54 h-54 overflow-hidden flex items-center justify-center">
+                            <img
+                              src={pokemon.image?.thumbnail ?? ""}
+                              alt={pokemon.name.english}
+                              className="  object-cover w-44 h-44"
+                            />
+                          </div>
+                        </div>
                         <span className="text-headingMdRegular font-mulish">
                           {pokemon.name.english}
                         </span>
                       </div>
                     </TableCell>
                     <TableCell className="text-bodyRegular font-mulish">
-                      {pokemon.id}
+                      #{String(pokemon.id).padStart(4, "0")}
                     </TableCell>
                     <TooltipProvider>
                       <Tooltip>
                         <TooltipTrigger asChild>
-                          <TableCell className="max-w-[400px] truncate font-mulish text-bodyRegular">
+                          <TableCell className="max-w-[400px] truncate font-mulish text-bodyRegular pr-40">
                             {pokemon.description}
                           </TableCell>
                         </TooltipTrigger>
-                        <TooltipContent className="w-345 h-full bg-neutrals-1000 text-center text-neutral-100 gap-10 py-5 px-10">
+                        <TooltipContent className="w-345 h-full bg-neutrals-1000 text-center font-mulish text-neutral-100">
                           <p>{pokemon.description}</p>
                         </TooltipContent>
                       </Tooltip>
@@ -117,7 +122,7 @@ function PokemonTable({ data }: PokemonTableProps) {
                       {pokemon.base.Attack}
                     </TableCell>
                     <TableCell className="font-mulish text-bodyRegular">
-                      {pokemon.base.HP}
+                      {pokemon.base.HP} HP
                     </TableCell>
                   </TableRow>
                 </DialogTrigger>
@@ -126,8 +131,8 @@ function PokemonTable({ data }: PokemonTableProps) {
           </TableBody>
 
           <TableFooter>
-            <div className="flex justify-between items-center px-2 py-2 text-sm text-muted-foreground border-t border-neutrals-100">
-              <div className="flex items-center text-neutrals-600 gap-2">
+            <div className="flex justify-between items-center py-10 px-10  rounded-b-k text-sm text-muted-foreground bg-neutrals-white ">
+              <div className="flex items-center text-neutrals-650 gap-14">
                 <span>Rows per page:</span>
                 <select
                   value={itemsPerPage}
@@ -135,7 +140,7 @@ function PokemonTable({ data }: PokemonTableProps) {
                     setItemsPerPage(Number(e.target.value));
                     setCurrentPage(1);
                   }}
-                  className="border border-neutrals-200 rounded px-2 py-1 text-sm"
+                  className=" rounded px-2 py-1 text-sm"
                 >
                   {pageSizeOptions.map((size) => (
                     <option key={size} value={size}>
@@ -145,7 +150,7 @@ function PokemonTable({ data }: PokemonTableProps) {
                 </select>
               </div>
 
-              <div className="flex gap-4 text-neutrals-600">
+              <div className="flex text-neutrals-650 gap-32">
                 <span className="text-muted-foreground text-sm">
                   {displayRangeText}
                 </span>
@@ -155,16 +160,16 @@ function PokemonTable({ data }: PokemonTableProps) {
                   disabled={currentPage === 1}
                   className="disabled:opacity-50"
                 >
-                  &lt;
+                  <ChevronLeft size={16} />
                 </button>
                 <button
                   onClick={() =>
                     setCurrentPage((p) => Math.min(p + 1, totalPages))
                   }
                   disabled={currentPage === totalPages}
-                  className="disabled:opacity-50"
+                  className="disabled:opacity-50 gap-20"
                 >
-                  &gt;
+                  <ChevronRight size={16} />
                 </button>
               </div>
             </div>
