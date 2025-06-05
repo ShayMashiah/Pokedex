@@ -163,9 +163,9 @@ function DialogContent({
             </div>
           </>
         ) : variant === Variant.MyPokemons && pokemons ? (
-          <div className="space-y-6">
-            <DialogHeader className="text-center">
-              <DialogTitle className="text-headingLgMedium text-neutrals-500">
+          <>
+            <DialogHeader className="items-start border-neutrals-light font-mulish">
+              <DialogTitle className="font-mulish !text-headingLgMedium text-neutrals-500 py-24 px-10">
                 Choose the Pokemon to battle with
               </DialogTitle>
             </DialogHeader>
@@ -177,17 +177,19 @@ function DialogContent({
                   onClick={() => onSelectPokemon?.(p.id)}
                   className="rounded-full border-2 mt-16 border-transparent hover:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-500 transition"
                 >
-                  <img
-                    src={p.image}
-                    alt={p.name}
-                    className="w-102.35 h-102.35 rounded-full"
-                  />
+                  <div className="bg-neutrals-900 rounded-full">
+                    <img
+                      src={p.image}
+                      alt={p.name}
+                      className="w-102.35 h-102.35 rounded-full"
+                    />
+                  </div>
                 </button>
               ))}
             </div>
 
             {remainingItems.length > 0 && (
-              <div className="flex justify-center gap-76 mt-4">
+              <div className="flex justify-center gap-76 pt-10">
                 {remainingItems.map((p) => (
                   <button
                     key={p.id}
@@ -204,12 +206,14 @@ function DialogContent({
               </div>
             )}
 
-            <DialogFooter className="flex justify-center border-t border-neutrals-light pt-16">
-              <Button variant="primary" size="xlg" onClick={onStartBattle}>
-                Start battle
-              </Button>
-            </DialogFooter>
-          </div>
+            <div className="border-t border-neutrals-light mt-24">
+              <DialogFooter className="flex justify-center py-16 px-16">
+                <Button variant="primary" size="xlg" onClick={onStartBattle}>
+                  Start battle
+                </Button>
+              </DialogFooter>
+            </div>
+          </>
         ) : (
           children
         )}
@@ -253,7 +257,7 @@ function DialogTitle({
   return (
     <DialogPrimitive.Title
       data-slot="dialog-title"
-      className={cn("text-lg leading-none font-semibold", className)}
+      className={cn(" leading-none", className)}
       {...props}
     />
   );
