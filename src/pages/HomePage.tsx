@@ -82,37 +82,39 @@ function HomePage() {
 
   return (
     <div className="bg-neutrals-100 min-h-screen">
-      <PokemonNavbar activeItem={activeTab} onChange={setActiveTab}/>
+      <PokemonNavbar activeItem={activeTab} onChange={setActiveTab} />
 
-      <main className="max-w-1360 mx-auto px-10">
-        <h1 className="text-headingLgMedium font-mulish text-neutrals-400 mt-32 mb-10">
-          {TAB_LABELS[activeTab]}
-        </h1>
+      <main className="max-w-1440 mx-auto px-10">
+        <div className="max-w-1376 mx-auto">
+          <h1 className="text-headingLgMedium font-mulish text-neutrals-400 mt-32 mb-10">
+            {TAB_LABELS[activeTab]}
+          </h1>
 
-        <div className="flex items-center justify-between mt-6 mb-16">
-          <Input
-            placeholder="Search Pokemon"
-            onChange={onInputChange}
-            value={searchTerm}
-            className="font-roboto text-bodyRegular"
-          />
-          <DropdownMenu open={isOpen} onOpenChange={setIsOpen}>
-            <DropdownMenuTrigger isOpen={isOpen}>
-              {selectedOption}
-            </DropdownMenuTrigger>
-            <DropdownMenuContent>
-              {SORT_OPTIONS.map((option) => (
-                <DropdownMenuItem
-                  key={option.value}
-                  onSelect={() => handleSelect(option.value)}
-                >
-                  {option.label}
-                </DropdownMenuItem>
-              ))}
-            </DropdownMenuContent>
-          </DropdownMenu>
+          <div className="flex items-center justify-between mt-6 mb-16">
+            <Input
+              placeholder="Search Pokemon"
+              onChange={onInputChange}
+              value={searchTerm}
+              className="font-roboto text-bodyRegular"
+            />
+            <DropdownMenu open={isOpen} onOpenChange={setIsOpen}>
+              <DropdownMenuTrigger isOpen={isOpen}>
+                {selectedOption}
+              </DropdownMenuTrigger>
+              <DropdownMenuContent>
+                {SORT_OPTIONS.map((option) => (
+                  <DropdownMenuItem
+                    key={option.value}
+                    onSelect={() => handleSelect(option.value)}
+                  >
+                    {option.label}
+                  </DropdownMenuItem>
+                ))}
+              </DropdownMenuContent>
+            </DropdownMenu>
+          </div>
         </div>
-        <PokemonTable data={pokemonData} />
+        <PokemonTable key={activeTab} data={pokemonData} />
       </main>
     </div>
   );
