@@ -56,9 +56,9 @@ function PokemonTable({ data }: PokemonTableProps) {
   return (
     <div className="max-w-1376 mx-auto p-4">
       <Dialog>
-        <Table className="rounded-k overflow-hidden border border-neutrals-200">
+        <Table className="rounded-xl overflow-hidden w-1376 border border-neutrals-200">
           <TableHeader>
-            <TableRow className="bg-primary-50 border border-naturals-100 ">
+            <TableRow className="bg-primary-50 border border-naturals-100 font-mulish text-bodyBold">
               <TableHead className="w-408 h-48 pt-4 pl-66 ">
                 Pokemon name
               </TableHead>
@@ -89,12 +89,12 @@ function PokemonTable({ data }: PokemonTableProps) {
                   <TableRow className="bg-neutrals-white text-neutrals-300  border-neutrals-100 hover:bg-primary-50 cursor-pointer w-1376 h-72">
                     <TableCell>
                       <div className="flex items-center gap-3">
-                        <div className="py-9 pl-16 pr-13.5 w-54 h-54">
-                          <div className="bg-neutrals-900 rounded-xxl">
+                        <div className="py-9 pl-16 pr-13.5 ">
+                          <div className="bg-neutrals-900 rounded-full w-54 h-54 overflow-hidden flex items-center justify-center">
                             <img
                               src={pokemon.image?.thumbnail ?? ""}
                               alt={pokemon.name.english}
-                              className=" object-contain rounded-full"
+                              className="  object-cover w-44 h-44"
                             />
                           </div>
                         </div>
@@ -109,7 +109,7 @@ function PokemonTable({ data }: PokemonTableProps) {
                     <TooltipProvider>
                       <Tooltip>
                         <TooltipTrigger asChild>
-                          <TableCell className="max-w-[400px] truncate font-mulish text-bodyRegular">
+                          <TableCell className="max-w-[400px] truncate font-mulish text-bodyRegular pr-40">
                             {pokemon.description}
                           </TableCell>
                         </TooltipTrigger>
@@ -132,7 +132,7 @@ function PokemonTable({ data }: PokemonTableProps) {
 
           <TableFooter>
             <div className="flex justify-between items-center py-10 px-10  rounded-b-k text-sm text-muted-foreground bg-neutrals-white ">
-              <div className="flex items-center text-neutrals-600 gap-2">
+              <div className="flex items-center text-neutrals-650 gap-14">
                 <span>Rows per page:</span>
                 <select
                   value={itemsPerPage}
@@ -150,7 +150,7 @@ function PokemonTable({ data }: PokemonTableProps) {
                 </select>
               </div>
 
-              <div className="flex text-neutrals-600 gap-32">
+              <div className="flex text-neutrals-650 gap-32">
                 <span className="text-muted-foreground text-sm">
                   {displayRangeText}
                 </span>
