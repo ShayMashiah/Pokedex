@@ -81,7 +81,7 @@ function HomePage() {
   };
 
   return (
-    <div className="bg-neutrals-100 min-h-screen">
+    <div className="bg-neutrals-100 max-h-1121 h-1121">
       <PokemonNavbar activeItem={activeTab} onChange={setActiveTab} />
 
       <main className="max-w-1440 mx-auto px-10">
