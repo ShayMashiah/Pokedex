@@ -14,6 +14,7 @@ export interface CustomDialogContentProps
   variant?: Variant;
   pokemon?: { id: number };
   pokemons?: PokemonModal[];
+
 }
 
 
@@ -29,6 +30,7 @@ export interface PokemonModal {
   id: number;
   name: string;
   image: string;
+  hires?: string;
   description?: string;
   height?: string;
   weight?: string;
@@ -66,3 +68,41 @@ export const SortOption = {
 } as const;
 
 export type SortOption = (typeof SortOption)[keyof typeof SortOption];
+
+
+export interface Pokemon  {
+  id: number;
+  name: {
+    english: string;
+    japanese?: string;
+    chinese?: string;
+    french?: string;
+  };
+  type: string[];
+  base: {
+    HP: number;
+    Attack: number;
+    Defense: number;
+    "Sp. Attack": number;
+    "Sp. Defense": number;
+    Speed: number;
+  };
+  species?: string;
+  description?: string;
+  evolution?: {
+    prev?: [string, string];
+    next?: [string, string][];
+  };
+  profile?: {
+    height?: string;
+    weight?: string;
+    egg?: string[];
+    ability?: [[string, string]];
+    gender: string;
+  };
+  image: {
+    sprite: string;
+    thumbnail: string;
+    hires?: string;
+  };
+};
