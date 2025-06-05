@@ -105,65 +105,67 @@ function DialogContent({
         {...props}
       >
         {variant === Variant.PokeInfo && selectedPokemonModal ? (
-          <div className="space-y-6">
-            <div className="text-start text-muted-foreground text-subheadingRegular text-neutral-200 w-48 h-26">
-              #{String(selectedPokemonModal.id).padStart(4, "0")}
-            </div>
-            <DialogHeader className="items-start border-b border-neutrals-light pb-4 font-mulish">
-              <DialogTitle className="text-pokemonModalTitle h-26 w-428 text-neutrals-500 font-mulish">
+          <>
+            <DialogHeader className="items-start border-neutrals-light font-mulish">
+              <div className="text-start text-muted-foreground text-subheadingRegular text-neutral-200 w-48 h-26">
+                #{String(selectedPokemonModal.id).padStart(4, "0")}
+              </div>
+              <DialogTitle className="text-pokemonModalTitle h-26 text-neutrals-500 font-mulish">
                 {selectedPokemonModal.name}
               </DialogTitle>
             </DialogHeader>
-            <img
-              src={selectedPokemonModal.image}
-              alt={selectedPokemonModal.name}
-              className="mx-auto w-158 h-158 pt-10 pb-10"
-            />
-            <div className="bg-neutrals-900 p-4 space-y-4 font-mulish text-sm text-neutrals-500">
-              <p>{selectedPokemonModal.description}</p>
-
-              <hr className="border-t border-[#A8AEB5]" />
-
-              <div className="grid grid-cols-4 gap-24">
-                <div className="flex flex-col  gap-6">
-                  <span className="text-pokemonModalFields text-neutrals-400 w-36 h-18 font-mulish">
-                    Height
-                  </span>
-                  <span className="text-pokemonModalStats font-mulish text-neutrals-500 ">
-                    {selectedPokemonModal.height}
-                  </span>
-                </div>
-                <div className="flex flex-col gap-6">
-                  <span className="text-pokemonModalFields text-neutrals-400 w-36 h-18 font-mulish">
-                    Weight
-                  </span>
-                  <span className="text-pokemonModalStats text-neutrals-500 font-mulish">
-                    {selectedPokemonModal.weight}
-                  </span>
-                </div>
-                <div className="flex flex-col gap-6">
-                  <span className="text-pokemonModalFields text-neutrals-400 w-36 h-18 font-mulish">
-                    Category
-                  </span>
-                  <span className="text-pokemonModalStats text-neutrals-500 font-mulish">
-                    {selectedPokemonModal.category}
-                  </span>
-                </div>
-                <div className="flex flex-col gap-6">
-                  <span className="text-pokemonModalFields text-neutrals-400 w-36 h-18 font-mulish">
-                    Abilities
-                  </span>
-                  <span className="text-pokemonModalStats  text-neutrals-500 font-mulish">
-                    {selectedPokemonModal.abilities}
-                  </span>
+            <div className="w-435 py-16 px-16">
+              <img
+                src={selectedPokemonModal.image}
+                alt={selectedPokemonModal.name}
+                className="mx-auto w-158 h-158 pt-10 pb-10"
+              />
+            </div>
+            <div className="px-16 pb-16">
+              <div className="bg-neutrals-900  space-y-4 max-w-440 font-mulish text-sm text-neutrals-500">
+                <p className="p-24">{selectedPokemonModal.description}</p>
+                <hr className="border-t border-neutrals-200" />
+                <div className="grid grid-cols-4 gap-24 p-24">
+                  <div className="flex flex-col  gap-6">
+                    <span className="text-pokemonModalFields text-neutrals-400 w-36 h-18 font-mulish">
+                      Height
+                    </span>
+                    <span className="text-pokemonModalStats font-mulish text-neutrals-500 ">
+                      {selectedPokemonModal.height}
+                    </span>
+                  </div>
+                  <div className="flex flex-col gap-6">
+                    <span className="text-pokemonModalFields text-neutrals-400 w-36 h-18 font-mulish">
+                      Weight
+                    </span>
+                    <span className="text-pokemonModalStats text-neutrals-500 font-mulish">
+                      {selectedPokemonModal.weight}
+                    </span>
+                  </div>
+                  <div className="flex flex-col gap-6">
+                    <span className="text-pokemonModalFields text-neutrals-400 w-36 h-18 font-mulish">
+                      Category
+                    </span>
+                    <span className="text-pokemonModalStats text-neutrals-500 font-mulish">
+                      {selectedPokemonModal.category}
+                    </span>
+                  </div>
+                  <div className="flex flex-col gap-6">
+                    <span className="text-pokemonModalFields text-neutrals-400 w-36 h-18 font-mulish">
+                      Abilities
+                    </span>
+                    <span className="text-pokemonModalStats  text-neutrals-500 font-mulish">
+                      {selectedPokemonModal.abilities}
+                    </span>
+                  </div>
                 </div>
               </div>
             </div>
-          </div>
+          </>
         ) : variant === Variant.MyPokemons && pokemons ? (
-          <div className="space-y-6">
-            <DialogHeader className="text-center">
-              <DialogTitle className="text-headingLgMedium text-neutrals-500">
+          <>
+            <DialogHeader className="items-start border-neutrals-light font-mulish">
+              <DialogTitle className="font-mulish !text-headingLgMedium text-neutrals-500 py-24 px-10">
                 Choose the Pokemon to battle with
               </DialogTitle>
             </DialogHeader>
@@ -175,17 +177,19 @@ function DialogContent({
                   onClick={() => onSelectPokemon?.(p.id)}
                   className="rounded-full border-2 mt-16 border-transparent hover:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-500 transition"
                 >
-                  <img
-                    src={p.image}
-                    alt={p.name}
-                    className="w-102.35 h-102.35 rounded-full"
-                  />
+                  <div className="bg-neutrals-900 rounded-full">
+                    <img
+                      src={p.image}
+                      alt={p.name}
+                      className="w-102.35 h-102.35 rounded-full"
+                    />
+                  </div>
                 </button>
               ))}
             </div>
 
             {remainingItems.length > 0 && (
-              <div className="flex justify-center gap-76 mt-4">
+              <div className="flex justify-center gap-76 pt-10">
                 {remainingItems.map((p) => (
                   <button
                     key={p.id}
@@ -202,17 +206,19 @@ function DialogContent({
               </div>
             )}
 
-            <DialogFooter className="flex justify-center border-t border-neutrals-light pt-16">
-              <Button variant="primary" size="xlg" onClick={onStartBattle}>
-                Start battle
-              </Button>
-            </DialogFooter>
-          </div>
+            <div className="border-t border-neutrals-light mt-24">
+              <DialogFooter className="flex justify-center py-16 px-16">
+                <Button variant="primary" size="xlg" onClick={onStartBattle}>
+                  Start battle
+                </Button>
+              </DialogFooter>
+            </div>
+          </>
         ) : (
           children
         )}
 
-        <DialogPrimitive.Close className="absolute top-4 right-4 opacity-70 transition-opacity hover:opacity-100 focus:outline-none">
+        <DialogPrimitive.Close className="absolute top-12 right-24 opacity-70 transition-opacity hover:opacity-100 focus:outline-none">
           <XIcon />
           <span className="sr-only">Close</span>
         </DialogPrimitive.Close>
@@ -225,7 +231,10 @@ function DialogHeader({ className, ...props }: React.ComponentProps<"div">) {
   return (
     <div
       data-slot="dialog-header"
-      className={cn("flex flex-col gap-2 text-center sm:text-left", className)}
+      className={cn(
+        "flex flex-col py-6 px-18 text-center sm:text-left",
+        className
+      )}
       {...props}
     />
   );
@@ -248,7 +257,7 @@ function DialogTitle({
   return (
     <DialogPrimitive.Title
       data-slot="dialog-title"
-      className={cn("text-lg leading-none font-semibold", className)}
+      className={cn(" leading-none", className)}
       {...props}
     />
   );
