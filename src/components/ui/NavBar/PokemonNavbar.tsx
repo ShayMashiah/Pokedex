@@ -17,6 +17,7 @@ function PokemonNavbar({ activeItem, onChange }: PokemonNavbarProps) {
     id: p.id,
     name: p.name.english,
     image: p.image.thumbnail,
+    hires: p.image.hires
   }));
 
   return (
@@ -62,7 +63,6 @@ function PokemonNavbar({ activeItem, onChange }: PokemonNavbarProps) {
           <DialogContent
             variant={Variant.MyPokemons}
             pokemons={myPokemons}
-            onSelectPokemon={(id) => alert("Selected Pokémon ID: " + id)}
           />
         </Dialog>
       </div>

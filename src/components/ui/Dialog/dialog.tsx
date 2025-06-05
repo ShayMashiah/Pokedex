@@ -6,6 +6,8 @@ import { Button } from "../Button/button";
 import { Variant, type PokemonModal } from "../../../lib/types";
 import type { CustomDialogContentProps } from "../../../lib/types";
 import pokemonData from "../../../data/pokemon_.json";
+import { useNavigate } from "react-router-dom";
+import { useState } from "react";
 
 function Dialog({
   ...props
@@ -53,13 +55,26 @@ function DialogContent({
   variant,
   pokemon,
   pokemons,
-  onSelectPokemon,
-  onStartBattle,
   ...props
 }: CustomDialogContentProps) {
+  const navigate = useNavigate();
   const perRow = 3;
   let fullItems: typeof pokemons = [];
   let remainingItems: typeof pokemons = [];
+
+  const [selectedPokemonForBattle, setselectedPokemonForBattle] = useState<
+    number | null
+  >(null);
+
+  const handleStartBattle = () => {
+    const selected = pokemons?.find((p) => p.id === selectedPokemonForBattle);
+    if (!selected) return;
+    navigate("/prebattle", { state: { selectedPokemon: selected} });
+  };
+
+  const onSelectPokemon = (id: number) => {
+    setselectedPokemonForBattle(id);
+  };
 
   if (variant === Variant.MyPokemons && pokemons) {
     const fullRows = Math.floor(pokemons.length / perRow);
@@ -81,6 +96,7 @@ function DialogContent({
       id: selectedPokemon.id,
       name: selectedPokemon.name.english,
       image: selectedPokemon.image?.thumbnail ?? "",
+      hires: selectedPokemon.image?.hires ?? "",
       description: selectedPokemon.description,
       height: selectedPokemon.profile?.height ?? "Unknown",
       weight: selectedPokemon.profile?.weight ?? "Unknown",
@@ -206,14 +222,12 @@ function DialogContent({
               </div>
             )}
 
-            <div className="border-t border-neutrals-light mt-24">
-              <DialogFooter className="flex justify-center py-16 px-16">
-                <Button variant="primary" size="xlg" onClick={onStartBattle}>
-                  Start battle
-                </Button>
-              </DialogFooter>
-            </div>
-          </>
+            <DialogFooter className="flex justify-center border-t border-neutrals-light pt-16">
+              <Button variant="primary" size="xlg" onClick={handleStartBattle}>
+                Start battle
+              </Button>
+            </DialogFooter>
+          </div>
         ) : (
           children
         )}
