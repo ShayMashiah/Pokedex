@@ -14,6 +14,7 @@ import { Progress } from "../components/ui/ProgressBar/progress";
 import { FightButton } from "../components/ui/Button/FightButton";
 import { motion } from "framer-motion";
 import PokaballImg from "../assets/pokador.png";
+import myPokemonsData from "../data/mypokemons_.json";
 
 function BattlePage() {
   const [isOpen, setIsOpen] = useState(false);
@@ -30,6 +31,7 @@ function BattlePage() {
     selectedPokemon
   );
 
+  const myPokemons = myPokemonsData as Pokemon[];
   const enemyDead = enemyHp === 0;
   const playerDead = myHp === 0;
 
@@ -73,7 +75,30 @@ function BattlePage() {
             {fightingPokemon?.name || "Select Pokemon"}
           </DropdownMenuTrigger>
           <DropdownMenuContent>
-            <DropdownMenuItem></DropdownMenuItem>
+            {myPokemons.map((pokemon) => (
+              <DropdownMenuItem
+                key={pokemon.id}
+                onSelect={() => {
+                  const converted = {
+                    id: pokemon.id,
+                    image: pokemon.image.thumbnail,
+                    name: pokemon.name.english,
+                    type: pokemon.type,
+                    attack: pokemon.base.Attack,
+                    defense: pokemon.base.Defense,
+                    speed: pokemon.base.Speed,
+                    hp: pokemon.base.HP,
+                    hires: pokemon.image.hires,
+                  };
+
+                  setFightingPokemon(converted);
+                  setMyHp(converted.hp);
+                  setIsOpen(false);
+                }}
+              >
+                {pokemon.name.english}
+              </DropdownMenuItem>
+            ))}
           </DropdownMenuContent>
         </DropdownMenu>
       </div>
@@ -138,7 +163,7 @@ function BattlePage() {
           <motion.img
             src={PokaballImg}
             alt="Pokeball"
-            className="absolute top-101 right-270 w-206 h-206"
+            className="absolute top-101 right-295 w-206 h-206"
             initial={{ scale: 0, opacity: 0 }}
             animate={{ scale: 1, opacity: 1, transition: { delay: 0.6 } }}
           />
