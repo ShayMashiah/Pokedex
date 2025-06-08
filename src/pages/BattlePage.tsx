@@ -278,7 +278,7 @@ function BattlePage() {
             onCatchFail={() => {
               setTriedToCatch(true);
             }}
-            disabled={!playerTurn || isCaught || isGameOver || myHp === 0}
+            disabled={!playerTurn || isCaught || isGameOver || playerDead}
           />
         </div>
       </div>
