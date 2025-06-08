@@ -7,7 +7,7 @@ import rightBackground from "@/assets/bluebg.jpg";
 import leftBackground from "@/assets/purplebg.jpg";
 
 function PreBattlePage() {
-  const [rivalPokemon, setRivalPokemon] = useState<any>(null);
+  const [rivalPokemon, setRivalPokemon] = useState<Pokemon | null >(null);
   const navigate = useNavigate();
 
   const location = useLocation();
