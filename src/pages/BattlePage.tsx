@@ -23,22 +23,25 @@ function BattlePage() {
   const [isGameOver, setIsGameOver] = useState(false);
   const [isFainted, setIsFainted] = useState(false);
   const [triedToCatch, setTriedToCatch] = useState(false);
+  const [playerDead, setPlayerDead] = useState(false);
 
   const location = useLocation();
   const { selectedPokemon } = location.state || {};
   const { rivalPokemon } = location.state || {};
   const [enemyHp, setEnemyHp] = useState<number>(rivalPokemon.base.HP);
   const [myHp, setMyHp] = useState<number>(selectedPokemon.hp);
-  const [fightingPokemon, setFightingPokemon] = useState<PokemonModal | null>(
-    selectedPokemon
-  );
+  const [fightingPokemon, setFightingPokemon] =
+    useState<PokemonModal>(selectedPokemon);
 
   const messageColor = isFainted
     ? "text-extendedPalette-error-red"
     : "text-neutrals-500";
   const myPokemons = myPokemonsData as Pokemon[];
   const enemyDead = enemyHp === 0;
-  const playerDead = myHp === 0;
+
+  useEffect(() => {
+    setPlayerDead(myHp === 0);
+  }, [myHp, fightingPokemon.id]);
 
   useEffect(() => {
     if ((enemyHp === 0 || myHp === 0) && !isFainted) {
@@ -87,7 +90,7 @@ function BattlePage() {
     enemyHp === rivalPokemon.base.HP &&
     myHp === selectedPokemon.hp
   ) {
-    turnMessage = `${selectedPokemon.name} starts the fight!`;
+    turnMessage = `${fightingPokemon.name} starts the fight!`;
   } else if (isCaught) {
     turnMessage = `You caught ${rivalPokemon.name.english}!`;
   } else if (
@@ -101,10 +104,10 @@ function BattlePage() {
   } else if (enemyHp === 0) {
     turnMessage = `Critical hit! ${rivalPokemon.name.english} fainted!`;
   } else if (myHp === 0) {
-    turnMessage = `Critical hit! ${selectedPokemon.name} fainted!`;
+    turnMessage = `Critical hit! ${fightingPokemon.name} fainted!`;
   } else {
     const currentPokemonName = playerTurn
-      ? selectedPokemon.name
+      ? fightingPokemon.name
       : rivalPokemon.name.english;
     turnMessage = `${currentPokemonName} attacks!`;
   }
@@ -148,10 +151,12 @@ function BattlePage() {
                     hp: pokemon.base.HP,
                     hires: pokemon.image.hires,
                   };
-
+                  setIsOpen(false);
+                  setIsFainted(false);
+                  setIsGameOver(false);
+                  setPlayerDead(false);
                   setFightingPokemon(converted);
                   setMyHp(converted.hp);
-                  setIsOpen(false);
                 }}
               >
                 {pokemon.name.english}
@@ -179,7 +184,8 @@ function BattlePage() {
         />
 
         <motion.img
-          src={selectedPokemon.hires}
+          key={fightingPokemon.id}
+          src={fightingPokemon.hires}
           alt="Pokemon Left"
           className="absolute bottom-158 left-234 w-235 h-239"
           initial={{ scale: 1 }}
@@ -196,10 +202,10 @@ function BattlePage() {
         />
 
         <Progress
-          name={selectedPokemon.name}
-          speed={selectedPokemon.speed}
+          name={fightingPokemon.name}
+          speed={fightingPokemon.speed ?? 0}
           currentHP={myHp}
-          maxHP={selectedPokemon.hp}
+          maxHP={fightingPokemon.hp ?? 0}
           isTurn={playerTurn}
           isFainted={playerDead}
           className="absolute bottom-24 left-24"
