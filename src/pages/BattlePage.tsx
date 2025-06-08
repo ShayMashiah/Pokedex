@@ -9,18 +9,23 @@ import {
 import { useState } from "react";
 import type { Pokemon } from "@/lib/types";
 import { useLocation } from "react-router-dom";
+import BattleBackground from "@/assets/battlebg.png"; 
 
 function BattlePage() {
   const [isOpen, setIsOpen] = useState(false);
 
   const location = useLocation();
   const { selectedPokemon } = location.state || {};
+  const { rivalPokemon } = location.state || {};
+
+  console.log("Selected Pokemon:", selectedPokemon);
+  console.log("Rival Pokemon:", rivalPokemon);
   const [fightingPokemon, setFightingPokemon] = useState<Pokemon | null>(
     selectedPokemon
   );
 
   return (
-    <div className="bg-neutrals-100 max-w-1440 mx-auto max-h-1024">
+    <div className="bg-neutrals-100  mx-auto max-h-1024">
       <PokemonNavbar
         activeItem={Tab.Null}
         onChange={() => console.log("Battle mode")}
@@ -48,11 +53,23 @@ function BattlePage() {
         </DropdownMenu>
       </div>
 
-      <div className="relative flex max-w-1360 mx-auto h-750  overflow-hidden">
+      <div className="relative flex max-w-1360 mx-auto h-750 overflow-hidden">
         <img
-          src="src/assets/battlebg.png"
-          alt="Left background"
+          src={BattleBackground}
+          alt="Background"
           className="w-full h-full object-cover"
+        />
+
+        <img
+          src={selectedPokemon.hires}
+          alt="Pokemon Left"
+          className="absolute bottom-158 left-234 w-64 h-auto"
+        />
+
+        <img
+          src={rivalPokemon.image?.hires}
+          alt="Pokemon Right"
+          className="absolute top-101 right-270 w-64 h-auto"
         />
       </div>
     </div>
