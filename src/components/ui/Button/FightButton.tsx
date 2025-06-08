@@ -84,7 +84,6 @@ function FightButton({
       style={bgStyle}
       className={clsx(
         "w-140 h-140 rounded-full flex flex-col justify-center items-center shadow-md border-[3px] border-black cursor-pointe hover:border-[3px] hover:border-primary-600",
-        disabled && "opacity-50 cursor-not-allowed",
         className
       )}
     >

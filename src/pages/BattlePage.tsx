@@ -24,6 +24,7 @@ function BattlePage() {
   const [isFainted, setIsFainted] = useState(false);
   const [triedToCatch, setTriedToCatch] = useState(false);
   const [playerDead, setPlayerDead] = useState(false);
+  const [enemyDead, setEnemyDead] = useState(false);
 
   const location = useLocation();
   const { selectedPokemon } = location.state || {};
@@ -37,11 +38,14 @@ function BattlePage() {
     ? "text-extendedPalette-error-red"
     : "text-neutrals-500";
   const myPokemons = myPokemonsData as Pokemon[];
-  const enemyDead = enemyHp === 0;
 
   useEffect(() => {
     setPlayerDead(myHp === 0);
   }, [myHp, fightingPokemon.id]);
+
+  useEffect(() => {
+    setEnemyDead(enemyHp === 0);
+  }, [enemyHp, rivalPokemon.id]);
 
   useEffect(() => {
     if ((enemyHp === 0 || myHp === 0) && !isFainted) {
@@ -212,6 +216,7 @@ function BattlePage() {
         />
 
         <motion.img
+          key={rivalPokemon.id}
           src={rivalPokemon.image?.hires}
           alt="Pokemon Right"
           className="absolute top-101 right-270 w-235 h-239"
@@ -255,38 +260,38 @@ function BattlePage() {
           className="absolute top-24 right-24"
         />
 
-        <div className="absolute bottom-24 right-24  flex gap-24 p-4">
-          <FightButton
-            type="attack"
-            attackerAttack={selectedPokemon.attack}
-            defenderDefense={rivalPokemon.base.Defense}
-            onAttack={(damage) => {
-              const newHp = Math.max(enemyHp - damage, 0);
-              setEnemyHp(newHp);
+        {playerTurn && !playerDead && !enemyDead && !isGameOver && (
+          <div className="absolute bottom-24 right-24 flex gap-24 p-4">
+            <FightButton
+              type="attack"
+              attackerAttack={fightingPokemon.attack}
+              defenderDefense={rivalPokemon.base.Defense}
+              onAttack={(damage) => {
+                const newHp = Math.max(enemyHp - damage, 0);
+                setEnemyHp(newHp);
 
-              if (newHp === 0) {
+                if (newHp === 0) {
+                  setIsGameOver(true);
+                  return;
+                }
+
+                setPlayerTurn(false);
+                enemyAttack();
+              }}
+            />
+            <FightButton
+              type="catch"
+              targetHp={enemyHp}
+              onCatchSuccess={() => {
+                setIsCaught(true);
                 setIsGameOver(true);
-                return;
-              }
-
-              setPlayerTurn(false);
-              enemyAttack();
-            }}
-            disabled={!playerTurn || isGameOver || myHp === 0}
-          />
-          <FightButton
-            type="catch"
-            targetHp={enemyHp}
-            onCatchSuccess={() => {
-              setIsCaught(true);
-              setIsGameOver(true);
-            }}
-            onCatchFail={() => {
-              setTriedToCatch(true);
-            }}
-            disabled={!playerTurn || isCaught || isGameOver || playerDead}
-          />
-        </div>
+              }}
+              onCatchFail={() => {
+                setTriedToCatch(true);
+              }}
+            />
+          </div>
+        )}
       </div>
     </div>
   );
