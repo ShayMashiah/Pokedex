@@ -21,6 +21,8 @@ function PokemonNavbar({ activeItem, onChange }: PokemonNavbarProps) {
     hires: p.image.hires,
     speed: p.base.Speed,
     hp: p.base.HP,
+    attack: p.base.Attack,
+    defense: p.base.Defense,
   }));
 
   return (

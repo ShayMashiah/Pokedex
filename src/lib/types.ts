@@ -27,11 +27,18 @@ export interface BattleBarProps  {
 };
 
 
-export interface FightButtonProps {
+export interface FightButtonProps  {
   type: "attack" | "catch";
   className?: string;
   targetHp?: number;
-}
+  attackerAttack?: number;
+  defenderDefense?: number;
+  onAttack?: (damage: number) => void;
+  onCatchSuccess?: () => void;
+  disabled?: boolean; 
+
+};
+
 
 
 export interface PokemonRow {
@@ -49,6 +56,8 @@ export interface PokemonModal {
   hires?: string;
   speed?: number;
   hp?: number;
+  attack?: number;
+  defense?: number;
   description?: string;
   height?: string;
   weight?: string;

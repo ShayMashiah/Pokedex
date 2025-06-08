@@ -26,20 +26,20 @@ function Progress({
       )}
     >
       <div className="text-headingLgBold font-mulish py-8 px-8.5">{name}</div>
-
-      <ProgressPrimitive.Root
-        value={percentage}
-        className="relative h-14 pl-8 pr-8  overflow-hidden"
-      >
-        <ProgressPrimitive.Indicator
-          className={cn(
-            "h-full transition-transform rounded-xs border border-primary-500",
-            getIndicatorColor(percentage)
-          )}
-          style={{ transform: `translateX(-${100 - percentage}%)` }}
-        />
-      </ProgressPrimitive.Root>
-
+      <div className="px-8">
+        <ProgressPrimitive.Root
+          value={percentage}
+          className="relative h-14 max-w-270 bg-black overflow-hidden "
+        >
+          <ProgressPrimitive.Indicator
+            className={cn(
+              "h-full transition-transform rounded-xs border border-primary-500",
+              getIndicatorColor(percentage)
+            )}
+            style={{ transform: `translateX(-${100 - percentage}%)` }}
+          />
+        </ProgressPrimitive.Root>
+      </div>
       <div className="flex justify-between pr-8 pl-8 pb-8 ">
         <span className="opacity-90 text-subheadingMedium font-mulish">
           Speed. <span className="text-headingMdBold font-mulish">{speed}</span>

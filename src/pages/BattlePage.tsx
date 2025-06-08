@@ -12,20 +12,42 @@ import { useLocation } from "react-router-dom";
 import BattleBackground from "@/assets/battlebg.png";
 import { Progress } from "../components/ui/ProgressBar/progress";
 import { FightButton } from "../components/ui/Button/FightButton";
-
+import { motion } from "framer-motion";
+import PokaballImg from "../assets/pokador.png";
 
 function BattlePage() {
   const [isOpen, setIsOpen] = useState(false);
+  const [isCaught, setIsCaught] = useState(false);
+  const [playerTurn, setPlayerTurn] = useState(true);
+  const [isGameOver, setIsGameOver] = useState(false);
 
   const location = useLocation();
   const { selectedPokemon } = location.state || {};
   const { rivalPokemon } = location.state || {};
-
+  const [enemyHp, setEnemyHp] = useState<number>(rivalPokemon.base.HP);
+  const [myHp, setMyHp] = useState<number>(selectedPokemon.hp);
   const [fightingPokemon, setFightingPokemon] = useState<PokemonModal | null>(
     selectedPokemon
   );
 
-  console.log("Fighting Pokemon:", fightingPokemon);
+  const enemyDead = enemyHp === 0;
+  const playerDead = myHp === 0;
+
+  function enemyAttack() {
+    const enemyAttack = rivalPokemon.base.Attack;
+    const playerDefense = selectedPokemon.defense;
+
+    const damage =
+      Math.floor(
+        (((2 * 50) / 5 + 2) * 60 * (enemyAttack / playerDefense)) / 50 + 2
+      ) *
+      (Math.random() * (1 - 0.85) + 0.85);
+
+    setTimeout(() => {
+      setMyHp((prev) => Math.max(prev - Math.floor(damage), 0));
+      setPlayerTurn(true);
+    }, 1000);
+  }
 
   return (
     <div className="bg-neutrals-100 h-screen">
@@ -63,28 +85,69 @@ function BattlePage() {
           className="w-full h-full object-cover"
         />
 
-        <img
+        <motion.img
           src={selectedPokemon.hires}
           alt="Pokemon Left"
-          className="absolute bottom-158 left-234 w-64 h-auto"
+          className="absolute bottom-158 left-234 w-235 h-239"
+          initial={{ scale: 1 }}
+          animate={
+            playerDead
+              ? {
+                  rotate: [0, 10, -10, 10, -90],
+                  y: [0, 10, 20, 30, 60],
+                  opacity: [1, 1, 1, 1, 0.7],
+                  transition: { duration: 1 },
+                }
+              : { scale: 1, opacity: 1, y: 0 }
+          }
         />
+
         <Progress
           name={selectedPokemon.name}
           speed={selectedPokemon.speed}
-          currentHP={selectedPokemon.hp}
+          currentHP={myHp}
           maxHP={selectedPokemon.hp}
           className="absolute bottom-24 left-24"
         />
 
-        <img
+        <motion.img
           src={rivalPokemon.image?.hires}
           alt="Pokemon Right"
-          className="absolute top-101 right-270 w-64 h-auto"
+          className="absolute top-101 right-270 w-235 h-239"
+          initial={{ scale: 1 }}
+          animate={
+            isCaught
+              ? {
+                  scale: [1, 0.9, 0.7, 0.5, 0.3],
+                  opacity: [1, 0.8, 0.6, 0.4, 0],
+                  y: [0, -10, -30, -60, -80],
+                  transition: { duration: 0.8 },
+                }
+              : enemyDead
+              ? {
+                  rotate: [0, -10, 10, -10, 90],
+                  y: [0, 10, 20, 30, 60],
+                  opacity: [1, 1, 1, 1, 0.7],
+                  transition: { duration: 1 },
+                }
+              : { scale: 1, opacity: 1, y: 0 }
+          }
         />
+
+        {isCaught && (
+          <motion.img
+            src={PokaballImg}
+            alt="Pokeball"
+            className="absolute top-101 right-270 w-206 h-206"
+            initial={{ scale: 0, opacity: 0 }}
+            animate={{ scale: 1, opacity: 1, transition: { delay: 0.6 } }}
+          />
+        )}
+
         <Progress
           name={rivalPokemon.name.english}
           speed={rivalPokemon.base.Speed}
-          currentHP={rivalPokemon.base.HP}
+          currentHP={enemyHp}
           maxHP={rivalPokemon.base.HP}
           className="absolute top-24 right-24"
         />
@@ -92,8 +155,31 @@ function BattlePage() {
         <div className="absolute bottom-24 right-24  flex gap-24 p-4">
           <FightButton
             type="attack"
+            attackerAttack={selectedPokemon.attack}
+            defenderDefense={rivalPokemon.base.Defense}
+            onAttack={(damage) => {
+              const newHp = Math.max(enemyHp - damage, 0);
+              setEnemyHp(newHp);
+
+              if (newHp === 0) {
+                setIsGameOver(true);
+                return;
+              }
+
+              setPlayerTurn(false);
+              enemyAttack();
+            }}
+            disabled={!playerTurn || isGameOver}
           />
-          <FightButton type="catch"  />
+          <FightButton
+            type="catch"
+            targetHp={enemyHp}
+            onCatchSuccess={() => {
+              setIsCaught(true);
+              setIsGameOver(true);
+            }}
+            disabled={!playerTurn || isCaught || isGameOver}
+          />
         </div>
       </div>
     </div>

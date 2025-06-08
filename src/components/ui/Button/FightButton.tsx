@@ -14,7 +14,16 @@ const shakeAnimation = {
   },
 };
 
-function FightButton({ type, className, targetHp }: FightButtonProps) {
+function FightButton({
+  type,
+  className,
+  targetHp,
+  attackerAttack,
+  defenderDefense,
+  onAttack,
+  onCatchSuccess,
+  disabled = false,
+}: FightButtonProps) {
   const isAttack = type === "attack";
   const [isShaking, setIsShaking] = useState(false);
 
@@ -31,12 +40,37 @@ function FightButton({ type, className, targetHp }: FightButtonProps) {
         backgroundColor: colors.neutrals[100],
       };
 
+  function calculateDamage({
+    attackerAttack,
+    defenderDefense,
+    level = 50,
+    power = 60,
+  }: {
+    attackerAttack: number;
+    defenderDefense: number;
+    level?: number;
+    power?: number;
+  }) {
+    const numerator =
+      ((2 * level) / 5 + 2) * power * (attackerAttack / defenderDefense);
+    const baseDamage = numerator / 50 + 2;
+    const randomFactor = Math.random() * (1 - 0.85) + 0.85;
+    return Math.floor(baseDamage * randomFactor);
+  }
+
   const handleClick = () => {
-    if (!isAttack && (targetHp ?? 100) > 33) {
-      // אם מנסים לתפוס פוקימון עם יותר מדי חיים — רק רעידה
-      setIsShaking(true);
-      setTimeout(() => setIsShaking(false), 400);
-      return;
+    if (!isAttack) {
+      if ((targetHp ?? 100) > 33) {
+        setIsShaking(true);
+        setTimeout(() => setIsShaking(false), 400);
+      } else {
+        onCatchSuccess?.();
+      }
+    } else {
+      if (attackerAttack && defenderDefense && onAttack && !disabled) {
+        const damage = calculateDamage({ attackerAttack, defenderDefense });
+        onAttack(damage);
+      }
     }
   };
 
@@ -47,7 +81,8 @@ function FightButton({ type, className, targetHp }: FightButtonProps) {
       onClick={handleClick}
       style={bgStyle}
       className={clsx(
-        "w-140 h-140 rounded-full flex flex-col justify-center items-center shadow-md border-[3px] border-black",
+        "w-140 h-140 rounded-full flex flex-col justify-center items-center shadow-md border-[3px] border-black cursor-pointer",
+        disabled && "opacity-50 cursor-not-allowed",
         className
       )}
     >
