@@ -24,6 +24,7 @@ export const colors = {
         300: "#3B5AA6",
         400: "#293F74",
         500: "#182442",
+        600: "#2E29E6"
     },
     secondary:{
         300:"#FFCB05",

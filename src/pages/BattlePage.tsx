@@ -6,13 +6,13 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "../components/ui/DropDown/dropdown-menu";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import type { Pokemon, PokemonModal } from "@/lib/types";
 import { useLocation } from "react-router-dom";
 import BattleBackground from "@/assets/battlebg.png";
 import { Progress } from "../components/ui/ProgressBar/progress";
 import { FightButton } from "../components/ui/Button/FightButton";
-import { motion } from "framer-motion";
+import { m, motion } from "framer-motion";
 import PokaballImg from "../assets/pokador.png";
 import myPokemonsData from "../data/mypokemons_.json";
 
@@ -21,6 +21,8 @@ function BattlePage() {
   const [isCaught, setIsCaught] = useState(false);
   const [playerTurn, setPlayerTurn] = useState(true);
   const [isGameOver, setIsGameOver] = useState(false);
+  const [isFainted, setIsFainted] = useState(false);
+  const [triedToCatch, setTriedToCatch] = useState(false);
 
   const location = useLocation();
   const { selectedPokemon } = location.state || {};
@@ -31,9 +33,27 @@ function BattlePage() {
     selectedPokemon
   );
 
+  const messageColor = isFainted
+    ? "text-extendedPalette-error-red"
+    : "text-neutrals-500";
   const myPokemons = myPokemonsData as Pokemon[];
   const enemyDead = enemyHp === 0;
   const playerDead = myHp === 0;
+
+  useEffect(() => {
+    if ((enemyHp === 0 || myHp === 0) && !isFainted) {
+      setIsFainted(true);
+    }
+  }, [enemyHp, myHp, isFainted]);
+
+  useEffect(() => {
+    if (selectedPokemon.speed >= rivalPokemon.base.Speed) {
+      setPlayerTurn(true);
+    } else {
+      setPlayerTurn(false);
+      enemyAttack();
+    }
+  }, []);
 
   function enemyAttack() {
     const enemyAttack = rivalPokemon.base.Attack;
@@ -48,7 +68,45 @@ function BattlePage() {
     setTimeout(() => {
       setMyHp((prev) => Math.max(prev - Math.floor(damage), 0));
       setPlayerTurn(true);
+      setTriedToCatch(false);
     }, 1000);
+  }
+
+  let turnMessage = "";
+
+  if (
+    !playerTurn &&
+    !isGameOver &&
+    enemyHp === rivalPokemon.base.HP &&
+    myHp === selectedPokemon.hp
+  ) {
+    turnMessage = `${rivalPokemon.name.english} starts the fight!`;
+  } else if (
+    playerTurn &&
+    !isGameOver &&
+    enemyHp === rivalPokemon.base.HP &&
+    myHp === selectedPokemon.hp
+  ) {
+    turnMessage = `${selectedPokemon.name} starts the fight!`;
+  } else if (isCaught) {
+    turnMessage = `You caught ${rivalPokemon.name.english}!`;
+  } else if (
+    triedToCatch &&
+    !isCaught &&
+    enemyHp > 33 &&
+    myHp > 0 &&
+    playerTurn
+  ) {
+    turnMessage = `You can’t catch ${rivalPokemon.name.english} yet.`;
+  } else if (enemyHp === 0) {
+    turnMessage = `Critical hit! ${rivalPokemon.name.english} fainted!`;
+  } else if (myHp === 0) {
+    turnMessage = `Critical hit! ${selectedPokemon.name} fainted!`;
+  } else {
+    const currentPokemonName = playerTurn
+      ? selectedPokemon.name
+      : rivalPokemon.name.english;
+    turnMessage = `${currentPokemonName} attacks!`;
   }
 
   return (
@@ -104,6 +162,16 @@ function BattlePage() {
       </div>
 
       <div className="relative flex max-w-1360 mx-auto h-750 overflow-hidden">
+        <div
+          className={
+            "absolute top-90 left-1 w-633 h-119 px-[25px] py-[24px] rounded-tr-[12px] rounded-br-[12px] border-t-[5px] border-r-[5px] border-b-[5px] border-l-0 border-solid [border-image-source:theme(backgroundImage.gradient-default)] [border-image-slice:1]  backdrop-blur-sm bg-white/30 z-10 flex items-center"
+          }
+        >
+          <p className={`${messageColor} text-headingLgBold font-mulish`}>
+            {turnMessage}
+          </p>
+        </div>
+
         <img
           src={BattleBackground}
           alt="Background"
@@ -194,7 +262,7 @@ function BattlePage() {
               setPlayerTurn(false);
               enemyAttack();
             }}
-            disabled={!playerTurn || isGameOver}
+            disabled={!playerTurn || isGameOver || myHp === 0}
           />
           <FightButton
             type="catch"
@@ -203,7 +271,10 @@ function BattlePage() {
               setIsCaught(true);
               setIsGameOver(true);
             }}
-            disabled={!playerTurn || isCaught || isGameOver}
+            onCatchFail={() => {
+              setTriedToCatch(true);
+            }}
+            disabled={!playerTurn || isCaught || isGameOver || myHp === 0}
           />
         </div>
       </div>

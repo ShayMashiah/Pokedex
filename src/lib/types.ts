@@ -36,6 +36,7 @@ export interface FightButtonProps  {
   onAttack?: (damage: number) => void;
   onCatchSuccess?: () => void;
   disabled?: boolean; 
+  onCatchFail?: () => void;
 
 };
 
