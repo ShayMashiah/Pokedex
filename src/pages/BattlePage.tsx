@@ -7,10 +7,12 @@ import {
   DropdownMenuTrigger,
 } from "../components/ui/DropDown/dropdown-menu";
 import { useState } from "react";
-import type { Pokemon } from "@/lib/types";
+import type { Pokemon, PokemonModal } from "@/lib/types";
 import { useLocation } from "react-router-dom";
 import BattleBackground from "@/assets/battlebg.png";
 import { Progress } from "../components/ui/ProgressBar/progress";
+import { FightButton } from "../components/ui/Button/FightButton";
+
 
 function BattlePage() {
   const [isOpen, setIsOpen] = useState(false);
@@ -19,14 +21,14 @@ function BattlePage() {
   const { selectedPokemon } = location.state || {};
   const { rivalPokemon } = location.state || {};
 
-  console.log("Selected Pokemon:", selectedPokemon);
-  console.log("Rival Pokemon:", rivalPokemon);
-  const [fightingPokemon, setFightingPokemon] = useState<Pokemon | null>(
+  const [fightingPokemon, setFightingPokemon] = useState<PokemonModal | null>(
     selectedPokemon
   );
 
+  console.log("Fighting Pokemon:", fightingPokemon);
+
   return (
-    <div className="bg-neutrals-100  mx-auto max-h-1024">
+    <div className="bg-neutrals-100 h-screen">
       <PokemonNavbar
         activeItem={Tab.Null}
         onChange={() => console.log("Battle mode")}
@@ -40,13 +42,13 @@ function BattlePage() {
         </p>
       </div>
 
-      <div className=" max-w-1360 mx-auto mt-20">
+      <div className=" max-w-1360 mx-auto  mt-20">
         <DropdownMenu open={isOpen} onOpenChange={setIsOpen}>
           <DropdownMenuTrigger
             isOpen={isOpen}
             className="text-textBodyRegular font-roboto mb-12 "
           >
-            {fightingPokemon?.name.english || "Select Pokemon"}
+            {fightingPokemon?.name || "Select Pokemon"}
           </DropdownMenuTrigger>
           <DropdownMenuContent>
             <DropdownMenuItem></DropdownMenuItem>
@@ -86,6 +88,13 @@ function BattlePage() {
           maxHP={rivalPokemon.base.HP}
           className="absolute top-24 right-24"
         />
+
+        <div className="absolute bottom-24 right-24  flex gap-24 p-4">
+          <FightButton
+            type="attack"
+          />
+          <FightButton type="catch"  />
+        </div>
       </div>
     </div>
   );

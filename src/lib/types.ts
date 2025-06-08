@@ -27,6 +27,13 @@ export interface BattleBarProps  {
 };
 
 
+export interface FightButtonProps {
+  type: "attack" | "catch";
+  className?: string;
+  targetHp?: number;
+}
+
+
 export interface PokemonRow {
   id: number;
   name: { english: string };

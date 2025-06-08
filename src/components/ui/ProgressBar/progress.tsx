@@ -29,11 +29,11 @@ function Progress({
 
       <ProgressPrimitive.Root
         value={percentage}
-        className="relative h-14 pl-8 pr-8 rounded-sm  overflow-hidden"
+        className="relative h-14 pl-8 pr-8  overflow-hidden"
       >
         <ProgressPrimitive.Indicator
           className={cn(
-            "h-full transition-transform",
+            "h-full transition-transform rounded-xs border border-primary-500",
             getIndicatorColor(percentage)
           )}
           style={{ transform: `translateX(-${100 - percentage}%)` }}
