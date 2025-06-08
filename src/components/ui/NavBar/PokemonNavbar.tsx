@@ -18,7 +18,9 @@ function PokemonNavbar({ activeItem, onChange }: PokemonNavbarProps) {
     id: p.id,
     name: p.name.english,
     image: p.image.thumbnail,
-    hires: p.image.hires
+    hires: p.image.hires,
+    speed: p.base.Speed,
+    hp: p.base.HP,
   }));
 
   return (

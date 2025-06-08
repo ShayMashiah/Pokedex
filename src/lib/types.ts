@@ -17,6 +17,15 @@ export interface CustomDialogContentProps
 
 }
 
+export interface BattleBarProps  {
+  name: string;
+  speed: number;
+  currentHP: number;
+  maxHP: number;
+  className?: string;
+
+};
+
 
 export interface PokemonRow {
   id: number;
@@ -31,6 +40,8 @@ export interface PokemonModal {
   name: string;
   image: string;
   hires?: string;
+  speed?: number;
+  hp?: number;
   description?: string;
   height?: string;
   weight?: string;

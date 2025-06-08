@@ -1,7 +1,6 @@
-import * as React from "react"
-import * as ProgressPrimitive from "@radix-ui/react-progress"
-
-import { cn } from "@/lib/utils"
+import * as ProgressPrimitive from "@radix-ui/react-progress";
+import type { BattleBarProps } from "@/lib/types";
+import { cn } from "@/lib/utils";
 
 function getIndicatorColor(value: number): string {
   if (value < 33) return "bg-extendedPalette-error-red";
@@ -10,33 +9,46 @@ function getIndicatorColor(value: number): string {
 }
 
 function Progress({
+  name,
+  speed,
+  currentHP,
+  maxHP,
   className,
-  value,
-  ...props
-}: React.ComponentProps<typeof ProgressPrimitive.Root> & {
-  value: number;
-}) {
+}: BattleBarProps) {
+  const percentage = Math.round((currentHP / maxHP) * 100);
+
   return (
-    <ProgressPrimitive.Root
-      data-slot="progress"
-      value={value}
+    <div
       className={cn(
-        "bg-neutrals-400 relative h-4 overflow-hidden rounded-lg border border-neutrals-black",
-        "w-270 h-14 rounded-xs border top-20 left-20",
+        "w-286 h-103 rounded-md  text-white shadow-md border border-white",
+        "flex flex-col justify-between bg-gradient-default",
         className
       )}
-      {...props}
     >
-      <ProgressPrimitive.Indicator
-        data-slot="progress-indicator"
-        className={cn(
-          "h-full flex-1 transition-transform",
-          getIndicatorColor(value),
-        )}
-        style={{ transform: `translateX(-${100 - value}%)` }}
-      />
-    </ProgressPrimitive.Root>
+      <div className="text-headingLgBold font-mulish py-8 px-8.5">{name}</div>
+
+      <ProgressPrimitive.Root
+        value={percentage}
+        className="relative h-14 pl-8 pr-8 rounded-sm  overflow-hidden"
+      >
+        <ProgressPrimitive.Indicator
+          className={cn(
+            "h-full transition-transform",
+            getIndicatorColor(percentage)
+          )}
+          style={{ transform: `translateX(-${100 - percentage}%)` }}
+        />
+      </ProgressPrimitive.Root>
+
+      <div className="flex justify-between pr-8 pl-8 pb-8 ">
+        <span className="opacity-90 text-subheadingMedium font-mulish">
+          Speed. <span className="text-headingMdBold font-mulish">{speed}</span>
+        </span>
+        <span className="text-headingMdBold font-mulish">
+          {currentHP}/{maxHP}
+        </span>
+      </div>
+    </div>
   );
 }
-
 export { Progress };

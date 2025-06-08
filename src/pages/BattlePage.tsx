@@ -9,7 +9,8 @@ import {
 import { useState } from "react";
 import type { Pokemon } from "@/lib/types";
 import { useLocation } from "react-router-dom";
-import BattleBackground from "@/assets/battlebg.png"; 
+import BattleBackground from "@/assets/battlebg.png";
+import { Progress } from "../components/ui/ProgressBar/progress";
 
 function BattlePage() {
   const [isOpen, setIsOpen] = useState(false);
@@ -65,11 +66,25 @@ function BattlePage() {
           alt="Pokemon Left"
           className="absolute bottom-158 left-234 w-64 h-auto"
         />
+        <Progress
+          name={selectedPokemon.name}
+          speed={selectedPokemon.speed}
+          currentHP={selectedPokemon.hp}
+          maxHP={selectedPokemon.hp}
+          className="absolute bottom-24 left-24"
+        />
 
         <img
           src={rivalPokemon.image?.hires}
           alt="Pokemon Right"
           className="absolute top-101 right-270 w-64 h-auto"
+        />
+        <Progress
+          name={rivalPokemon.name.english}
+          speed={rivalPokemon.base.Speed}
+          currentHP={rivalPokemon.base.HP}
+          maxHP={rivalPokemon.base.HP}
+          className="absolute top-24 right-24"
         />
       </div>
     </div>
