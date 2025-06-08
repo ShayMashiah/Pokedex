@@ -23,7 +23,8 @@ export interface BattleBarProps  {
   currentHP: number;
   maxHP: number;
   className?: string;
-
+  isTurn?: boolean;
+  isFainted?: boolean; 
 };
 
 

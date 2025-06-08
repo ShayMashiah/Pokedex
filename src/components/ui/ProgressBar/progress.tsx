@@ -14,6 +14,8 @@ function Progress({
   currentHP,
   maxHP,
   className,
+  isTurn,
+  isFainted
 }: BattleBarProps) {
   const percentage = Math.round((currentHP / maxHP) * 100);
 
@@ -21,7 +23,9 @@ function Progress({
     <div
       className={cn(
         "w-286 h-103 rounded-md  text-white shadow-md border border-white",
-        "flex flex-col justify-between bg-gradient-default",
+        "flex flex-col justify-between",
+        isFainted ? "bg-gradient-fainted" :
+        isTurn ?  "bg-gradient-default " : "bg-gradient-disabled",
         className
       )}
     >

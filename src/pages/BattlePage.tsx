@@ -12,7 +12,7 @@ import { useLocation } from "react-router-dom";
 import BattleBackground from "@/assets/battlebg.png";
 import { Progress } from "../components/ui/ProgressBar/progress";
 import { FightButton } from "../components/ui/Button/FightButton";
-import { m, motion } from "framer-motion";
+import { motion } from "framer-motion";
 import PokaballImg from "../assets/pokador.png";
 import myPokemonsData from "../data/mypokemons_.json";
 
@@ -200,6 +200,8 @@ function BattlePage() {
           speed={selectedPokemon.speed}
           currentHP={myHp}
           maxHP={selectedPokemon.hp}
+          isTurn={playerTurn}
+          isFainted={playerDead}
           className="absolute bottom-24 left-24"
         />
 
@@ -242,6 +244,8 @@ function BattlePage() {
           speed={rivalPokemon.base.Speed}
           currentHP={enemyHp}
           maxHP={rivalPokemon.base.HP}
+          isTurn={!playerTurn}
+          isFainted={enemyDead}
           className="absolute top-24 right-24"
         />
 
