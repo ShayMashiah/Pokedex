@@ -6,6 +6,7 @@ import AttackBg from "@/assets/attack-button-bg.png";
 import { colors } from "@/tailwind/colors/colors";
 import type { FightButtonProps } from "@/lib/types";
 import { useState } from "react";
+import { buttonsVariant } from "@/lib/constants";
 
 const shakeAnimation = {
   shake: {
@@ -25,7 +26,7 @@ function FightButton({
   onCatchFail,
   disabled = false,
 }: FightButtonProps) {
-  const isAttack = type === "attack";
+  const isAttack = type === buttonsVariant.Attack;
   const [isShaking, setIsShaking] = useState(false);
 
   const imageSrc = isAttack ? AttackIcon : CatchIcon;

@@ -1,6 +1,7 @@
 import * as DialogPrimitive from '@radix-ui/react-dialog';
 import type { ComponentProps } from 'react';
 import { Variant } from '@/lib/constants';
+import  { buttonsVariant } from '@/lib/constants';
 
 
 export interface CustomDialogContentProps
@@ -22,7 +23,7 @@ export interface BattleBarProps  {
 
 
 export interface FightButtonProps  {
-  type: "attack" | "catch";
+  type: buttonsVariant;
   className?: string;
   targetHp?: number;
   attackerAttack?: number;

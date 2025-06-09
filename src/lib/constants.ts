@@ -95,3 +95,4 @@ export const buttonsVariant = {
   Attack: "attack",
   Catch: "catch",
 } as const;
+export type buttonsVariant = (typeof buttonsVariant)[keyof typeof buttonsVariant];
