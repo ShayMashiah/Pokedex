@@ -3,7 +3,8 @@ import * as DialogPrimitive from "@radix-ui/react-dialog";
 import { XIcon } from "lucide-react";
 import { cn } from "../../../lib/utils";
 import { Button } from "../Button/button";
-import { Variant, type PokemonModal } from "../../../lib/types";
+import { Variant} from "../../../lib/constants";
+import type { PokemonModal } from "../../../lib/types";
 import type { CustomDialogContentProps } from "../../../lib/types";
 import pokemonData from "../../../data/pokemon_.json";
 import { useNavigate } from "react-router-dom";
@@ -69,7 +70,7 @@ function DialogContent({
   const handleStartBattle = () => {
     const selected = pokemons?.find((p) => p.id === selectedPokemonForBattle);
     if (!selected) return;
-    navigate("/prebattle", { state: { selectedPokemon: selected} });
+    navigate("/prebattle", { state: { selectedPokemon: selected } });
   };
 
   const onSelectPokemon = (id: number) => {
@@ -227,7 +228,7 @@ function DialogContent({
                 Start battle
               </Button>
             </DialogFooter>
-          </div>
+          </>
         ) : (
           children
         )}

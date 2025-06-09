@@ -7,7 +7,7 @@ import rightBackground from "@/assets/bluebg.jpg";
 import leftBackground from "@/assets/purplebg.jpg";
 
 function PreBattlePage() {
-  const [rivalPokemon, setRivalPokemon] = useState<Pokemon | null>(null);
+  const [rivalPokemon, setRivalPokemon] = useState<Pokemon | null >(null);
   const navigate = useNavigate();
 
   const location = useLocation();
@@ -20,18 +20,21 @@ function PreBattlePage() {
   }, []);
 
   useEffect(() => {
+    if (!rivalPokemon) return;
+
     const timeout = setTimeout(() => {
-      navigate("/battle");
+      navigate("/battle", { state: { selectedPokemon, rivalPokemon } });
     }, 3000);
+
     return () => clearTimeout(timeout);
-  }, []);
+  }, [rivalPokemon, selectedPokemon]);
 
   if (!selectedPokemon) {
     return <div>No Pokémon selected!</div>;
   }
 
   return (
-    <div className="max-w-1440 mx-auto max-h-1024">
+    <div className="bg-neutrals-100 mx-auto min-h-screen ">
       <PokemonNavbar
         activeItem={Tab.Null}
         onChange={() => console.log("Battle mode")}

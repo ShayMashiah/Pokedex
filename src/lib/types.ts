@@ -1,21 +1,40 @@
 import * as DialogPrimitive from '@radix-ui/react-dialog';
 import type { ComponentProps } from 'react';
+import { Variant } from '@/lib/constants';
+import  { buttonsVariant } from '@/lib/constants';
 
-export const Variant = {
-  Default: "default",
-  PokeInfo: "poke-info",
-  MyPokemons: "my-pokemons",
-} as const;
-
-export type Variant = (typeof Variant)[keyof typeof Variant];
 
 export interface CustomDialogContentProps
   extends ComponentProps<typeof DialogPrimitive.Content> {
   variant?: Variant;
   pokemon?: { id: number };
   pokemons?: PokemonModal[];
-
 }
+
+export interface BattleBarProps  {
+  name: string;
+  speed: number;
+  currentHP: number;
+  maxHP: number;
+  className?: string;
+  isTurn?: boolean;
+  isFainted?: boolean; 
+};
+
+
+export interface FightButtonProps  {
+  type: buttonsVariant;
+  className?: string;
+  targetHp?: number;
+  attackerAttack?: number;
+  defenderDefense?: number;
+  onAttack?: (damage: number) => void;
+  onCatchSuccess?: () => void;
+  disabled?: boolean; 
+  onCatchFail?: () => void;
+
+};
+
 
 
 export interface PokemonRow {
@@ -31,6 +50,10 @@ export interface PokemonModal {
   name: string;
   image: string;
   hires?: string;
+  speed?: number;
+  hp?: number;
+  attack?: number;
+  defense?: number;
   description?: string;
   height?: string;
   weight?: string;
@@ -69,7 +92,6 @@ export const SortOption = {
 
 export type SortOption = (typeof SortOption)[keyof typeof SortOption];
 
-
 export interface Pokemon  {
   id: number;
   name: {
@@ -106,3 +128,18 @@ export interface Pokemon  {
     hires?: string;
   };
 };
+
+export interface BattleResultModalProps  {
+  open: boolean;
+  onOpenChange: (open: boolean) => void;
+  title: React.ReactNode;
+  imageSrc?: string;
+  primaryButtonLabel: string;
+  onPrimaryAction: () => void;
+  secondaryButtonLabel?: string;
+  onSecondaryAction?: () => void;
+  className?: string;
+  caughtPokemon?: Pokemon; 
+
+};
+

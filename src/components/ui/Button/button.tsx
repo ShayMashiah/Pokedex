@@ -19,7 +19,11 @@ const buttonVariants = cva(
         sm: "w-76 h-32 pt-9 pb-9 pr-16 pl-16 gap-4 rounded-s",
         md: "w-82 h-36 pt-10 pb-10 pr-16 pl-16 gap-4 rounded-s",
         lg: "w-82 h-40 pt-12 pb-12 pr-16 pl-16 gap-4 rounded-s",
+        l: "w-111 h-40 pt-12 pb-12 pr-16 pl-16 gap-4 rounded-s",
         xlg:"w-125 h-40 pt-12 pb-12 pr-16 pl-16 gap-4 rounded-s",
+        xl:"w-146 h-40 pt-12 pb-12 pr-16 pl-16 gap-4 rounded-s",
+        xxl: "w-150 h-40 pt-12 pb-12 pr-16 pl-16 gap-4 rounded-s",
+        xxxl: "w-213 h-40 pt-12 pb-12 pr-16 pl-16 gap-4 rounded-s",
       },
     },
     defaultVariants: {
