@@ -10,3 +10,88 @@ export const SORT_OPTIONS = [
   { label: 'HP (High to low)', value: SortOption.HPHighLow },
   { label: 'HP (Low to high)', value: SortOption.HPLowHigh },
 ];
+
+
+export interface TurnMessageParams {
+  playerTurn: boolean;
+  isGameOver: boolean;
+  enemyHp: number;
+  rivalHp: number;
+  myHp: number;
+  selectedHp: number;
+  triedToCatch: boolean;
+  isCaught: boolean;
+  rivalName: string;
+  playerName: string;
+  currentName: string;
+}
+
+interface TurnMessage {
+  label: string;
+  condition: (params: TurnMessageParams) => boolean;
+  getMessage: (params: TurnMessageParams) => string;
+}
+
+
+export const TURN_MESSAGES: TurnMessage[] = [
+  {
+    label: "Enemy starts the fight",
+    condition: ({ playerTurn , isGameOver, enemyHp, rivalHp, myHp, selectedHp }) =>
+      !playerTurn &&
+      !isGameOver &&
+      enemyHp === rivalHp &&
+      myHp === selectedHp,
+    getMessage: ({ rivalName }) => `${rivalName} starts the fight!`,
+  },
+  {
+    label: "Player starts the fight",
+    condition: ({ playerTurn, isGameOver, enemyHp, rivalHp, myHp, selectedHp }) =>
+      playerTurn &&
+      !isGameOver &&
+      enemyHp === rivalHp &&
+      myHp === selectedHp,
+    getMessage: ({ playerName }) => `${playerName} starts the fight!`,
+  },
+  {
+    label: "Caught Pokémon",
+    condition: ({ isCaught }) => isCaught,
+    getMessage: ({ rivalName }) => `You caught ${rivalName}!`,
+  },
+  {
+    label: "Can't catch yet",
+    condition: ({ triedToCatch, isCaught, enemyHp, rivalHp, myHp, playerTurn }) =>
+      triedToCatch &&
+      !isCaught &&
+      enemyHp > Math.floor(rivalHp * 0.33) &&
+      myHp > 0 &&
+      playerTurn,
+    getMessage: ({ rivalName }) => `You can’t catch ${rivalName} yet.`,
+  },
+  {
+    label: "Enemy fainted",
+    condition: ({ enemyHp }) => enemyHp === 0,
+    getMessage: ({ rivalName }) => `Critical hit! ${rivalName} fainted!`,
+  },
+  {
+    label: "Player fainted",
+    condition: ({ myHp }) => myHp === 0,
+    getMessage: ({ playerName }) => `Critical hit! ${playerName} fainted!`,
+  },
+  {
+    label: "Default attack",
+    condition: () => true, 
+    getMessage: ({ currentName }) => `${currentName} attacks!`,
+  },
+];
+
+export const Variant = {
+  Default: "default",
+  PokeInfo: "poke-info",
+  MyPokemons: "my-pokemons",
+} as const;
+export type Variant = (typeof Variant)[keyof typeof Variant];
+
+export const buttonsVariant = {
+  Attack: "attack",
+  Catch: "catch",
+} as const;

@@ -1,6 +1,6 @@
 import type { Meta, StoryObj } from "@storybook/react";
 import { Dialog, DialogTrigger, DialogContent } from "./dialog";
-import { Variant } from "../../../lib/types";
+import { Variant } from "../../../lib/constants";
 import { Button } from "../Button/button";
 import PokemonData from "../../../data/pokemon_.json";
 import type { PokemonModal } from "../../../../src/lib/types";
@@ -21,7 +21,6 @@ const samplePokemon: PokemonModal = {
   description: PokemonData[0].description,
   height: PokemonData[0].profile.height,
   weight: PokemonData[0].profile.weight,
-  category: PokemonData[0].species,
   abilities: PokemonData[0].profile.ability
   .map((a) => Array.isArray(a) && a.length >= 1 ? a[0] : "")
   .filter(Boolean)
@@ -76,7 +75,6 @@ export const MyPokemons: Story = {
       <DialogContent
         variant={Variant.MyPokemons}
         pokemons={pokemons}
-        onSelectPokemon={(id) => alert("Selected Pokémon ID: " + id)}
       />
     </Dialog>
   ),

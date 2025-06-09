@@ -6,7 +6,7 @@ import {
 import type { PokemonNavbarProps } from "../../../lib/types";
 import { Tab } from "../../../lib/types";
 import PokemonLogo from "@/assets/pokemon_logo.png";
-import { Variant } from "../../../lib/types";
+import { Variant } from "../../../lib/constants";
 import { Dialog, DialogContent, DialogTrigger } from "../Dialog/dialog";
 import { Button } from "../Button/button";
 import myPokemonsData from "../../../data/mypokemons_.json";

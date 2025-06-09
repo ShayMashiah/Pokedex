@@ -22,7 +22,7 @@ import {
   DialogContent,
   DialogTrigger,
 } from "@/components/ui/Dialog/dialog";
-import { Variant } from "@/lib/types";
+import { Variant } from "@/lib/constants";
 
 type PokemonTableProps = {
   data: PokemonRow[];
@@ -177,7 +177,7 @@ function PokemonTable({ data }: PokemonTableProps) {
         </Table>
 
         {selectedPokemon && (
-          <DialogContent variant={Variant.PokeInfo} pokemon={selectedPokemon} />
+          <DialogContent variant={Variant.PokeInfo} pokemon={selectedPokemon}/>
         )}
       </Dialog>
     </div>

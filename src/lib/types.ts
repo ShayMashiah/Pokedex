@@ -1,20 +1,13 @@
 import * as DialogPrimitive from '@radix-ui/react-dialog';
 import type { ComponentProps } from 'react';
+import { Variant } from '@/lib/constants';
 
-export const Variant = {
-  Default: "default",
-  PokeInfo: "poke-info",
-  MyPokemons: "my-pokemons",
-} as const;
-
-export type Variant = (typeof Variant)[keyof typeof Variant];
 
 export interface CustomDialogContentProps
   extends ComponentProps<typeof DialogPrimitive.Content> {
   variant?: Variant;
   pokemon?: { id: number };
   pokemons?: PokemonModal[];
-
 }
 
 export interface BattleBarProps  {
@@ -133,5 +126,19 @@ export interface Pokemon  {
     thumbnail: string;
     hires?: string;
   };
+};
+
+export interface BattleResultModalProps  {
+  open: boolean;
+  onOpenChange: (open: boolean) => void;
+  title: React.ReactNode;
+  imageSrc?: string;
+  primaryButtonLabel: string;
+  onPrimaryAction: () => void;
+  secondaryButtonLabel?: string;
+  onSecondaryAction?: () => void;
+  className?: string;
+  caughtPokemon?: Pokemon; 
+
 };
 

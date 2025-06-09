@@ -34,7 +34,7 @@ function PreBattlePage() {
   }
 
   return (
-    <div className="bg-neutrals-100 mx-auto h-screen">
+    <div className="bg-neutrals-100 mx-auto min-h-screen ">
       <PokemonNavbar
         activeItem={Tab.Null}
         onChange={() => console.log("Battle mode")}

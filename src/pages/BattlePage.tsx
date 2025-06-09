@@ -6,6 +6,7 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "../components/ui/DropDown/dropdown-menu";
+import { BattleResultDialog } from "@/components/ui/Dialog/BattleResultDialog";
 import { useState, useEffect } from "react";
 import type { Pokemon, PokemonModal } from "@/lib/types";
 import { useLocation } from "react-router-dom";
@@ -15,6 +16,10 @@ import { FightButton } from "../components/ui/Button/FightButton";
 import { motion } from "framer-motion";
 import PokaballImg from "../assets/pokador.png";
 import myPokemonsData from "../data/mypokemons_.json";
+import pokemonData from "../data/pokemon_.json";
+import { buttonsVariant } from "../../src/lib/constants";
+import { TURN_MESSAGES } from "@/lib/constants";
+import type { TurnMessageParams } from "@/lib/constants";
 
 function BattlePage() {
   const [isOpen, setIsOpen] = useState(false);
@@ -28,24 +33,47 @@ function BattlePage() {
 
   const location = useLocation();
   const { selectedPokemon } = location.state || {};
-  const { rivalPokemon } = location.state || {};
+  const { rivalPokemon: initialRivalPokemon } = location.state || {};
+  const [rivalPokemon, setRivalPokemon] =
+    useState<Pokemon>(initialRivalPokemon);
+
   const [enemyHp, setEnemyHp] = useState<number>(rivalPokemon.base.HP);
   const [myHp, setMyHp] = useState<number>(selectedPokemon.hp);
   const [fightingPokemon, setFightingPokemon] =
     useState<PokemonModal>(selectedPokemon);
+  const [showResultModal, setShowResultModal] = useState(false);
 
   const messageColor = isFainted
     ? "text-extendedPalette-error-red"
     : "text-neutrals-500";
+
   const myPokemons = myPokemonsData as Pokemon[];
 
+
+  function generateNewRivalPokemon() {
+    const randomIndex = Math.floor(Math.random() * pokemonData.length);
+    const newRival = pokemonData[randomIndex] as Pokemon;
+    setRivalPokemon(newRival);
+    setEnemyHp(newRival.base.HP);
+  }
+
   useEffect(() => {
-    setPlayerDead(myHp === 0);
+    const dead = enemyHp === 0;
+    setEnemyDead(dead);
+    if (dead) setShowResultModal(true);
+  }, [enemyHp]);
+
+  useEffect(() => {
+    const dead = myHp === 0;
+    setPlayerDead(dead);
+    if (dead) setShowResultModal(true);
   }, [myHp, fightingPokemon.id]);
 
   useEffect(() => {
-    setEnemyDead(enemyHp === 0);
-  }, [enemyHp, rivalPokemon.id]);
+    if (isCaught) {
+      setShowResultModal(true);
+    }
+  }, [isCaught]);
 
   useEffect(() => {
     if ((enemyHp === 0 || myHp === 0) && !isFainted) {
@@ -79,45 +107,25 @@ function BattlePage() {
     }, 1000);
   }
 
-  let turnMessage = "";
+  const params: TurnMessageParams = {
+    playerTurn,
+    isGameOver,
+    enemyHp,
+    rivalHp: rivalPokemon.base.HP,
+    myHp,
+    selectedHp: selectedPokemon.hp,
+    triedToCatch,
+    isCaught,
+    rivalName: rivalPokemon.name.english,
+    playerName: fightingPokemon.name,
+    currentName: playerTurn ? fightingPokemon.name : rivalPokemon.name.english,
+  };
 
-  if (
-    !playerTurn &&
-    !isGameOver &&
-    enemyHp === rivalPokemon.base.HP &&
-    myHp === selectedPokemon.hp
-  ) {
-    turnMessage = `${rivalPokemon.name.english} starts the fight!`;
-  } else if (
-    playerTurn &&
-    !isGameOver &&
-    enemyHp === rivalPokemon.base.HP &&
-    myHp === selectedPokemon.hp
-  ) {
-    turnMessage = `${fightingPokemon.name} starts the fight!`;
-  } else if (isCaught) {
-    turnMessage = `You caught ${rivalPokemon.name.english}!`;
-  } else if (
-    triedToCatch &&
-    !isCaught &&
-    enemyHp > 33 &&
-    myHp > 0 &&
-    playerTurn
-  ) {
-    turnMessage = `You can’t catch ${rivalPokemon.name.english} yet.`;
-  } else if (enemyHp === 0) {
-    turnMessage = `Critical hit! ${rivalPokemon.name.english} fainted!`;
-  } else if (myHp === 0) {
-    turnMessage = `Critical hit! ${fightingPokemon.name} fainted!`;
-  } else {
-    const currentPokemonName = playerTurn
-      ? fightingPokemon.name
-      : rivalPokemon.name.english;
-    turnMessage = `${currentPokemonName} attacks!`;
-  }
+  const matchedMessage = TURN_MESSAGES.find((msg) => msg.condition(params));
+  let turnMessage = matchedMessage?.getMessage(params) ?? "";
 
   return (
-    <div className="bg-neutrals-100 h-screen">
+    <div className="bg-neutrals-100  min-h-screen">
       <PokemonNavbar
         activeItem={Tab.Null}
         onChange={() => console.log("Battle mode")}
@@ -263,7 +271,7 @@ function BattlePage() {
         {playerTurn && !playerDead && !enemyDead && !isGameOver && (
           <div className="absolute bottom-24 right-24 flex gap-24 p-4">
             <FightButton
-              type="attack"
+              type={buttonsVariant.Attack}
               attackerAttack={fightingPokemon.attack}
               defenderDefense={rivalPokemon.base.Defense}
               onAttack={(damage) => {
@@ -280,7 +288,7 @@ function BattlePage() {
               }}
             />
             <FightButton
-              type="catch"
+              type={buttonsVariant.Catch}
               targetHp={enemyHp}
               onCatchSuccess={() => {
                 setIsCaught(true);
@@ -293,6 +301,66 @@ function BattlePage() {
           </div>
         )}
       </div>
+      <BattleResultDialog
+        open={showResultModal}
+        onOpenChange={setShowResultModal}
+        title={
+          isCaught ? (
+            <span className="flex items-center gap-2">
+              You caught {rivalPokemon.name.english}!
+              <img
+                src={PokaballImg}
+                alt="pokeball"
+                className="ml-10 w-24 h-24"
+              />
+            </span>
+          ) : playerDead ? (
+            `${fightingPokemon.name} lost the match`
+          ) : enemyDead ? (
+            `You won ${rivalPokemon.name.english}!`
+          ) : (
+            ``
+          )
+        }
+        imageSrc={
+          isCaught
+            ? rivalPokemon.image?.hires
+            : playerDead
+            ? fightingPokemon.hires
+            : enemyDead
+            ? rivalPokemon.image?.hires
+            : undefined
+        }
+        primaryButtonLabel={
+          isCaught
+            ? "Continue Battle"
+            : enemyDead
+            ? "Battle Another Pokémon"
+            : "Switch Pokémon"
+        }
+        onPrimaryAction={() => {
+          setShowResultModal(false);
+          setIsCaught(false);
+          setIsFainted(false);
+          setIsGameOver(false);
+          setPlayerDead(false);
+          setEnemyDead(false);
+          setPlayerTurn(true);
+
+          if (isCaught) {
+            generateNewRivalPokemon();
+          } else if (enemyDead) {
+            generateNewRivalPokemon();
+          } else {
+            setEnemyHp(rivalPokemon.base.HP);
+          }
+        }}
+        secondaryButtonLabel="End Match"
+        onSecondaryAction={() => {
+          window.location.href = "/";
+        }}
+        caughtPokemon={isCaught ? rivalPokemon : undefined}
+      />
     </div>
   );
 }
