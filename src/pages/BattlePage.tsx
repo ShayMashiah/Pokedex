@@ -20,6 +20,7 @@ import { buttonsVariant } from "../../src/lib/constants";
 import { TURN_MESSAGES } from "@/lib/constants";
 import type { TurnMessageParams } from "@/lib/constants";
 import { useMyPokemon } from "@/context/MyPokemonContext";
+import { Input } from "@/components/ui/Input/input";
 
 function BattlePage() {
   const [isOpen, setIsOpen] = useState(false);
@@ -158,11 +159,18 @@ function BattlePage() {
         <DropdownMenu open={isOpen} onOpenChange={setIsOpen}>
           <DropdownMenuTrigger
             isOpen={isOpen}
-            className="text-textBodyRegular font-roboto mb-12 "
+            className="text-textBodyRegular font-roboto mb-12 w-300"
           >
             {fightingPokemon?.name || "Select Pokemon"}
           </DropdownMenuTrigger>
           <DropdownMenuContent>
+            <DropdownMenuItem className="py-8 px-8">
+              <div className="flex items-center justify-between w-258 h-35 bg-primary-50">
+                <span className="text-captionRegular pl-8 font-mulish text-primary-400  h-19">
+                  Pokemon’s can be switched <strong>once</strong> in battle.
+                </span>
+              </div>
+            </DropdownMenuItem>
             {myPokemonModels.map((pokemon) => (
               <DropdownMenuItem
                 key={pokemon.id}
@@ -174,8 +182,32 @@ function BattlePage() {
                   setFightingPokemon(pokemon);
                   setMyHp(pokemon.hp);
                 }}
+                className="w-255 h-46 cursor-pointer py-8 px-8"
               >
-                {pokemon.name}
+                <div className="flex flex-row items-center justify-between gap-4 w-full">
+                  <div className="flex flex-row gap-4 ">
+                    <div className="bg-neutrals-900 rounded-full w-32 h-32 overflow-hidden flex items-center justify-center">
+                      <img
+                        src={pokemon.image}
+                        alt={pokemon.name}
+                        className="w-28 h-28 ml-2"
+                      />
+                    </div>
+                    <div className="flex flex-col w-67 h-38">
+                      <span className="text-bodyMedium font-mulish text-neutrals-500">
+                        {pokemon.name}
+                      </span>
+                      <span className="text-xSmallRegular font-mulish text-primary-300">
+                        Speed {pokemon.speed}
+                      </span>
+                    </div>
+                  </div>
+                  <div className="w-51 h-19 mr-8 ">
+                    <span className="text-captionBold font-mulish text-neutrals-500">
+                      Pwr. {pokemon.attack}
+                    </span>
+                  </div>
+                </div>
               </DropdownMenuItem>
             ))}
           </DropdownMenuContent>

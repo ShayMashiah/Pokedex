@@ -40,7 +40,7 @@ function Input({
         placeholder="Search"
         className={cn(
           "peer w-full h-full rounded-k border pr-[80px] py-8 bg-neutral-100",
-          isDropdown ? "pl-40" : "pl-32",
+          isDropdown ? "pl-40 bg-neutrals-white" : "pl-32",
 
           value
             ? "border-neutrals-500 text-neutrals-500 placeholder-transparent"
