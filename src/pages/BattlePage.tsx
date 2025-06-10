@@ -7,7 +7,7 @@ import {
   DropdownMenuTrigger,
 } from "../components/ui/DropDown/dropdown-menu";
 import { BattleResultDialog } from "@/components/ui/Dialog/BattleResultDialog";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useMemo } from "react";
 import type { Pokemon, PokemonModal } from "@/lib/types";
 import { useLocation } from "react-router-dom";
 import BattleBackground from "@/assets/battlebg.png";
@@ -15,11 +15,11 @@ import { Progress } from "../components/ui/ProgressBar/progress";
 import { FightButton } from "../components/ui/Button/FightButton";
 import { motion } from "framer-motion";
 import PokaballImg from "../assets/pokador.png";
-import myPokemonsData from "../data/mypokemons_.json";
 import pokemonData from "../data/pokemon_.json";
 import { buttonsVariant } from "../../src/lib/constants";
 import { TURN_MESSAGES } from "@/lib/constants";
 import type { TurnMessageParams } from "@/lib/constants";
+import { useMyPokemon } from "@/context/MyPokemonContext";
 
 function BattlePage() {
   const [isOpen, setIsOpen] = useState(false);
@@ -47,7 +47,7 @@ function BattlePage() {
     ? "text-extendedPalette-error-red"
     : "text-neutrals-500";
 
-  const myPokemons = myPokemonsData as Pokemon[];
+  const { myPokemons } = useMyPokemon();
 
   function generateNewRivalPokemon() {
     const randomIndex = Math.floor(Math.random() * pokemonData.length);
@@ -106,6 +106,22 @@ function BattlePage() {
     }, 1000);
   }
 
+  const myPokemonModels = useMemo(() => {
+    return pokemonData
+      .filter((p) => myPokemons.includes(p.id))
+      .map((pokemon) => ({
+        id: pokemon.id,
+        image: pokemon.image.thumbnail,
+        name: pokemon.name.english,
+        type: pokemon.type,
+        attack: pokemon.base.Attack,
+        defense: pokemon.base.Defense,
+        speed: pokemon.base.Speed,
+        hp: pokemon.base.HP,
+        hires: pokemon.image.hires,
+      }));
+  }, [pokemonData, myPokemons]);
+
   const params: TurnMessageParams = {
     playerTurn,
     isGameOver,
@@ -147,30 +163,19 @@ function BattlePage() {
             {fightingPokemon?.name || "Select Pokemon"}
           </DropdownMenuTrigger>
           <DropdownMenuContent>
-            {myPokemons.map((pokemon) => (
+            {myPokemonModels.map((pokemon) => (
               <DropdownMenuItem
                 key={pokemon.id}
                 onSelect={() => {
-                  const converted = {
-                    id: pokemon.id,
-                    image: pokemon.image.thumbnail,
-                    name: pokemon.name.english,
-                    type: pokemon.type,
-                    attack: pokemon.base.Attack,
-                    defense: pokemon.base.Defense,
-                    speed: pokemon.base.Speed,
-                    hp: pokemon.base.HP,
-                    hires: pokemon.image.hires,
-                  };
                   setIsOpen(false);
                   setIsFainted(false);
                   setIsGameOver(false);
                   setPlayerDead(false);
-                  setFightingPokemon(converted);
-                  setMyHp(converted.hp);
+                  setFightingPokemon(pokemon);
+                  setMyHp(pokemon.hp);
                 }}
               >
-                {pokemon.name.english}
+                {pokemon.name}
               </DropdownMenuItem>
             ))}
           </DropdownMenuContent>
