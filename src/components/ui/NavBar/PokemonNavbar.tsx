@@ -21,8 +21,8 @@ function PokemonNavbar({ activeItem, onChange }: PokemonNavbarProps) {
     }
     return {
       id: pokemon.id,
-      name: pokemon.name?.english ?? "Unknown", // וודא שיש שם
-      image: pokemon.image?.thumbnail ?? "", // וודא שיש תמונה
+      name: pokemon.name?.english ?? "Unknown", 
+      image: pokemon.image?.thumbnail ?? "",
       hires: pokemon.image?.hires,
       speed: pokemon.base.Speed,
       hp: pokemon.base.HP,
