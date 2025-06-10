@@ -20,7 +20,6 @@ import { buttonsVariant } from "../../src/lib/constants";
 import { TURN_MESSAGES } from "@/lib/constants";
 import type { TurnMessageParams } from "@/lib/constants";
 import { useMyPokemon } from "@/context/MyPokemonContext";
-import { Input } from "@/components/ui/Input/input";
 
 function BattlePage() {
   const [isOpen, setIsOpen] = useState(false);
