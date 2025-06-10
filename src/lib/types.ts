@@ -112,14 +112,14 @@ export interface Pokemon  {
   species?: string;
   description?: string;
   evolution?: {
-    prev?: [string, string];
-    next?: [string, string][];
+    prev?: string[];
+    next?: string[][] | [string, string][]; 
   };
   profile?: {
     height?: string;
     weight?: string;
     egg?: string[];
-    ability?: [[string, string]];
+    ability: string[][] | [[string, string]]; 
     gender: string;
   };
   image: {
@@ -128,6 +128,7 @@ export interface Pokemon  {
     hires?: string;
   };
 };
+
 
 export interface BattleResultModalProps  {
   open: boolean;

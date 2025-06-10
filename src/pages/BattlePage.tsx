@@ -49,7 +49,6 @@ function BattlePage() {
 
   const myPokemons = myPokemonsData as Pokemon[];
 
-
   function generateNewRivalPokemon() {
     const randomIndex = Math.floor(Math.random() * pokemonData.length);
     const newRival = pokemonData[randomIndex] as Pokemon;

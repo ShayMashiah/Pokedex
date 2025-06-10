@@ -3,12 +3,12 @@ import * as DialogPrimitive from "@radix-ui/react-dialog";
 import { XIcon } from "lucide-react";
 import { cn } from "../../../lib/utils";
 import { Button } from "../Button/button";
-import { Variant} from "../../../lib/constants";
-import type { PokemonModal } from "../../../lib/types";
+import { Variant } from "../../../lib/constants";
 import type { CustomDialogContentProps } from "../../../lib/types";
 import pokemonData from "../../../data/pokemon_.json";
 import { useNavigate } from "react-router-dom";
 import { useState } from "react";
+import { useMyPokemon } from "@/context/MyPokemonContext";
 
 function Dialog({
   ...props
@@ -55,20 +55,47 @@ function DialogContent({
   children,
   variant,
   pokemon,
-  pokemons,
   ...props
 }: CustomDialogContentProps) {
+  const { myPokemons: myPokemonIds } = useMyPokemon();
+
+  const myPokemons = React.useMemo(() => {
+    if (!myPokemonIds || myPokemonIds.length === 0) return [];
+
+    return myPokemonIds
+      .map((id) => pokemonData.find((poke) => poke.id === id))
+      .filter((p): p is (typeof pokemonData)[0] => p !== undefined)
+      .map((p) => ({
+        id: p.id,
+        name: p.name.english,
+        image: p.image?.thumbnail ?? "",
+        hires: p.image?.hires ?? "",
+        speed: p.base.Speed,
+        hp: p.base.HP,
+        attack: p.base.Attack,
+        defense: p.base.Defense,
+        description: p.description,
+        height: p.profile?.height ?? "Unknown",
+        weight: p.profile?.weight ?? "Unknown",
+        category: p.type ?? "Unknown",
+        abilities:
+          p.profile?.ability
+            ?.map((a: string[]) => a[0].split(",")[0].trim())
+            .join(", ") ?? "Unknown",
+      }));
+  }, [myPokemonIds]);
+
   const navigate = useNavigate();
   const perRow = 3;
-  let fullItems: typeof pokemons = [];
-  let remainingItems: typeof pokemons = [];
+  let fullItems: typeof myPokemons = [];
+  let remainingItems: typeof myPokemons = [];
 
   const [selectedPokemonForBattle, setselectedPokemonForBattle] = useState<
     number | null
   >(null);
 
   const handleStartBattle = () => {
-    const selected = pokemons?.find((p) => p.id === selectedPokemonForBattle);
+    const selected = myPokemons?.find((p) => p.id === selectedPokemonForBattle);
     if (!selected) return;
     navigate("/prebattle", { state: { selectedPokemon: selected } });
   };
@@ -77,37 +104,18 @@ function DialogContent({
     setselectedPokemonForBattle(id);
   };
 
-  if (variant === Variant.MyPokemons && pokemons) {
-    const fullRows = Math.floor(pokemons.length / perRow);
+  if (variant === Variant.MyPokemons && myPokemons) {
+    const fullRows = Math.floor(myPokemons.length / perRow);
     const lastRowStart = fullRows * perRow;
-    fullItems = pokemons.slice(0, lastRowStart);
-    remainingItems = pokemons.slice(lastRowStart);
+    fullItems = myPokemons.slice(0, lastRowStart);
+    remainingItems = myPokemons.slice(lastRowStart);
   }
 
-  const selectedPokemon = React.useMemo(() => {
+
+  const selectedPokemonModal = React.useMemo(() => {
     if (!pokemon?.id) return null;
-
-    return pokemonData.find((p) => p.id === pokemon.id) ?? null;
-  }, [pokemon]);
-
-  const selectedPokemonModal: PokemonModal | null = React.useMemo(() => {
-    if (!selectedPokemon) return null;
-
-    return {
-      id: selectedPokemon.id,
-      name: selectedPokemon.name.english,
-      image: selectedPokemon.image?.thumbnail ?? "",
-      hires: selectedPokemon.image?.hires ?? "",
-      description: selectedPokemon.description,
-      height: selectedPokemon.profile?.height ?? "Unknown",
-      weight: selectedPokemon.profile?.weight ?? "Unknown",
-      category: selectedPokemon.type ?? "Unknown",
-      abilities:
-        selectedPokemon.profile?.ability
-          ?.map((a: string[]) => a[0].split(",")[0].trim())
-          .join(", ") ?? "Unknown",
-    };
-  }, [selectedPokemon]);
+    return myPokemons.find((p) => p.id === pokemon.id) ?? null;
+  }, [pokemon, myPokemons]);
 
   return (
     <DialogPortal>
@@ -179,7 +187,7 @@ function DialogContent({
               </div>
             </div>
           </>
-        ) : variant === Variant.MyPokemons && pokemons ? (
+        ) : variant === Variant.MyPokemons && myPokemons ? (
           <>
             <DialogHeader className="items-start border-neutrals-light font-mulish">
               <DialogTitle className="font-mulish !text-headingLgMedium text-neutrals-500 py-24 px-10">
