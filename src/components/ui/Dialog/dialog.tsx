@@ -5,10 +5,10 @@ import { cn } from "../../../lib/utils";
 import { Button } from "../Button/button";
 import { Variant } from "../../../lib/constants";
 import type { CustomDialogContentProps } from "../../../lib/types";
-import pokemonData from "../../../data/pokemon_.json";
 import { useNavigate } from "react-router-dom";
 import { useState } from "react";
 import { useMyPokemon } from "@/context/MyPokemonContext";
+import { mapMyPokemonsByIds } from "@/lib/utils/mapMyPokemons";
 
 function Dialog({
   ...props
@@ -59,31 +59,10 @@ function DialogContent({
 }: CustomDialogContentProps) {
   const { myPokemons: myPokemonIds } = useMyPokemon();
 
-  const myPokemons = React.useMemo(() => {
-    if (!myPokemonIds || myPokemonIds.length === 0) return [];
-
-    return myPokemonIds
-      .map((id) => pokemonData.find((poke) => poke.id === id))
-      .filter((p): p is (typeof pokemonData)[0] => p !== undefined)
-      .map((p) => ({
-        id: p.id,
-        name: p.name.english,
-        image: p.image?.thumbnail ?? "",
-        hires: p.image?.hires ?? "",
-        speed: p.base.Speed,
-        hp: p.base.HP,
-        attack: p.base.Attack,
-        defense: p.base.Defense,
-        description: p.description,
-        height: p.profile?.height ?? "Unknown",
-        weight: p.profile?.weight ?? "Unknown",
-        category: p.type ?? "Unknown",
-        abilities:
-          p.profile?.ability
-            ?.map((a: string[]) => a[0].split(",")[0].trim())
-            .join(", ") ?? "Unknown",
-      }));
-  }, [myPokemonIds]);
+  const myPokemons = React.useMemo(
+    () => mapMyPokemonsByIds(myPokemonIds),
+    [myPokemonIds]
+  );
 
   const navigate = useNavigate();
   const perRow = 3;
