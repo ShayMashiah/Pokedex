@@ -9,6 +9,7 @@ import pokemonData from "../../../data/pokemon_.json";
 import { useNavigate } from "react-router-dom";
 import { useState } from "react";
 import { useMyPokemon } from "@/context/MyPokemonContext";
+import allPokemons from "@/data/pokemon_.json";
 
 function Dialog({
   ...props
@@ -113,8 +114,30 @@ function DialogContent({
 
   const selectedPokemonModal = React.useMemo(() => {
     if (!pokemon?.id) return null;
-    return myPokemons.find((p) => p.id === pokemon.id) ?? null;
-  }, [pokemon, myPokemons]);
+
+    return (
+      allPokemons
+        .map((p) => ({
+          id: p.id,
+          name: p.name?.english ?? "Unknown",
+          image: p.image?.thumbnail ?? "",
+          hires: p.image?.hires,
+          speed: p.base?.Speed,
+          hp: p.base?.HP,
+          attack: p.base?.Attack,
+          defense: p.base?.Defense,
+          description: p.description ?? "No description available.",
+          height: p.profile?.height ?? "Unknown",
+          weight: p.profile?.weight ?? "Unknown",
+          category: p.type ?? [],
+          abilities:
+            p.profile?.ability
+              ?.map((a: string[]) => a[0].split(",")[0].trim())
+              .join(", ") ?? "Unknown",
+        }))
+        .find((m) => m.id === pokemon.id) ?? null
+    );
+  }, [pokemon]);
 
   return (
     <DialogPortal>
@@ -135,7 +158,7 @@ function DialogContent({
                 #{String(selectedPokemonModal.id).padStart(4, "0")}
               </div>
               <DialogTitle className="text-pokemonModalTitle h-26 text-neutrals-500 font-mulish">
-                {selectedPokemonModal.name}
+                {selectedPokemonModal.name ?? "Unknown"}
               </DialogTitle>
             </DialogHeader>
             <div className="w-435 py-16 px-16">
