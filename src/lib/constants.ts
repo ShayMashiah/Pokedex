@@ -96,3 +96,5 @@ export const buttonsVariant = {
   Catch: "catch",
 } as const;
 export type buttonsVariant = (typeof buttonsVariant)[keyof typeof buttonsVariant];
+
+export const MY_POKEMONS_INIT = [1, 4, 25,101,133]
