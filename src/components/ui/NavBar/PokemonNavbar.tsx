@@ -3,7 +3,7 @@ import {
   NavigationMenuItem,
   NavigationMenuList,
 } from "@/components/ui/NavBar/";
-import type { Pokemon, PokemonNavbarProps } from "../../../lib/types";
+import type { PokemonNavbarProps } from "../../../lib/types";
 import { Tab } from "../../../lib/types";
 import PokemonLogo from "@/assets/pokemon_logo.png";
 import { Variant } from "../../../lib/constants";
@@ -13,31 +13,9 @@ import { Link } from "react-router-dom";
 import { useMyPokemon } from "@/context/MyPokemonContext";
 import allPokemons from "@/data/pokemon_.json";
 import type { PokemonModal } from "@/lib/types";
+import { transformToPokemonModal } from "@/lib/utils/mapMyPokemons";
 
 function PokemonNavbar({ activeItem, onChange }: PokemonNavbarProps) {
-  function transformToPokemonModal(pokemon: Pokemon): PokemonModal {
-    if (!pokemon.name || !pokemon.name.english) {
-      console.warn("Pokemon missing name:", pokemon);
-    }
-    return {
-      id: pokemon.id,
-      name: pokemon.name?.english ?? "Unknown", 
-      image: pokemon.image?.thumbnail ?? "",
-      hires: pokemon.image?.hires,
-      speed: pokemon.base.Speed,
-      hp: pokemon.base.HP,
-      attack: pokemon.base.Attack,
-      defense: pokemon.base.Defense,
-      description: pokemon.description ?? "",
-      height: pokemon.profile?.height ?? "",
-      weight: pokemon.profile?.weight ?? "",
-      category: pokemon.type ?? [],
-      abilities:
-        pokemon.profile?.ability
-          ?.map((ability: any) => ability)
-          .join(", ") ?? "",
-    };
-  }
 
   const { myPokemons } = useMyPokemon();
 
