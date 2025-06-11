@@ -23,12 +23,15 @@ import {
   DialogTrigger,
 } from "@/components/ui/Dialog/dialog";
 import { Variant } from "@/lib/constants";
-
+import { useMyPokemon } from "@/context/MyPokemonContext";
+import pokeballIcon from "@/assets/pokador.png";
 type PokemonTableProps = {
   data: PokemonRow[];
 };
 
 function PokemonTable({ data }: PokemonTableProps) {
+  const { myPokemons } = useMyPokemon();
+
   const [selectedPokemon, setSelectedPokemon] = useState<PokemonRow | null>(
     null
   );
@@ -80,7 +83,10 @@ function PokemonTable({ data }: PokemonTableProps) {
                 </TableCell>
               </TableRow>
             ) : (
-              paginatedData.map((pokemon: PokemonRow) => (
+              
+              paginatedData.map((pokemon: PokemonRow) => {
+                const isMine = myPokemons.includes(pokemon.id);
+                return (
                 <DialogTrigger
                   asChild
                   key={pokemon.id}
@@ -101,6 +107,13 @@ function PokemonTable({ data }: PokemonTableProps) {
                         <span className="text-headingMdRegular font-mulish">
                           {pokemon.name.english}
                         </span>
+                        {isMine && (
+                            <img
+                              src={pokeballIcon} 
+                              alt="My Pokemon"
+                              className="w-24 h-24 ml-8"
+                            />
+                        )}
                       </div>
                     </TableCell>
                     <TableCell className="text-bodyRegular font-mulish">
@@ -126,7 +139,8 @@ function PokemonTable({ data }: PokemonTableProps) {
                     </TableCell>
                   </TableRow>
                 </DialogTrigger>
-              ))
+                );
+              })
             )}
           </TableBody>
 
@@ -177,7 +191,7 @@ function PokemonTable({ data }: PokemonTableProps) {
         </Table>
 
         {selectedPokemon && (
-          <DialogContent variant={Variant.PokeInfo} pokemon={selectedPokemon}/>
+          <DialogContent variant={Variant.PokeInfo} pokemon={selectedPokemon} />
         )}
       </Dialog>
     </div>

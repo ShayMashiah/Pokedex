@@ -7,19 +7,20 @@ import {
   DropdownMenuTrigger,
 } from "../components/ui/DropDown/dropdown-menu";
 import { BattleResultDialog } from "@/components/ui/Dialog/BattleResultDialog";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useMemo } from "react";
 import type { Pokemon, PokemonModal } from "@/lib/types";
-import { useLocation } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import BattleBackground from "@/assets/battlebg.png";
 import { Progress } from "../components/ui/ProgressBar/progress";
 import { FightButton } from "../components/ui/Button/FightButton";
 import { motion } from "framer-motion";
 import PokaballImg from "../assets/pokador.png";
-import myPokemonsData from "../data/mypokemons_.json";
 import pokemonData from "../data/pokemon_.json";
 import { buttonsVariant } from "../../src/lib/constants";
 import { TURN_MESSAGES } from "@/lib/constants";
 import type { TurnMessageParams } from "@/lib/constants";
+import { useMyPokemon } from "@/context/MyPokemonContext";
+import { cn } from "@/lib/utils";
 
 function BattlePage() {
   const [isOpen, setIsOpen] = useState(false);
@@ -30,12 +31,17 @@ function BattlePage() {
   const [triedToCatch, setTriedToCatch] = useState(false);
   const [playerDead, setPlayerDead] = useState(false);
   const [enemyDead, setEnemyDead] = useState(false);
+  const [deadPokemons, setDeadPokemons] = useState<number[]>([]);
 
+  const navigate = useNavigate();
   const location = useLocation();
   const { selectedPokemon } = location.state || {};
   const { rivalPokemon: initialRivalPokemon } = location.state || {};
   const [rivalPokemon, setRivalPokemon] =
     useState<Pokemon>(initialRivalPokemon);
+  const [usedPokemons, setUsedPokemons] = useState<number[]>([
+    selectedPokemon.id,
+  ]);
 
   const [enemyHp, setEnemyHp] = useState<number>(rivalPokemon.base.HP);
   const [myHp, setMyHp] = useState<number>(selectedPokemon.hp);
@@ -47,8 +53,7 @@ function BattlePage() {
     ? "text-extendedPalette-error-red"
     : "text-neutrals-500";
 
-  const myPokemons = myPokemonsData as Pokemon[];
-
+  const { myPokemons, addPokemon } = useMyPokemon();
 
   function generateNewRivalPokemon() {
     const randomIndex = Math.floor(Math.random() * pokemonData.length);
@@ -56,6 +61,15 @@ function BattlePage() {
     setRivalPokemon(newRival);
     setEnemyHp(newRival.base.HP);
   }
+
+  useEffect(() => {
+    const dead = myHp === 0;
+    setPlayerDead(dead);
+    if (dead) {
+      setShowResultModal(true);
+      setDeadPokemons((prev) => [...prev, fightingPokemon.id]);
+    }
+  }, [myHp, fightingPokemon.id]);
 
   useEffect(() => {
     const dead = enemyHp === 0;
@@ -107,6 +121,22 @@ function BattlePage() {
     }, 1000);
   }
 
+  const myPokemonModels = useMemo(() => {
+    return pokemonData
+      .filter((p) => myPokemons.includes(p.id))
+      .map((pokemon) => ({
+        id: pokemon.id,
+        image: pokemon.image.thumbnail,
+        name: pokemon.name.english,
+        type: pokemon.type,
+        attack: pokemon.base.Attack,
+        defense: pokemon.base.Defense,
+        speed: pokemon.base.Speed,
+        hp: pokemon.base.HP,
+        hires: pokemon.image.hires,
+      }));
+  }, [pokemonData, myPokemons]);
+
   const params: TurnMessageParams = {
     playerTurn,
     isGameOver,
@@ -143,37 +173,68 @@ function BattlePage() {
         <DropdownMenu open={isOpen} onOpenChange={setIsOpen}>
           <DropdownMenuTrigger
             isOpen={isOpen}
-            className="text-textBodyRegular font-roboto mb-12 "
+            className="text-textBodyRegular font-roboto mb-12 w-300"
           >
             {fightingPokemon?.name || "Select Pokemon"}
           </DropdownMenuTrigger>
           <DropdownMenuContent>
-            {myPokemons.map((pokemon) => (
-              <DropdownMenuItem
-                key={pokemon.id}
-                onSelect={() => {
-                  const converted = {
-                    id: pokemon.id,
-                    image: pokemon.image.thumbnail,
-                    name: pokemon.name.english,
-                    type: pokemon.type,
-                    attack: pokemon.base.Attack,
-                    defense: pokemon.base.Defense,
-                    speed: pokemon.base.Speed,
-                    hp: pokemon.base.HP,
-                    hires: pokemon.image.hires,
-                  };
-                  setIsOpen(false);
-                  setIsFainted(false);
-                  setIsGameOver(false);
-                  setPlayerDead(false);
-                  setFightingPokemon(converted);
-                  setMyHp(converted.hp);
-                }}
-              >
-                {pokemon.name.english}
-              </DropdownMenuItem>
-            ))}
+            <DropdownMenuItem className="py-8 px-8">
+              <div className="flex items-center justify-between w-258 h-35 bg-primary-50">
+                <span className="text-captionRegular pl-8 font-mulish text-primary-400  h-19">
+                  Pokemon’s can be switched <strong>once</strong> in battle.
+                </span>
+              </div>
+            </DropdownMenuItem>
+            {myPokemonModels.map((pokemon) => {
+              const isDead = deadPokemons.includes(pokemon.id);
+              const isAlreadyUsed = usedPokemons.includes(pokemon.id);
+              const isDisabled = isDead || isAlreadyUsed;
+
+              return (
+                <DropdownMenuItem
+                  key={pokemon.id}
+                  onSelect={() => {
+                    if (isDisabled) return;
+                    setIsOpen(false);
+                    setIsFainted(false);
+                    setIsGameOver(false);
+                    setPlayerDead(false);
+                    setFightingPokemon(pokemon);
+                    setMyHp(pokemon.hp);
+                    setUsedPokemons((prev) => [...prev, pokemon.id]);
+                  }}
+                  className={cn(
+                    "w-255 h-46 cursor-pointer py-8 px-8",
+                    isDisabled && "pointer-events-none opacity-40"
+                  )}
+                >
+                  <div className="flex flex-row items-center justify-between gap-4 w-full">
+                    <div className="flex flex-row gap-4">
+                      <div className="bg-neutrals-900 rounded-full w-32 h-32 overflow-hidden flex items-center justify-center">
+                        <img
+                          src={pokemon.image}
+                          alt={pokemon.name}
+                          className="w-28 h-28 ml-2"
+                        />
+                      </div>
+                      <div className="flex flex-col w-67 h-38">
+                        <span className="text-bodyMedium font-mulish text-neutrals-500">
+                          {pokemon.name}
+                        </span>
+                        <span className="text-xSmallRegular font-mulish text-primary-300">
+                          Speed {pokemon.speed}
+                        </span>
+                      </div>
+                    </div>
+                    <div className="w-51 h-19 mr-8">
+                      <span className="text-captionBold font-mulish text-neutrals-500">
+                        Pwr. {pokemon.attack}
+                      </span>
+                    </div>
+                  </div>
+                </DropdownMenuItem>
+              );
+            })}
           </DropdownMenuContent>
         </DropdownMenu>
       </div>
@@ -292,6 +353,7 @@ function BattlePage() {
               targetHp={enemyHp}
               onCatchSuccess={() => {
                 setIsCaught(true);
+                addPokemon(rivalPokemon.id);
                 setIsGameOver(true);
               }}
               onCatchFail={() => {
@@ -357,7 +419,7 @@ function BattlePage() {
         }}
         secondaryButtonLabel="End Match"
         onSecondaryAction={() => {
-          window.location.href = "/";
+          navigate("/");
         }}
         caughtPokemon={isCaught ? rivalPokemon : undefined}
       />
