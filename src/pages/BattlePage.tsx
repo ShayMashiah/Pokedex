@@ -13,13 +13,14 @@ import { useLocation, useNavigate } from "react-router-dom";
 import BattleBackground from "@/assets/battlebg.png";
 import { Progress } from "../components/ui/ProgressBar/progress";
 import { FightButton } from "../components/ui/Button/FightButton";
-import { m, motion } from "framer-motion";
+import { motion } from "framer-motion";
 import PokaballImg from "../assets/pokador.png";
 import pokemonData from "../data/pokemon_.json";
 import { buttonsVariant } from "../../src/lib/constants";
 import { TURN_MESSAGES } from "@/lib/constants";
 import type { TurnMessageParams } from "@/lib/constants";
 import { useMyPokemon } from "@/context/MyPokemonContext";
+import { cn } from "@/lib/utils";
 
 function BattlePage() {
   const [isOpen, setIsOpen] = useState(false);
@@ -30,6 +31,7 @@ function BattlePage() {
   const [triedToCatch, setTriedToCatch] = useState(false);
   const [playerDead, setPlayerDead] = useState(false);
   const [enemyDead, setEnemyDead] = useState(false);
+  const [deadPokemons, setDeadPokemons] = useState<number[]>([]);
 
   const navigate = useNavigate();
   const location = useLocation();
@@ -37,6 +39,9 @@ function BattlePage() {
   const { rivalPokemon: initialRivalPokemon } = location.state || {};
   const [rivalPokemon, setRivalPokemon] =
     useState<Pokemon>(initialRivalPokemon);
+  const [usedPokemons, setUsedPokemons] = useState<number[]>([
+    selectedPokemon.id,
+  ]);
 
   const [enemyHp, setEnemyHp] = useState<number>(rivalPokemon.base.HP);
   const [myHp, setMyHp] = useState<number>(selectedPokemon.hp);
@@ -56,6 +61,15 @@ function BattlePage() {
     setRivalPokemon(newRival);
     setEnemyHp(newRival.base.HP);
   }
+
+  useEffect(() => {
+    const dead = myHp === 0;
+    setPlayerDead(dead);
+    if (dead) {
+      setShowResultModal(true);
+      setDeadPokemons((prev) => [...prev, fightingPokemon.id]);
+    }
+  }, [myHp, fightingPokemon.id]);
 
   useEffect(() => {
     const dead = enemyHp === 0;
@@ -171,45 +185,56 @@ function BattlePage() {
                 </span>
               </div>
             </DropdownMenuItem>
-            {myPokemonModels.map((pokemon) => (
-              <DropdownMenuItem
-                key={pokemon.id}
-                onSelect={() => {
-                  setIsOpen(false);
-                  setIsFainted(false);
-                  setIsGameOver(false);
-                  setPlayerDead(false);
-                  setFightingPokemon(pokemon);
-                  setMyHp(pokemon.hp);
-                }}
-                className="w-255 h-46 cursor-pointer py-8 px-8"
-              >
-                <div className="flex flex-row items-center justify-between gap-4 w-full">
-                  <div className="flex flex-row gap-4 ">
-                    <div className="bg-neutrals-900 rounded-full w-32 h-32 overflow-hidden flex items-center justify-center">
-                      <img
-                        src={pokemon.image}
-                        alt={pokemon.name}
-                        className="w-28 h-28 ml-2"
-                      />
+            {myPokemonModels.map((pokemon) => {
+              const isDead = deadPokemons.includes(pokemon.id);
+              const isAlreadyUsed = usedPokemons.includes(pokemon.id);
+              const isDisabled = isDead || isAlreadyUsed;
+
+              return (
+                <DropdownMenuItem
+                  key={pokemon.id}
+                  onSelect={() => {
+                    if (isDisabled) return;
+                    setIsOpen(false);
+                    setIsFainted(false);
+                    setIsGameOver(false);
+                    setPlayerDead(false);
+                    setFightingPokemon(pokemon);
+                    setMyHp(pokemon.hp);
+                    setUsedPokemons((prev) => [...prev, pokemon.id]);
+                  }}
+                  className={cn(
+                    "w-255 h-46 cursor-pointer py-8 px-8",
+                    isDisabled && "pointer-events-none opacity-40"
+                  )}
+                >
+                  <div className="flex flex-row items-center justify-between gap-4 w-full">
+                    <div className="flex flex-row gap-4">
+                      <div className="bg-neutrals-900 rounded-full w-32 h-32 overflow-hidden flex items-center justify-center">
+                        <img
+                          src={pokemon.image}
+                          alt={pokemon.name}
+                          className="w-28 h-28 ml-2"
+                        />
+                      </div>
+                      <div className="flex flex-col w-67 h-38">
+                        <span className="text-bodyMedium font-mulish text-neutrals-500">
+                          {pokemon.name}
+                        </span>
+                        <span className="text-xSmallRegular font-mulish text-primary-300">
+                          Speed {pokemon.speed}
+                        </span>
+                      </div>
                     </div>
-                    <div className="flex flex-col w-67 h-38">
-                      <span className="text-bodyMedium font-mulish text-neutrals-500">
-                        {pokemon.name}
-                      </span>
-                      <span className="text-xSmallRegular font-mulish text-primary-300">
-                        Speed {pokemon.speed}
+                    <div className="w-51 h-19 mr-8">
+                      <span className="text-captionBold font-mulish text-neutrals-500">
+                        Pwr. {pokemon.attack}
                       </span>
                     </div>
                   </div>
-                  <div className="w-51 h-19 mr-8 ">
-                    <span className="text-captionBold font-mulish text-neutrals-500">
-                      Pwr. {pokemon.attack}
-                    </span>
-                  </div>
-                </div>
-              </DropdownMenuItem>
-            ))}
+                </DropdownMenuItem>
+              );
+            })}
           </DropdownMenuContent>
         </DropdownMenu>
       </div>
