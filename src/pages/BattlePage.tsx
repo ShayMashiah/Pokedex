@@ -9,11 +9,11 @@ import {
 import { BattleResultDialog } from "@/components/ui/Dialog/BattleResultDialog";
 import { useState, useEffect, useMemo } from "react";
 import type { Pokemon, PokemonModal } from "@/lib/types";
-import { useLocation } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import BattleBackground from "@/assets/battlebg.png";
 import { Progress } from "../components/ui/ProgressBar/progress";
 import { FightButton } from "../components/ui/Button/FightButton";
-import { motion } from "framer-motion";
+import { m, motion } from "framer-motion";
 import PokaballImg from "../assets/pokador.png";
 import pokemonData from "../data/pokemon_.json";
 import { buttonsVariant } from "../../src/lib/constants";
@@ -31,6 +31,7 @@ function BattlePage() {
   const [playerDead, setPlayerDead] = useState(false);
   const [enemyDead, setEnemyDead] = useState(false);
 
+  const navigate = useNavigate();
   const location = useLocation();
   const { selectedPokemon } = location.state || {};
   const { rivalPokemon: initialRivalPokemon } = location.state || {};
@@ -47,7 +48,7 @@ function BattlePage() {
     ? "text-extendedPalette-error-red"
     : "text-neutrals-500";
 
-  const { myPokemons } = useMyPokemon();
+  const { myPokemons, addPokemon } = useMyPokemon();
 
   function generateNewRivalPokemon() {
     const randomIndex = Math.floor(Math.random() * pokemonData.length);
@@ -327,6 +328,7 @@ function BattlePage() {
               targetHp={enemyHp}
               onCatchSuccess={() => {
                 setIsCaught(true);
+                addPokemon(rivalPokemon.id);
                 setIsGameOver(true);
               }}
               onCatchFail={() => {
@@ -392,7 +394,7 @@ function BattlePage() {
         }}
         secondaryButtonLabel="End Match"
         onSecondaryAction={() => {
-          window.location.href = "/";
+          navigate("/");
         }}
         caughtPokemon={isCaught ? rivalPokemon : undefined}
       />
