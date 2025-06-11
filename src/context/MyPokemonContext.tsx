@@ -1,4 +1,5 @@
 import { createContext, useContext, useState, type ReactNode } from "react";
+import { MY_POKEMONS_INIT } from "@/lib/constants";
 
 type MyPokemonContextType = {
   myPokemons: number[];
@@ -10,10 +11,16 @@ type MyPokemonContextType = {
 const MyPokemonContext = createContext<MyPokemonContextType | undefined>(undefined);
 
 export const MyPokemonProvider = ({ children }: { children: ReactNode }) => {
-  const [myPokemons, setMyPokemons] = useState<number[]>([1, 4, 25,101,133]); 
+  const [myPokemons, setMyPokemons] = useState<number[]>(MY_POKEMONS_INIT);
 
   const addPokemon = (id: number) => {
-    setMyPokemons((prev) => (prev.includes(id) ? prev : [...prev, id]));
+    setMyPokemons((prev) => {
+      if (prev.includes(id)) {
+        return prev;
+      }
+      const newArr = [...prev, id];
+      return newArr;
+    });
   };
 
   const removePokemon = (id: number) => {
