@@ -16,7 +16,6 @@ import type { PokemonModal } from "@/lib/types";
 import { transformToPokemonModal } from "@/lib/utils/mapMyPokemons";
 
 function PokemonNavbar({ activeItem, onChange }: PokemonNavbarProps) {
-
   const { myPokemons } = useMyPokemon();
 
   const pokemonsData: PokemonModal[] = myPokemons
@@ -27,8 +26,8 @@ function PokemonNavbar({ activeItem, onChange }: PokemonNavbarProps) {
     .filter((pokemon): pokemon is PokemonModal => pokemon !== null);
 
   return (
-    <div className="w-full bg-neutrals-white">
-      <NavigationMenu className="max-w-1440 mx-auto py-12 px-40 ">
+    <div className=" bg-neutrals-white max-w-full">
+      <NavigationMenu className="py-12 px-40">
         <div className="w-full mx-auto flex items-center justify-between">
           <NavigationMenuList className="flex items-center ">
             <Link to="/">
@@ -61,24 +60,23 @@ function PokemonNavbar({ activeItem, onChange }: PokemonNavbarProps) {
               </button>
             </NavigationMenuItem>
           </NavigationMenuList>
-        </div>
-
-        <div>
-          <Dialog>
-            <DialogTrigger asChild>
-              <Button
-                variant="primary"
-                size="xlg"
-                className="text-subheadingRegular font-mulish text-neutrals-white"
-              >
-                Start a Fight
-              </Button>
-            </DialogTrigger>
-            <DialogContent
-              variant={Variant.MyPokemons}
-              pokemons={pokemonsData}
-            />
-          </Dialog>
+          <div>
+            <Dialog>
+              <DialogTrigger asChild>
+                <Button
+                  variant="primary"
+                  size="xlg"
+                  className="text-subheadingRegular font-mulish text-neutrals-white"
+                >
+                  Start a Fight
+                </Button>
+              </DialogTrigger>
+              <DialogContent
+                variant={Variant.MyPokemons}
+                pokemons={pokemonsData}
+              />
+            </Dialog>
+          </div>
         </div>
       </NavigationMenu>
     </div>

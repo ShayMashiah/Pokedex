@@ -57,7 +57,7 @@ function PokemonTable({ data }: PokemonTableProps) {
   }, [currentPage, itemsPerPage, data.length]);
 
   return (
-    <div className="max-w-1376 mx-auto p-4">
+    <div className=" h-884 ">
       <Dialog>
         <Table className="rounded-xl overflow-hidden w-1376 border border-neutrals-200">
           <TableHeader>

@@ -7,7 +7,7 @@ import rightBackground from "@/assets/bluebg.jpg";
 import leftBackground from "@/assets/purplebg.jpg";
 
 function PreBattlePage() {
-  const [rivalPokemon, setRivalPokemon] = useState<Pokemon | null >(null);
+  const [rivalPokemon, setRivalPokemon] = useState<Pokemon | null>(null);
   const navigate = useNavigate();
 
   const location = useLocation();
@@ -34,13 +34,13 @@ function PreBattlePage() {
   }
 
   return (
-    <div className="bg-neutrals-100 mx-auto min-h-screen ">
+    <div className="bg-neutrals-100 mx-auto min-h-screen">
       <PokemonNavbar
         activeItem={Tab.Null}
         onChange={() => console.log("Battle mode")}
       />
-      <div className="max-w-1360  mx-auto">
-        <div className=" text-center mt-48 mb-6">
+      <div className="px-40 py-45">
+        <div className=" text-center mb-6">
           <h1 className="text-headingXXLgBold font-mulish text-neutrals-400">
             Fighting Arena
           </h1>
@@ -49,23 +49,29 @@ function PreBattlePage() {
           </p>
         </div>
         <div className="relative flex justify-center items-center w-full mt-24">
-          <div className="relative flex h-755 overflow-hidden">
-            <div className="relative w-1/2 h-full">
+          <div className="relative flex h-755 min-w-1360 overflow-hidden">
+            <div className="relative w-1/2 min-w-680 h-full">
               <img
                 src={leftBackground}
                 alt="Left background"
-                className="w-full h-full object-cover"
+                className="w-full  h-full object-cover"
               />
               {selectedPokemon?.image && (
                 <img
                   src={selectedPokemon.hires}
                   alt="Selected Pokemon"
-                  className="absolute top-82 left-130 z-10"
+                  className="absolute z-10"
+                  style={{
+                    top: "17%",
+                    left: "28%",
+                    width: "auto",
+                    height: "auto",
+                  }}
                 />
               )}
             </div>
 
-            <div className="relative w-1/2 h-full">
+            <div className="relative w-1/2 min-w-680  h-full">
               <img
                 src={rightBackground}
                 alt="Right background"
@@ -75,7 +81,13 @@ function PreBattlePage() {
                 <img
                   src={rivalPokemon.image?.hires}
                   alt={rivalPokemon.name?.english}
-                  className="absolute bottom-82 right-130  z-10"
+                  className="absolute z-10"
+                  style={{
+                    bottom: "17%",
+                    right: "28%",
+                    width: "auto",
+                    height: "auto",
+                  }}
                 />
               )}
             </div>

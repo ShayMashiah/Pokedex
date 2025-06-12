@@ -85,9 +85,9 @@ function HomePage() {
     <div className="bg-neutrals-100 min-h-[1121px] h-auto">
       <PokemonNavbar activeItem={activeTab} onChange={setActiveTab} />
 
-      <main className="max-w-1440 mx-auto px-10">
-        <div className="max-w-1376 mx-auto">
-          <h1 className="text-headingLgMedium font-mulish text-neutrals-400 mt-32 mb-10">
+      <main className="px-40 py-16">
+        <div>
+          <h1 className="text-headingLgMedium font-mulish text-neutrals-400 mb-10">
             {TAB_LABELS[activeTab]}
           </h1>
 

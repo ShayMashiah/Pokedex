@@ -169,7 +169,7 @@ function BattlePage() {
         </p>
       </div>
 
-      <div className=" max-w-1360 mx-auto  mt-20">
+      <div className="px-40">
         <DropdownMenu open={isOpen} onOpenChange={setIsOpen}>
           <DropdownMenuTrigger
             isOpen={isOpen}
@@ -239,10 +239,10 @@ function BattlePage() {
         </DropdownMenu>
       </div>
 
-      <div className="relative flex max-w-1360 mx-auto h-750 overflow-hidden">
+      <div className="relative flex px-40 pb-40 mx-auto ">
         <div
           className={
-            "absolute top-90 left-1 w-633 h-119 px-[25px] py-[24px] rounded-tr-[12px] rounded-br-[12px] border-t-[5px] border-r-[5px] border-b-[5px] border-l-0 border-solid [border-image-source:theme(backgroundImage.gradient-default)] [border-image-slice:1]  backdrop-blur-sm bg-white/30 z-10 flex items-center"
+            "absolute top-90 left-41 w-633 h-119 px-[25px] py-[24px] rounded-tr-[12px] rounded-br-[12px] border-t-[5px] border-r-[5px] border-b-[5px] border-l-0 border-solid [border-image-source:theme(backgroundImage.gradient-default)] [border-image-slice:1]  backdrop-blur-sm bg-white/30 z-10 flex items-center"
           }
         >
           <p className={`${messageColor} text-headingLgBold font-mulish`}>
@@ -260,7 +260,8 @@ function BattlePage() {
           key={fightingPokemon.id}
           src={fightingPokemon.hires}
           alt="Pokemon Left"
-          className="absolute bottom-158 left-234 w-235 h-239"
+          className="absolute"
+          style={{ bottom: "20%", left: "20%", width: "15vw", height: "auto" }}
           initial={{ scale: 1 }}
           animate={
             playerDead
@@ -281,14 +282,15 @@ function BattlePage() {
           maxHP={fightingPokemon.hp ?? 0}
           isTurn={playerTurn}
           isFainted={playerDead}
-          className="absolute bottom-24 left-24"
+          className="absolute bottom-64 left-64"
         />
 
         <motion.img
           key={rivalPokemon.id}
           src={rivalPokemon.image?.hires}
           alt="Pokemon Right"
-          className="absolute top-101 right-270 w-235 h-239"
+          className="absolute"
+          style={{ top: "15%", right: "20%", width: "15vw", height: "auto" }}
           initial={{ scale: 1 }}
           animate={
             isCaught
@@ -313,7 +315,8 @@ function BattlePage() {
           <motion.img
             src={PokaballImg}
             alt="Pokeball"
-            className="absolute top-101 right-295 w-206 h-206"
+            className="absolute"
+            style={{ top: "15%", right: "20%", width: "15vw", height: "auto" }}
             initial={{ scale: 0, opacity: 0 }}
             animate={{ scale: 1, opacity: 1, transition: { delay: 0.6 } }}
           />
@@ -326,11 +329,11 @@ function BattlePage() {
           maxHP={rivalPokemon.base.HP}
           isTurn={!playerTurn}
           isFainted={enemyDead}
-          className="absolute top-24 right-24"
+          className="absolute top-24 right-64"
         />
 
         {playerTurn && !playerDead && !enemyDead && !isGameOver && (
-          <div className="absolute bottom-24 right-24 flex gap-24 p-4">
+          <div className="absolute bottom-64 right-64 flex gap-24 p-4">
             <FightButton
               type={buttonsVariant.Attack}
               attackerAttack={fightingPokemon.attack}
