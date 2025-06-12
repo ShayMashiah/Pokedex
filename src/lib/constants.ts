@@ -97,4 +97,4 @@ export const buttonsVariant = {
 } as const;
 export type buttonsVariant = (typeof buttonsVariant)[keyof typeof buttonsVariant];
 
-export const MY_POKEMONS_INIT = [1, 4, 25,101,133]
+export const MY_POKEMONS_INIT = [1, 4,6, 25,101,133]
