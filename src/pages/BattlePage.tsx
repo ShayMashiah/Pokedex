@@ -22,6 +22,7 @@ import type { TurnMessageParams } from "@/lib/constants";
 import { useMyPokemon } from "@/context/MyPokemonContext";
 import { cn } from "@/lib/utils";
 
+
 function BattlePage() {
   const [isOpen, setIsOpen] = useState(false);
   const [isCaught, setIsCaught] = useState(false);
@@ -48,6 +49,7 @@ function BattlePage() {
   const [fightingPokemon, setFightingPokemon] =
     useState<PokemonModal>(selectedPokemon);
   const [showResultModal, setShowResultModal] = useState(false);
+  const [hasSwitched, setHasSwitched] = useState(false);
 
   const messageColor = isFainted
     ? "text-extendedPalette-error-red"
@@ -170,13 +172,25 @@ function BattlePage() {
       </div>
 
       <div className=" max-w-1360 mx-auto  mt-20">
-        <DropdownMenu open={isOpen} onOpenChange={setIsOpen}>
+        <DropdownMenu
+          open={isOpen}
+          onOpenChange={(open) => {
+            if (!hasSwitched) {
+              setIsOpen(open);
+            }
+          }}
+        >
           <DropdownMenuTrigger
             isOpen={isOpen}
-            className="text-textBodyRegular font-roboto mb-12 w-300"
+            className={cn(
+              "text-textBodyRegular font-roboto mb-12 w-300",
+              hasSwitched && "opacity-50 cursor-not-allowed"
+            )}
+            disabled={hasSwitched}
           >
             {fightingPokemon?.name || "Select Pokemon"}
           </DropdownMenuTrigger>
+
           <DropdownMenuContent>
             <DropdownMenuItem className="py-8 px-8">
               <div className="flex items-center justify-between w-258 h-35 bg-primary-50">
@@ -188,7 +202,7 @@ function BattlePage() {
             {myPokemonModels.map((pokemon) => {
               const isDead = deadPokemons.includes(pokemon.id);
               const isAlreadyUsed = usedPokemons.includes(pokemon.id);
-              const isDisabled = isDead || isAlreadyUsed;
+              const isDisabled = isDead || isAlreadyUsed || hasSwitched;
 
               return (
                 <DropdownMenuItem
@@ -202,6 +216,7 @@ function BattlePage() {
                     setFightingPokemon(pokemon);
                     setMyHp(pokemon.hp);
                     setUsedPokemons((prev) => [...prev, pokemon.id]);
+                    setHasSwitched(true);
                   }}
                   className={cn(
                     "w-255 h-46 cursor-pointer py-8 px-8",
@@ -419,7 +434,7 @@ function BattlePage() {
         }}
         secondaryButtonLabel="End Match"
         onSecondaryAction={() => {
-          navigate("/");
+          navigate("/", { state: { activeTab: Tab.User } });
         }}
         caughtPokemon={isCaught ? rivalPokemon : undefined}
       />
