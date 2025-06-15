@@ -25,6 +25,8 @@ import {
 import { Variant } from "@/lib/constants";
 import { useMyPokemon } from "@/context/MyPokemonContext";
 import pokeballIcon from "@/assets/pokador.png";
+import { SearchX } from "lucide-react";
+
 type PokemonTableProps = {
   data: PokemonRow[];
 };
@@ -79,7 +81,14 @@ function PokemonTable({ data }: PokemonTableProps) {
                   colSpan={5}
                   className="text-center py-10 text-muted-foreground"
                 >
-                  No Pokemons exist
+                  <div className="flex flex-col items-center justify-center p-10 text-neutrals-1100 font-mulish">
+                    <div className="mb-16 h-150 w-150  bg-primary-50 rounded-full  items-center justify-center flex ">
+                    <SearchX size={64} className="text-primary-300 h-70 w-70" />
+                    </div>
+                    <span className="mt-2 text-lg font-medium">
+                      No Pokemons were found
+                    </span>
+                  </div>
                 </TableCell>
               </TableRow>
             ) : (
