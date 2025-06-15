@@ -83,62 +83,61 @@ function PokemonTable({ data }: PokemonTableProps) {
                 </TableCell>
               </TableRow>
             ) : (
-              
               paginatedData.map((pokemon: PokemonRow) => {
                 const isMine = myPokemons.includes(pokemon.id);
                 return (
-                <DialogTrigger
-                  asChild
-                  key={pokemon.id}
-                  onClick={() => setSelectedPokemon(pokemon)}
-                >
-                  <TableRow className="bg-neutrals-white text-neutrals-300  border-neutrals-100 hover:bg-primary-50 cursor-pointer w-1376 h-72">
-                    <TableCell>
-                      <div className="flex items-center gap-3">
-                        <div className="py-9 pl-16 pr-13.5 ">
-                          <div className="bg-neutrals-900 rounded-full w-54 h-54 overflow-hidden flex items-center justify-center">
-                            <img
-                              src={pokemon.image?.thumbnail ?? ""}
-                              alt={pokemon.name.english}
-                              className="  object-cover w-44 h-44"
-                            />
+                  <DialogTrigger
+                    asChild
+                    key={pokemon.id}
+                    onClick={() => setSelectedPokemon(pokemon)}
+                  >
+                    <TableRow className="bg-neutrals-white text-neutrals-300  border-neutrals-100 hover:bg-primary-50 cursor-pointer w-1376 h-72">
+                      <TableCell>
+                        <div className="flex items-center gap-3">
+                          <div className="py-9 pl-16 pr-13.5 ">
+                            <div className="bg-neutrals-900 rounded-full w-54 h-54 overflow-hidden flex items-center justify-center">
+                              <img
+                                src={pokemon.image?.thumbnail ?? ""}
+                                alt={pokemon.name.english}
+                                className="  object-cover w-44 h-44"
+                              />
+                            </div>
                           </div>
-                        </div>
-                        <span className="text-headingMdRegular font-mulish">
-                          {pokemon.name.english}
-                        </span>
-                        {isMine && (
+                          <span className="text-headingMdRegular font-mulish">
+                            {pokemon.name.english}
+                          </span>
+                          {isMine && (
                             <img
-                              src={pokeballIcon} 
+                              src={pokeballIcon}
                               alt="My Pokemon"
                               className="w-24 h-24 ml-8"
                             />
-                        )}
-                      </div>
-                    </TableCell>
-                    <TableCell className="text-bodyRegular font-mulish">
-                      #{String(pokemon.id).padStart(4, "0")}
-                    </TableCell>
-                    <TooltipProvider>
-                      <Tooltip>
-                        <TooltipTrigger asChild>
+                          )}
+                        </div>
+                      </TableCell>
+                      <TableCell className="text-bodyRegular font-mulish">
+                        #{String(pokemon.id).padStart(4, "0")}
+                      </TableCell>
+                      <TooltipProvider>
+                        <Tooltip>
                           <TableCell className="max-w-[400px] truncate font-mulish text-bodyRegular pr-40">
-                            {pokemon.description}
+                            <TooltipTrigger asChild>
+                              <p className="truncate">{pokemon.description}</p>
+                            </TooltipTrigger>
+                            <TooltipContent className="w-345 h-full bg-neutrals-1000 text-center font-mulish text-neutral-100">
+                              <p>{pokemon.description}</p>
+                            </TooltipContent>
                           </TableCell>
-                        </TooltipTrigger>
-                        <TooltipContent className="w-345 h-full bg-neutrals-1000 text-center font-mulish text-neutral-100">
-                          <p>{pokemon.description}</p>
-                        </TooltipContent>
-                      </Tooltip>
-                    </TooltipProvider>
-                    <TableCell className="font-mulish text-bodyRegular">
-                      {pokemon.base.Attack}
-                    </TableCell>
-                    <TableCell className="font-mulish text-bodyRegular">
-                      {pokemon.base.HP} HP
-                    </TableCell>
-                  </TableRow>
-                </DialogTrigger>
+                        </Tooltip>
+                      </TooltipProvider>
+                      <TableCell className="font-mulish text-bodyRegular">
+                        Power Level {pokemon.base.Attack}
+                      </TableCell>
+                      <TableCell className="font-mulish text-bodyRegular">
+                        {pokemon.base.HP} HP
+                      </TableCell>
+                    </TableRow>
+                  </DialogTrigger>
                 );
               })
             )}
