@@ -82,7 +82,7 @@ function HomePage() {
   };
 
   return (
-    <div className="bg-neutrals-100 min-h-[1121px] h-auto">
+    <div className="bg-neutrals-100 min-h-screen h-auto">
       <PokemonNavbar activeItem={activeTab} onChange={setActiveTab} />
 
       <main className="max-w-1440 mx-auto px-10">
@@ -115,7 +115,7 @@ function HomePage() {
             </DropdownMenu>
           </div>
         </div>
-        <PokemonTable key={activeTab} data={pokemonData} />
+        <PokemonTable key={activeTab} data={pokemonData}/>
       </main>
     </div>
   );

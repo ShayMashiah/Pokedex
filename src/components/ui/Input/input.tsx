@@ -1,7 +1,7 @@
 import * as React from "react";
 import { cn } from "@/lib/utils";
 import { Search, X } from "lucide-react";
-import { useState } from "react";
+
 
 type InputProps = React.ComponentProps<"input"> & {
   variant?: "default" | "dropdown-input";
@@ -10,10 +10,10 @@ type InputProps = React.ComponentProps<"input"> & {
 function Input({
   className,
   variant = "default",
+  value,
+  onChange,
   ...props
 }: InputProps) {
-  const [value, setValue] = useState("");
-
   const isDropdown = variant === "dropdown-input";
 
   return (
@@ -21,7 +21,7 @@ function Input({
       className={cn(
         "relative",
         "mb-6",
-    
+
         isDropdown ? "w-206 h-38" : "w-[293.17px] h-38"
       )}
     >
@@ -36,7 +36,7 @@ function Input({
       <input
         type="text"
         value={value}
-        onChange={(e) => setValue(e.target.value)}
+        onChange={onChange}
         placeholder="Search"
         className={cn(
           "peer w-full h-full rounded-k border pr-[80px] py-8 bg-neutral-100",
@@ -59,8 +59,8 @@ function Input({
       {value && (
         <button
           type="button"
-          onClick={() => setValue("")}
-          className="absolute right-12 top-1/2 -translate-y-1/2 text-neutrals-400 hover:text-neutrals-600 transition-colors"
+          onClick={() => onChange?.({ target: { value: "" } } as any)}
+          className="absolute right-12 top-1/2 -translate-y-1/2 text-neutrals-400 hover:text-neutrals-600 transition-colors z-10"
         >
           <X size={16} />
         </button>
