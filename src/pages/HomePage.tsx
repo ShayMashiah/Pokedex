@@ -13,9 +13,9 @@ import {
 import { SortOption } from "@/lib/types";
 import { SORT_OPTIONS } from "@/lib/constants";
 import { useMyPokemon } from "@/context/MyPokemonContext";
+import { useLocation } from "react-router-dom";
 
 function HomePage() {
-  const [activeTab, setActiveTab] = useState<Tab>(Tab.All);
   const [isOpen, setIsOpen] = useState(false);
   const [selectedOption, setSelectedOption] = useState<SortOption>(
     SortOption.default
@@ -25,6 +25,10 @@ function HomePage() {
   const [searchTerm, setSearchTerm] = useState("");
 
   const { myPokemons } = useMyPokemon();
+
+  const location = useLocation();
+  const initialTab = location.state?.activeTab || Tab.All;
+  const [activeTab, setActiveTab] = useState<Tab>(initialTab);
 
   useEffect(() => {
     let sourceData;
