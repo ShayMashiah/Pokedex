@@ -22,7 +22,6 @@ import type { TurnMessageParams } from "@/lib/constants";
 import { useMyPokemon } from "@/context/MyPokemonContext";
 import { cn } from "@/lib/utils";
 
-
 function BattlePage() {
   const [isOpen, setIsOpen] = useState(false);
   const [isCaught, setIsCaught] = useState(false);
@@ -110,14 +109,28 @@ function BattlePage() {
     const enemyAttack = rivalPokemon.base.Attack;
     const playerDefense = selectedPokemon.defense;
 
-    const damage =
-      Math.floor(
-        (((2 * 50) / 5 + 2) * 60 * (enemyAttack / playerDefense)) / 50 + 2
-      ) *
-      (Math.random() * (1 - 0.85) + 0.85);
+    const missChance = 0.05;
+    const didMiss = Math.random() < missChance;
+
+    if (didMiss) {
+      setTimeout(() => {
+        setPlayerTurn(true);
+        setTriedToCatch(false);
+      }, 1000);
+      return;
+    }
+
+    const level = 50;
+    const power = 60;
+    const numerator =
+      ((2 * level) / 5 + 2) * power * (enemyAttack / playerDefense);
+    const baseDamage = numerator / 50 + 2;
+
+    const randomFactor = Math.random() * (1.3 - 0.7) + 0.7;
+    const totalDamage = Math.floor(baseDamage * randomFactor);
 
     setTimeout(() => {
-      setMyHp((prev) => Math.max(prev - Math.floor(damage), 0));
+      setMyHp((prev) => Math.max(prev - totalDamage, 0));
       setPlayerTurn(true);
       setTriedToCatch(false);
     }, 1000);

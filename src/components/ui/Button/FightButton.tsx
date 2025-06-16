@@ -47,16 +47,31 @@ function FightButton({
     defenderDefense,
     level = 50,
     power = 60,
+    accuracy = 100, 
+    evasion = 0,
   }: {
     attackerAttack: number;
     defenderDefense: number;
     level?: number;
     power?: number;
+    accuracy?: number;
+    evasion?: number;
   }) {
+    const baseMissChance = 0.05; 
+    const accuracyModifier = accuracy / 100;
+    const evasionModifier = 1 + evasion / 100;
+    const finalHitChance =
+      (1 - baseMissChance) * (accuracyModifier / evasionModifier);
+
+    if (Math.random() > finalHitChance) {
+      return 0; 
+    }
+
     const numerator =
       ((2 * level) / 5 + 2) * power * (attackerAttack / defenderDefense);
     const baseDamage = numerator / 50 + 2;
-    const randomFactor = Math.random() * (1 - 0.85) + 0.85;
+
+    const randomFactor = Math.random() * (1.3 - 0.7) + 0.7;
     return Math.floor(baseDamage * randomFactor);
   }
 
