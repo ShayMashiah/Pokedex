@@ -34,7 +34,7 @@ function DropdownMenuTrigger({
       className={cn(
         "flex items-center justify-between",
         "w-101 h-38",
-        "px-9 pr-6 py-9",
+        "px-4 py-2",
         "gap-4 rounded-k",
         "border",
         "data-[state=closed]:border-neutrals-200",

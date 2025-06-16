@@ -1,4 +1,4 @@
-import { useMemo, useState } from "react";
+import { useMemo, useState, useEffect  } from "react";
 import type { PokemonRow } from "@/lib/types";
 import { pageSizeOptions } from "../../../lib/constants";
 import { ChevronLeft, ChevronRight } from "lucide-react";
@@ -38,6 +38,10 @@ function PokemonTable({ data }: PokemonTableProps) {
 
   const [currentPage, setCurrentPage] = useState(1);
   const [itemsPerPage, setItemsPerPage] = useState(10);
+
+  useEffect(() => {
+    setCurrentPage(1);
+  }, [data]);
 
   const totalPages = useMemo(() => {
     return Math.ceil(data.length / itemsPerPage);

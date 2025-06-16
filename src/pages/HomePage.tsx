@@ -99,7 +99,7 @@ function HomePage() {
               className="font-roboto text-bodyRegular"
             />
             <DropdownMenu open={isOpen} onOpenChange={setIsOpen}>
-              <DropdownMenuTrigger isOpen={isOpen}>
+              <DropdownMenuTrigger isOpen={isOpen}   className="max-w-full inline-flex min-w-101">
                 {selectedOption}
               </DropdownMenuTrigger>
               <DropdownMenuContent>
@@ -107,6 +107,7 @@ function HomePage() {
                   <DropdownMenuItem
                     key={option.value}
                     onSelect={() => handleSelect(option.value)}
+                    className="h-38 w-206 font-mulish text-bodyRegular text-neutrals-500 border-k cursor-pointer"
                   >
                     {option.label}
                   </DropdownMenuItem>
