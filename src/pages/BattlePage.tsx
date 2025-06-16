@@ -28,7 +28,6 @@ import {
   TooltipProvider,
 } from "@/components/ui/Table/tooltip";
 
-
 function BattlePage() {
   const [isOpen, setIsOpen] = useState(false);
   const [isCaught, setIsCaught] = useState(false);
@@ -77,6 +76,7 @@ function BattlePage() {
     setPlayerDead(dead);
     if (dead) {
       setShowResultModal(true);
+      setCatchAttempts(0);
       setDeadPokemons((prev) => [...prev, fightingPokemon.id]);
     }
   }, [myHp, fightingPokemon.id]);
@@ -84,7 +84,10 @@ function BattlePage() {
   useEffect(() => {
     const dead = enemyHp === 0;
     setEnemyDead(dead);
-    if (dead) setShowResultModal(true);
+    if (dead) {
+      setCatchAttempts(0);
+      setShowResultModal(true);
+    }
   }, [enemyHp]);
 
   useEffect(() => {
