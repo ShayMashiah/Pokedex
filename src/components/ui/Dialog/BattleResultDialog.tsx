@@ -22,6 +22,9 @@ function BattleResultDialog({
   secondaryButtonLabel,
   onSecondaryAction,
   caughtPokemon,
+  onSwitchPokemon,
+  hasSwitched,
+  currentPokemonId,
   className,
 }: BattleResultModalProps) {
   const [isPokemonDialogOpen, setIsPokemonDialogOpen] = useState(false);
@@ -89,6 +92,7 @@ function BattleResultDialog({
                 onPrimaryAction();
               }
             }}
+            disabled={primaryButtonLabel === "Switch Pokémon" && hasSwitched}
             size={
               primaryButtonLabel === "Battle Another Pokémon"
                 ? "xxxl"
@@ -141,6 +145,7 @@ function BattleResultDialog({
                 onPrimaryAction();
               }
             }}
+            disabled={primaryButtonLabel === "Switch Pokémon" && hasSwitched}
             size={
               primaryButtonLabel === "Battle Another Pokémon" ? "xxxl" : "xxl"
             }
@@ -160,7 +165,7 @@ function BattleResultDialog({
 
       <Dialog open={isPokemonDialogOpen} onOpenChange={setIsPokemonDialogOpen}>
         <DialogContent
-          variant={Variant.MyPokemons}
+          variant={Variant.SwitchPokemon}
           pokemons={myPokemons.map((p) => ({
             id: p.id,
             name: p.name.english,
@@ -179,6 +184,11 @@ function BattleResultDialog({
                 ?.map((a: string[]) => a[0].split(",")[0].trim())
                 .join(", ") ?? "Unknown",
           }))}
+          disabledPokemonId={currentPokemonId}
+          onSwitchPokemon={(pokemon) => {
+            setIsPokemonDialogOpen(false);
+            onSwitchPokemon?.(pokemon);
+          }}
         />
       </Dialog>
     </>

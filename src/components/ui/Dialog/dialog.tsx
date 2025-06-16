@@ -11,7 +11,6 @@ import { useMyPokemon } from "@/context/MyPokemonContext";
 import allPokemons from "@/data/pokemon_.json";
 import { mapMyPokemonsByIds } from "@/lib/utils/mapMyPokemons";
 
-
 function Dialog({
   ...props
 }: React.ComponentProps<typeof DialogPrimitive.Root>) {
@@ -57,6 +56,7 @@ function DialogContent({
   children,
   variant,
   pokemon,
+  disabledPokemonId,
   ...props
 }: CustomDialogContentProps) {
   const { myPokemons: myPokemonIds } = useMyPokemon();
@@ -81,11 +81,22 @@ function DialogContent({
     navigate("/prebattle", { state: { selectedPokemon: selected } });
   };
 
+  const handleSwitchPokemon = () => {
+    const selected = myPokemons?.find((p) => p.id === selectedPokemonForBattle);
+    if (!selected || !props.onSwitchPokemon) return;
+    props.onSwitchPokemon(selected);
+  };
+
   const onSelectPokemon = (id: number) => {
     setselectedPokemonForBattle(id);
   };
 
   if (variant === Variant.MyPokemons && myPokemons) {
+    const fullRows = Math.floor(myPokemons.length / perRow);
+    const lastRowStart = fullRows * perRow;
+    fullItems = myPokemons.slice(0, lastRowStart);
+    remainingItems = myPokemons.slice(lastRowStart);
+  } else if (variant === Variant.SwitchPokemon && myPokemons) {
     const fullRows = Math.floor(myPokemons.length / perRow);
     const lastRowStart = fullRows * perRow;
     fullItems = myPokemons.slice(0, lastRowStart);
@@ -235,8 +246,82 @@ function DialogContent({
               </div>
             )}
 
-            <DialogFooter className="flex justify-center border-t border-neutrals-light pt-16">
+            <DialogFooter className="flex justify-center border-t border-neutrals-light py-16">
               <Button variant="primary" size="xlg" onClick={handleStartBattle}>
+                Start battle
+              </Button>
+            </DialogFooter>
+          </>
+        ) : variant === Variant.SwitchPokemon && myPokemons ? (
+          <>
+            <DialogHeader className="items-start border-neutrals-light font-mulish">
+              <DialogTitle className="font-mulish !text-headingLgMedium text-neutrals-500 py-24 px-10">
+                Choose the Pokémon to battle with
+              </DialogTitle>
+            </DialogHeader>
+
+            <div className="grid grid-cols-3 gap-2 justify-items-center">
+              {fullItems.map((p) => {
+                const isDisabled = p.id === disabledPokemonId;
+                return (
+                  <button
+                    key={p.id}
+                    onClick={() => !isDisabled && onSelectPokemon?.(p.id)}
+                    disabled={isDisabled}
+                    className={cn(
+                      "rounded-full border-2 mt-16 transition",
+                      isDisabled
+                        ? "opacity-50 cursor-not-allowed border-transparent"
+                        : "hover:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    )}
+                  >
+                    <div className="bg-neutrals-900 w-102.35 h-102.35 rounded-full flex items-center justify-center">
+                      <img
+                        src={p.image}
+                        alt={p.name}
+                        className="object-cover w-76 h-76"
+                      />
+                    </div>
+                  </button>
+                );
+              })}
+            </div>
+
+            {remainingItems.length > 0 && (
+              <div className="flex justify-center gap-76 pt-10">
+                {remainingItems.map((p) => {
+                  const isDisabled = p.id === disabledPokemonId;
+                  return (
+                    <button
+                      key={p.id}
+                      onClick={() => !isDisabled && onSelectPokemon?.(p.id)}
+                      disabled={isDisabled}
+                      className={cn(
+                        "rounded-full border-2 transition",
+                        isDisabled
+                          ? "opacity-50 cursor-not-allowed border-transparent"
+                          : "hover:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                      )}
+                    >
+                      <div className="bg-neutrals-900 w-102.35 h-102.35 rounded-full flex items-center justify-center">
+                        <img
+                          src={p.image}
+                          alt={p.name}
+                          className="object-cover w-76 h-76"
+                        />
+                      </div>
+                    </button>
+                  );
+                })}
+              </div>
+            )}
+
+            <DialogFooter className="flex justify-center border-t border-neutrals-light py-16">
+              <Button
+                variant="primary"
+                size="xlg"
+                onClick={handleSwitchPokemon}
+              >
                 Start battle
               </Button>
             </DialogFooter>

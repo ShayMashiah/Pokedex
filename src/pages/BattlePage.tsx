@@ -22,7 +22,6 @@ import type { TurnMessageParams } from "@/lib/constants";
 import { useMyPokemon } from "@/context/MyPokemonContext";
 import { cn } from "@/lib/utils";
 
-
 function BattlePage() {
   const [isOpen, setIsOpen] = useState(false);
   const [isCaught, setIsCaught] = useState(false);
@@ -433,6 +432,18 @@ function BattlePage() {
           navigate("/", { state: { activeTab: Tab.User } });
         }}
         caughtPokemon={isCaught ? rivalPokemon : undefined}
+        onSwitchPokemon={(pokemon) => {
+          setShowResultModal(false);
+          setFightingPokemon(pokemon);
+          setMyHp(pokemon.hp ?? 100);
+          setIsFainted(false);
+          setPlayerDead(false);
+          setIsGameOver(false);
+          setUsedPokemons((prev) => [...prev, pokemon.id]);
+          setHasSwitched(true);
+        }}
+        hasSwitched={hasSwitched}
+        currentPokemonId={fightingPokemon.id}
       />
     </div>
   );
