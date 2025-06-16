@@ -111,7 +111,7 @@ function HomePage() {
                   <DropdownMenuItem
                     key={option.value}
                     onSelect={() => handleSelect(option.value)}
-                    className="h-38 w-206 font-mulish text-bodyRegular text-neutrals-500 border-k cursor-pointer"
+                    className="h-38 w-206 font-mulish text-bodyRegular text-neutrals-500 border-k py-8 pl-8 cursor-pointer"
                   >
                     {option.label}
                   </DropdownMenuItem>
