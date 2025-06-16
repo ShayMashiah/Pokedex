@@ -21,6 +21,12 @@ import { TURN_MESSAGES } from "@/lib/constants";
 import type { TurnMessageParams } from "@/lib/constants";
 import { useMyPokemon } from "@/context/MyPokemonContext";
 import { cn } from "@/lib/utils";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipTrigger,
+  TooltipProvider,
+} from "@/components/ui/Table/tooltip";
 
 function BattlePage() {
   const [isOpen, setIsOpen] = useState(false);
@@ -184,16 +190,33 @@ function BattlePage() {
           open={isOpen}
           onOpenChange={(open) => !hasSwitched && setIsOpen(open)}
         >
-          <DropdownMenuTrigger
-            isOpen={isOpen}
-            className={cn(
-              "text-textBodyRegular font-roboto mb-12 w-300",
-              hasSwitched && "opacity-50 cursor-not-allowed"
-            )}
-            disabled={hasSwitched}
-          >
-            {fightingPokemon?.name || "Select Pokemon"}
-          </DropdownMenuTrigger>
+          <TooltipProvider>
+            <Tooltip>
+              <TooltipTrigger asChild>
+                <div className="w-fit">
+                  <DropdownMenuTrigger
+                    isOpen={isOpen}
+                    className={cn(
+                      "text-textBodyRegular font-roboto mb-12 w-300",
+                      hasSwitched && "opacity-50 cursor-not-allowed"
+                    )}
+                    disabled={hasSwitched}
+                  >
+                    {fightingPokemon?.name || "Select Pokemon"}
+                  </DropdownMenuTrigger>
+                </div>
+              </TooltipTrigger>
+              {hasSwitched && (
+                <TooltipContent
+                  side="right"
+                  sideOffset={7}
+                  className="w-193 h-46 py-7 px-10  border-k text-center text-captionRegular text-neutrals-white font-roboto"
+                >
+                  You have already switched a Pokemon in this battle.{" "}
+                </TooltipContent>
+              )}
+            </Tooltip>
+          </TooltipProvider>
 
           <DropdownMenuContent>
             <DropdownMenuItem className="py-8 px-8">
