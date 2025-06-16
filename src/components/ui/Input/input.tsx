@@ -2,7 +2,6 @@ import * as React from "react";
 import { cn } from "@/lib/utils";
 import { Search, X } from "lucide-react";
 
-
 type InputProps = React.ComponentProps<"input"> & {
   variant?: "default" | "dropdown-input";
 };
@@ -59,7 +58,11 @@ function Input({
       {value && (
         <button
           type="button"
-          onClick={() => onChange?.({ target: { value: "" } } as any)}
+          onClick={() =>
+            onChange?.({
+              target: { value: "" },
+            } as React.ChangeEvent<HTMLInputElement>)
+          }
           className="absolute right-12 top-1/2 -translate-y-1/2 text-neutrals-400 hover:text-neutrals-600 transition-colors z-10"
         >
           <X size={16} />
