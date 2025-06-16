@@ -19,6 +19,7 @@ import pokemonData from "../data/pokemon_.json";
 import { buttonsVariant } from "../../src/lib/constants";
 import { TURN_MESSAGES } from "@/lib/constants";
 import type { TurnMessageParams } from "@/lib/constants";
+import { missChance } from "@/lib/constants";
 import { useMyPokemon } from "@/context/MyPokemonContext";
 import { cn } from "@/lib/utils";
 
@@ -109,7 +110,6 @@ function BattlePage() {
     const enemyAttack = rivalPokemon.base.Attack;
     const playerDefense = selectedPokemon.defense;
 
-    const missChance = 0.05;
     const didMiss = Math.random() < missChance;
 
     if (didMiss) {

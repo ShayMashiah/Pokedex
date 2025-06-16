@@ -6,7 +6,8 @@ import AttackBg from "@/assets/attack-button-bg.png";
 import { colors } from "@/tailwind/colors/colors";
 import type { FightButtonProps } from "@/lib/types";
 import { useState } from "react";
-import { buttonsVariant } from "@/lib/constants";
+import { baseMissChance, randomFactor, buttonsVariant } from "@/lib/constants";
+
 
 const shakeAnimation = {
   shake: {
@@ -57,7 +58,6 @@ function FightButton({
     accuracy?: number;
     evasion?: number;
   }) {
-    const baseMissChance = 0.05; 
     const accuracyModifier = accuracy / 100;
     const evasionModifier = 1 + evasion / 100;
     const finalHitChance =
@@ -71,7 +71,6 @@ function FightButton({
       ((2 * level) / 5 + 2) * power * (attackerAttack / defenderDefense);
     const baseDamage = numerator / 50 + 2;
 
-    const randomFactor = Math.random() * (1.3 - 0.7) + 0.7;
     return Math.floor(baseDamage * randomFactor);
   }
 
