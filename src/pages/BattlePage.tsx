@@ -27,6 +27,7 @@ import {
   TooltipTrigger,
   TooltipProvider,
 } from "@/components/ui/Table/tooltip";
+import { maxAttempts } from "@/lib/constants";
 
 function BattlePage() {
   const [isOpen, setIsOpen] = useState(false);
@@ -56,7 +57,6 @@ function BattlePage() {
   const [showResultModal, setShowResultModal] = useState(false);
   const [hasSwitched, setHasSwitched] = useState(false);
   const [catchAttempts, setCatchAttempts] = useState(0);
-  const maxAttempts = 3;
 
   const messageColor = isFainted
     ? "text-extendedPalette-error-red"
@@ -76,6 +76,7 @@ function BattlePage() {
     setPlayerDead(dead);
     if (dead) {
       setShowResultModal(true);
+      setCatchAttempts(0);
       setDeadPokemons((prev) => [...prev, fightingPokemon.id]);
     }
   }, [myHp, fightingPokemon.id]);
@@ -83,7 +84,10 @@ function BattlePage() {
   useEffect(() => {
     const dead = enemyHp === 0;
     setEnemyDead(dead);
-    if (dead) setShowResultModal(true);
+    if (dead) {
+      setCatchAttempts(0);
+      setShowResultModal(true);
+    }
   }, [enemyHp]);
 
   useEffect(() => {
@@ -463,6 +467,18 @@ function BattlePage() {
           navigate("/", { state: { activeTab: Tab.User } });
         }}
         caughtPokemon={isCaught ? rivalPokemon : undefined}
+        onSwitchPokemon={(pokemon) => {
+          setShowResultModal(false);
+          setFightingPokemon(pokemon);
+          setMyHp(pokemon.hp ?? 100);
+          setIsFainted(false);
+          setPlayerDead(false);
+          setIsGameOver(false);
+          setUsedPokemons((prev) => [...prev, pokemon.id]);
+          setHasSwitched(true);
+        }}
+        hasSwitched={hasSwitched}
+        currentPokemonId={fightingPokemon.id}
         rivalHp={rivalPokemon.base.HP}
       />
     </div>
