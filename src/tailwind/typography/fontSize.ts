@@ -20,7 +20,7 @@ export const fontSize = {
     pokemonModalFields: ['14px', { lineHeight: '18px', fontWeight: '400' }],
     captionBold: ['12px', { lineHeight: '19px', fontWeight: '700' }],
     captionMedium: ['12px', { lineHeight: '19px', fontWeight: '500' }],
-    captionRegular: ['12px', { lineHeight: '19px', fontWeight: '400' }],
+    captionRegular: ['12px', { lineHeight: '18px', fontWeight: '400' }],
     xSmallBold: ['11px', { lineHeight: '16px', fontWeight: '700' }],
     xSmallMedium: ['11px', { lineHeight: '16px', fontWeight: '500' }],
     xSmallRegular: ['11px', { lineHeight: '16px', fontWeight: '400' }],
