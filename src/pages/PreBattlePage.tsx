@@ -3,11 +3,10 @@ import { Tab, type Pokemon } from "@/lib/types";
 import { useLocation, useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
 import pokemonData from "../data/pokemon_.json";
-import rightBackground from "@/assets/bluebg.jpg";
-import leftBackground from "@/assets/purplebg.jpg";
+import background from "../assets/Background.png";
 
 function PreBattlePage() {
-  const [rivalPokemon, setRivalPokemon] = useState<Pokemon | null >(null);
+  const [rivalPokemon, setRivalPokemon] = useState<Pokemon | null>(null);
   const navigate = useNavigate();
 
   const location = useLocation();
@@ -49,54 +48,30 @@ function PreBattlePage() {
           </p>
         </div>
         <div className="relative flex justify-center items-center w-full mt-24">
-          <div className="relative flex h-755 overflow-hidden">
-            <div className="relative w-1/2 h-full">
-              <img
-                src={leftBackground}
-                alt="Left background"
-                className="w-full h-full object-cover"
-              />
-              {selectedPokemon?.image && (
-                <img
-                  src={selectedPokemon.hires}
-                  alt="Selected Pokemon"
-                  className="absolute top-82 left-130 z-10"
-                />
-              )}
-            </div>
+          <div className="relative flex h-755 w-full overflow-hidden">
+            <img
+              src={background}
+              alt="Battle Background"
+              className="absolute top-0 left-0 w-full h-full object-cover z-0"
+            />
 
-            <div className="relative w-1/2 h-full">
+            {selectedPokemon?.image && (
               <img
-                src={rightBackground}
-                alt="Right background"
-                className="w-full h-full object-cover"
+                src={selectedPokemon.hires}
+                alt="Selected Pokemon"
+                className="absolute top-82 left-130 z-10"
               />
-              {rivalPokemon && (
-                <img
-                  src={rivalPokemon.image?.hires}
-                  alt={rivalPokemon.name?.english}
-                  className="absolute bottom-82 right-130  z-10"
-                />
-              )}
-            </div>
+            )}
 
-            <div className="absolute w-75 h-100 inset-0 flex items-center justify-center mr-55">
-              <span
-                className="text-[130px] font-sans font-extrabold text-secondary-300 drop-shadow-[0_2px_4px_rgba(0,0,0,0.5)]"
-                style={{ WebkitTextStroke: "3px white" }}
-              >
-                V
-              </span>
-            </div>
-            <div className="absolute w-75 h-100 inset-0 flex items-center justify-center ml-55 mt-72">
-              <span
-                className="text-[130px] font-sans font-extrabold text-secondary-300 drop-shadow-[0_2px_4px_rgba(0,0,0,0.5)]"
-                style={{ WebkitTextStroke: "3px white" }}
-              >
-                S
-              </span>
-            </div>
+            {rivalPokemon && (
+              <img
+                src={rivalPokemon.image?.hires}
+                alt={rivalPokemon.name?.english}
+                className="absolute bottom-82 right-130 z-10"
+              />
+            )}
           </div>
+          ;
         </div>
       </div>
     </div>
