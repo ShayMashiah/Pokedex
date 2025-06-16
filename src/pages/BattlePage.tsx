@@ -174,11 +174,7 @@ function BattlePage() {
       <div className=" max-w-1360 mx-auto  mt-20">
         <DropdownMenu
           open={isOpen}
-          onOpenChange={(open) => {
-            if (!hasSwitched) {
-              setIsOpen(open);
-            }
-          }}
+          onOpenChange={(open) => !hasSwitched && setIsOpen(open)}
         >
           <DropdownMenuTrigger
             isOpen={isOpen}
