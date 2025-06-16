@@ -29,6 +29,10 @@ function BattleResultDialog({
 }: BattleResultModalProps) {
   const [isPokemonDialogOpen, setIsPokemonDialogOpen] = useState(false);
 
+  function isPrimaryButtonDisabled(label: string, hasSwitched: boolean) {
+    return label === "Switch Pokémon" && hasSwitched;
+  }
+
   const ContinueBattleContent = () => (
     <>
       <div className="py-12 px-24 h-481">
@@ -92,7 +96,7 @@ function BattleResultDialog({
                 onPrimaryAction();
               }
             }}
-            disabled={primaryButtonLabel === "Switch Pokémon" && hasSwitched}
+            disabled={isPrimaryButtonDisabled(primaryButtonLabel, hasSwitched)}
             size={
               primaryButtonLabel === "Battle Another Pokémon"
                 ? "xxxl"
@@ -145,7 +149,7 @@ function BattleResultDialog({
                 onPrimaryAction();
               }
             }}
-            disabled={primaryButtonLabel === "Switch Pokémon" && hasSwitched}
+            disabled={isPrimaryButtonDisabled(primaryButtonLabel, hasSwitched)}
             size={
               primaryButtonLabel === "Battle Another Pokémon" ? "xxxl" : "xxl"
             }

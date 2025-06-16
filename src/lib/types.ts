@@ -145,7 +145,7 @@ export interface BattleResultModalProps  {
   className?: string;
   caughtPokemon?: Pokemon; 
   onSwitchPokemon?: (pokemon: PokemonModal) => void;
-  hasSwitched?: boolean;
+  hasSwitched: boolean;
   currentPokemonId?: number;
 
 };
