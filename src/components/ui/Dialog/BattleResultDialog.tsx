@@ -193,7 +193,6 @@ function BattleResultDialog({
         ) : (
           <DefaultContent />
         )}
-        shouldRedirectOnClose={true}
       </DialogContent>
     </Dialog>
   );
