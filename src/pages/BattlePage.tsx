@@ -55,6 +55,8 @@ function BattlePage() {
     useState<PokemonModal>(selectedPokemon);
   const [showResultModal, setShowResultModal] = useState(false);
   const [hasSwitched, setHasSwitched] = useState(false);
+  const [catchAttempts, setCatchAttempts] = useState(0);
+  const maxAttempts = 3;
 
   const messageColor = isFainted
     ? "text-extendedPalette-error-red"
@@ -83,12 +85,6 @@ function BattlePage() {
     setEnemyDead(dead);
     if (dead) setShowResultModal(true);
   }, [enemyHp]);
-
-  useEffect(() => {
-    const dead = myHp === 0;
-    setPlayerDead(dead);
-    if (dead) setShowResultModal(true);
-  }, [myHp, fightingPokemon.id]);
 
   useEffect(() => {
     if (isCaught) {
@@ -127,6 +123,19 @@ function BattlePage() {
       setTriedToCatch(false);
     }, 1000);
   }
+
+  const handleCatchFail = () => {
+    const newAttempts = catchAttempts + 1;
+    setCatchAttempts(newAttempts);
+
+    if (newAttempts >= maxAttempts) {
+      setPlayerDead(true);
+      setIsGameOver(true);
+      setShowResultModal(true);
+    } else {
+      setTriedToCatch(true);
+    }
+  };
 
   const myPokemonModels = useMemo(() => {
     return pokemonData
@@ -235,6 +244,7 @@ function BattlePage() {
                     setMyHp(pokemon.hp);
                     setUsedPokemons((prev) => [...prev, pokemon.id]);
                     setHasSwitched(true);
+                    setCatchAttempts(0);
                   }}
                   className={cn(
                     "w-255 h-46 cursor-pointer py-8 px-8",
@@ -389,9 +399,7 @@ function BattlePage() {
                 addPokemon(rivalPokemon.id);
                 setIsGameOver(true);
               }}
-              onCatchFail={() => {
-                setTriedToCatch(true);
-              }}
+              onCatchFail={handleCatchFail}
             />
           </div>
         )}
@@ -455,6 +463,7 @@ function BattlePage() {
           navigate("/", { state: { activeTab: Tab.User } });
         }}
         caughtPokemon={isCaught ? rivalPokemon : undefined}
+        rivalHp={rivalPokemon.base.HP}
       />
     </div>
   );

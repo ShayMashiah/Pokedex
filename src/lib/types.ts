@@ -32,6 +32,7 @@ export interface FightButtonProps  {
   onCatchSuccess?: () => void;
   disabled?: boolean; 
   onCatchFail?: () => void;
+  rivalHp?: number;
 
 };
 
@@ -141,6 +142,7 @@ export interface BattleResultModalProps  {
   onSecondaryAction?: () => void;
   className?: string;
   caughtPokemon?: Pokemon; 
+  rivalHp?: number;
 
 };
 
