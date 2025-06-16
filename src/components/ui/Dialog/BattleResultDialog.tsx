@@ -22,9 +22,52 @@ function BattleResultDialog({
   secondaryButtonLabel,
   onSecondaryAction,
   caughtPokemon,
+  onSwitchPokemon,
+  hasSwitched,
+  currentPokemonId,
   className,
 }: BattleResultModalProps) {
   const [isPokemonDialogOpen, setIsPokemonDialogOpen] = useState(false);
+
+  function isPrimaryButtonDisabled(label: string, hasSwitched: boolean) {
+    return label === "Switch Pokémon" && hasSwitched;
+  }
+
+  function renderDialogFooter() {
+    return (
+      <DialogFooter className="flex justify-center border-t border-neutrals-light py-16 px-16">
+        <div className="flex justify-center gap-16">
+          <Button
+            onClick={() => {
+              if (primaryButtonLabel === "Switch Pokémon") {
+                setIsPokemonDialogOpen(true);
+              } else {
+                onPrimaryAction();
+              }
+            }}
+            disabled={isPrimaryButtonDisabled(primaryButtonLabel, hasSwitched)}
+            size={
+              primaryButtonLabel === "Battle Another Pokémon"
+                ? "xxxl"
+                : primaryButtonLabel === "Continue Battle"
+                ? "xl"
+                : "xxl"
+            }
+            variant="primary"
+            className="text-subheadingRegular font-mulish text-neutrals-white"
+          >
+            {primaryButtonLabel}
+          </Button>
+
+          {secondaryButtonLabel && onSecondaryAction && (
+            <Button variant="secondary" size="l" onClick={onSecondaryAction}>
+              {secondaryButtonLabel}
+            </Button>
+          )}
+        </div>
+      </DialogFooter>
+    );
+  }
 
   const ContinueBattleContent = () => (
     <>
@@ -45,7 +88,7 @@ function BattleResultDialog({
         )}
       </div>
       <div className="px-16 pb-16">
-        <div className="bg-neutrals-900  space-y-4 max-w-440 font-mulish text-left text-neutrals-500 max-h-147">
+        <div className="bg-neutrals-900 space-y-4 max-w-440 font-mulish text-left text-neutrals-500 max-h-147">
           <p className="text-headingMdBold text-neutrals-500 font-mulish pl-24 py-24">
             Rewards Earned
           </p>
@@ -70,7 +113,7 @@ function BattleResultDialog({
               <span className="text-pokemonModalFields text-neutrals-400 w-36 h-18 font-mulish">
                 Abilities
               </span>
-              <span className="text-textBaseRegular  text-neutrals-500 font-mulish pb-24">
+              <span className="text-textBaseRegular text-neutrals-500 font-mulish pb-24">
                 {caughtPokemon?.profile?.ability?.[0]?.[0]
                   ?.split(",")[0]
                   ?.trim() ?? "Unknown"}
@@ -79,36 +122,7 @@ function BattleResultDialog({
           </div>
         </div>
       </div>
-      <DialogFooter className="flex justify-center border-t border-neutrals-light py-16 px-16">
-        <div className="flex justify-center gap-16">
-          <Button
-            onClick={() => {
-              if (primaryButtonLabel === "Switch Pokémon") {
-                setIsPokemonDialogOpen(true);
-              } else {
-                onPrimaryAction();
-              }
-            }}
-            size={
-              primaryButtonLabel === "Battle Another Pokémon"
-                ? "xxxl"
-                : primaryButtonLabel === "Continue Battle"
-                ? "xl"
-                : "xxl"
-            }
-            variant="primary"
-            className="text-subheadingRegular font-mulish text-neutrals-white"
-          >
-            {primaryButtonLabel}
-          </Button>
-
-          {secondaryButtonLabel && onSecondaryAction && (
-            <Button variant="secondary" size="l" onClick={onSecondaryAction}>
-              {secondaryButtonLabel}
-            </Button>
-          )}
-        </div>
-      </DialogFooter>
+      {renderDialogFooter()}
     </>
   );
 
@@ -116,7 +130,7 @@ function BattleResultDialog({
     <>
       <div className="py-12 px-24">
         <DialogHeader>
-          <DialogTitle className="text-headingXLBold text-primary-500  font-mulish">
+          <DialogTitle className="text-headingXLBold text-primary-500 font-mulish">
             {title}
           </DialogTitle>
         </DialogHeader>
@@ -131,36 +145,11 @@ function BattleResultDialog({
           />
         )}
       </div>
-      <DialogFooter className="flex justify-center border-t border-neutrals-light py-16 px-16">
-        <div className="flex justify-center gap-16 ">
-          <Button
-            onClick={() => {
-              if (primaryButtonLabel === "Switch Pokémon") {
-                setIsPokemonDialogOpen(true);
-              } else {
-                onPrimaryAction();
-              }
-            }}
-            size={
-              primaryButtonLabel === "Battle Another Pokémon" ? "xxxl" : "xxl"
-            }
-            variant="primary"
-            className="text-subheadingRegular font-mulish text-neutrals-white"
-          >
-            {primaryButtonLabel}
-          </Button>
-
-          {secondaryButtonLabel && onSecondaryAction && (
-            <Button variant="secondary" size="l" onClick={onSecondaryAction}>
-              {secondaryButtonLabel}
-            </Button>
-          )}
-        </div>
-      </DialogFooter>
+      {renderDialogFooter()}
 
       <Dialog open={isPokemonDialogOpen} onOpenChange={setIsPokemonDialogOpen}>
         <DialogContent
-          variant={Variant.MyPokemons}
+          variant={Variant.SwitchPokemon}
           pokemons={myPokemons.map((p) => ({
             id: p.id,
             name: p.name.english,
@@ -179,6 +168,11 @@ function BattleResultDialog({
                 ?.map((a: string[]) => a[0].split(",")[0].trim())
                 .join(", ") ?? "Unknown",
           }))}
+          disabledPokemonId={currentPokemonId}
+          onSwitchPokemon={(pokemon) => {
+            setIsPokemonDialogOpen(false);
+            onSwitchPokemon?.(pokemon);
+          }}
         />
       </Dialog>
     </>

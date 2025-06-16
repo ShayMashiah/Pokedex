@@ -1,5 +1,6 @@
 import { SortOption } from './types';
 
+<<<<<<< fix/damage-mechanism
 
 
 export const missChance = 0.05;
@@ -7,6 +8,9 @@ export const missChance = 0.05;
 export const randomFactor = Math.random() * (1.3 - 0.7) + 0.7;
 
 export const baseMissChance = 0.05; 
+=======
+export const maxAttempts = 3;
+>>>>>>> branch/develop
 
 export const pageSizeOptions = [10, 20, 30];
 
@@ -96,6 +100,7 @@ export const Variant = {
   Default: "default",
   PokeInfo: "poke-info",
   MyPokemons: "my-pokemons",
+  SwitchPokemon: "switch-pokemon"
 } as const;
 export type Variant = (typeof Variant)[keyof typeof Variant];
 

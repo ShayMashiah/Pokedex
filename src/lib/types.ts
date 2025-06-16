@@ -9,6 +9,9 @@ export interface CustomDialogContentProps
   variant?: Variant;
   pokemon?: { id: number };
   pokemons?: PokemonModal[];
+  onSwitchPokemon?: (pokemon: PokemonModal) => void;
+  disabledPokemonId?: number;
+
 }
 
 export interface BattleBarProps  {
@@ -32,6 +35,7 @@ export interface FightButtonProps  {
   onCatchSuccess?: () => void;
   disabled?: boolean; 
   onCatchFail?: () => void;
+  rivalHp?: number;
 
 };
 
@@ -141,6 +145,9 @@ export interface BattleResultModalProps  {
   onSecondaryAction?: () => void;
   className?: string;
   caughtPokemon?: Pokemon; 
-
+  onSwitchPokemon?: (pokemon: PokemonModal) => void;
+  hasSwitched: boolean;
+  currentPokemonId?: number;
+  rivalHp?: number;
 };
 

@@ -26,6 +26,7 @@ function FightButton({
   onCatchSuccess,
   onCatchFail,
   disabled = false,
+  rivalHp = 100,
 }: FightButtonProps) {
   const isAttack = type === buttonsVariant.Attack;
   const [isShaking, setIsShaking] = useState(false);
@@ -76,12 +77,16 @@ function FightButton({
 
   const handleClick = () => {
     if (!isAttack) {
-      if ((targetHp ?? 100) > 33) {
+
+      const catchRate = (targetHp ?? 100) <= 0.2 * rivalHp ? 0.2 : 0.1;
+      const didCatch = Math.random() < catchRate;
+
+      if (didCatch) {
+        onCatchSuccess?.();
+      } else {
         setIsShaking(true);
         setTimeout(() => setIsShaking(false), 400);
         onCatchFail?.();
-      } else {
-        onCatchSuccess?.();
       }
     } else {
       if (attackerAttack && defenderDefense && onAttack && !disabled) {

@@ -22,6 +22,14 @@ import type { TurnMessageParams } from "@/lib/constants";
 import { missChance } from "@/lib/constants";
 import { useMyPokemon } from "@/context/MyPokemonContext";
 import { cn } from "@/lib/utils";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipTrigger,
+  TooltipProvider,
+} from "@/components/ui/Table/tooltip";
+import { maxAttempts } from "@/lib/constants";
+
 
 function BattlePage() {
   const [isOpen, setIsOpen] = useState(false);
@@ -50,6 +58,7 @@ function BattlePage() {
     useState<PokemonModal>(selectedPokemon);
   const [showResultModal, setShowResultModal] = useState(false);
   const [hasSwitched, setHasSwitched] = useState(false);
+  const [catchAttempts, setCatchAttempts] = useState(0);
 
   const messageColor = isFainted
     ? "text-extendedPalette-error-red"
@@ -69,6 +78,7 @@ function BattlePage() {
     setPlayerDead(dead);
     if (dead) {
       setShowResultModal(true);
+      setCatchAttempts(0);
       setDeadPokemons((prev) => [...prev, fightingPokemon.id]);
     }
   }, [myHp, fightingPokemon.id]);
@@ -76,14 +86,11 @@ function BattlePage() {
   useEffect(() => {
     const dead = enemyHp === 0;
     setEnemyDead(dead);
-    if (dead) setShowResultModal(true);
+    if (dead) {
+      setCatchAttempts(0);
+      setShowResultModal(true);
+    }
   }, [enemyHp]);
-
-  useEffect(() => {
-    const dead = myHp === 0;
-    setPlayerDead(dead);
-    if (dead) setShowResultModal(true);
-  }, [myHp, fightingPokemon.id]);
 
   useEffect(() => {
     if (isCaught) {
@@ -135,6 +142,19 @@ function BattlePage() {
       setTriedToCatch(false);
     }, 1000);
   }
+
+  const handleCatchFail = () => {
+    const newAttempts = catchAttempts + 1;
+    setCatchAttempts(newAttempts);
+
+    if (newAttempts >= maxAttempts) {
+      setPlayerDead(true);
+      setIsGameOver(true);
+      setShowResultModal(true);
+    } else {
+      setTriedToCatch(true);
+    }
+  };
 
   const myPokemonModels = useMemo(() => {
     return pokemonData
@@ -189,16 +209,33 @@ function BattlePage() {
           open={isOpen}
           onOpenChange={(open) => !hasSwitched && setIsOpen(open)}
         >
-          <DropdownMenuTrigger
-            isOpen={isOpen}
-            className={cn(
-              "text-textBodyRegular font-roboto mb-12 w-300",
-              hasSwitched && "opacity-50 cursor-not-allowed"
-            )}
-            disabled={hasSwitched}
-          >
-            {fightingPokemon?.name || "Select Pokemon"}
-          </DropdownMenuTrigger>
+          <TooltipProvider>
+            <Tooltip>
+              <TooltipTrigger asChild>
+                <div className="w-fit">
+                  <DropdownMenuTrigger
+                    isOpen={isOpen}
+                    className={cn(
+                      "text-textBodyRegular font-roboto mb-12 w-300",
+                      hasSwitched && "opacity-50 cursor-not-allowed"
+                    )}
+                    disabled={hasSwitched}
+                  >
+                    {fightingPokemon?.name || "Select Pokemon"}
+                  </DropdownMenuTrigger>
+                </div>
+              </TooltipTrigger>
+              {hasSwitched && (
+                <TooltipContent
+                  side="right"
+                  sideOffset={7}
+                  className="w-193 h-46 py-7 px-10  border-k text-center text-captionRegular text-neutrals-white font-roboto"
+                >
+                  You have already switched a Pokemon in this battle.{" "}
+                </TooltipContent>
+              )}
+            </Tooltip>
+          </TooltipProvider>
 
           <DropdownMenuContent>
             <DropdownMenuItem className="py-8 px-8">
@@ -226,6 +263,7 @@ function BattlePage() {
                     setMyHp(pokemon.hp);
                     setUsedPokemons((prev) => [...prev, pokemon.id]);
                     setHasSwitched(true);
+                    setCatchAttempts(0);
                   }}
                   className={cn(
                     "w-255 h-46 cursor-pointer py-8 px-8",
@@ -380,9 +418,7 @@ function BattlePage() {
                 addPokemon(rivalPokemon.id);
                 setIsGameOver(true);
               }}
-              onCatchFail={() => {
-                setTriedToCatch(true);
-              }}
+              onCatchFail={handleCatchFail}
             />
           </div>
         )}
@@ -446,6 +482,19 @@ function BattlePage() {
           navigate("/", { state: { activeTab: Tab.User } });
         }}
         caughtPokemon={isCaught ? rivalPokemon : undefined}
+        onSwitchPokemon={(pokemon) => {
+          setShowResultModal(false);
+          setFightingPokemon(pokemon);
+          setMyHp(pokemon.hp ?? 100);
+          setIsFainted(false);
+          setPlayerDead(false);
+          setIsGameOver(false);
+          setUsedPokemons((prev) => [...prev, pokemon.id]);
+          setHasSwitched(true);
+        }}
+        hasSwitched={hasSwitched}
+        currentPokemonId={fightingPokemon.id}
+        rivalHp={rivalPokemon.base.HP}
       />
     </div>
   );
