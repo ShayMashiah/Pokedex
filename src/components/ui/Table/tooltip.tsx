@@ -51,8 +51,7 @@ function TooltipContent({
       >
         {children}
         <TooltipPrimitive.Arrow
-          className="fill-neutrals-1000 z-49 rotate-360 rounded-[2px]"
-          style={{ width: 12, height: 7 }}
+          className="fill-neutrals-1000 w-12 h-7 z-49 rotate-360 rounded-[2px]"
         />
       </TooltipPrimitive.Content>
     </TooltipPrimitive.Portal>
