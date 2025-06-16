@@ -1,5 +1,7 @@
 import { SortOption } from './types';
 
+export const maxAttempts = 3;
+
 export const pageSizeOptions = [10, 20, 30];
 
 export const SORT_OPTIONS = [

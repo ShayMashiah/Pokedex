@@ -27,6 +27,7 @@ import {
   TooltipTrigger,
   TooltipProvider,
 } from "@/components/ui/Table/tooltip";
+import { maxAttempts } from "@/lib/constants";
 
 function BattlePage() {
   const [isOpen, setIsOpen] = useState(false);
@@ -56,7 +57,6 @@ function BattlePage() {
   const [showResultModal, setShowResultModal] = useState(false);
   const [hasSwitched, setHasSwitched] = useState(false);
   const [catchAttempts, setCatchAttempts] = useState(0);
-  const maxAttempts = 3;
 
   const messageColor = isFainted
     ? "text-extendedPalette-error-red"
