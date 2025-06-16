@@ -124,18 +124,18 @@ function PokemonTable({ data }: PokemonTableProps) {
                       </TableCell>
                       <TooltipProvider>
                         <Tooltip>
-                          <TooltipTrigger asChild>
-                            <TableCell className="max-w-[400px] truncate font-mulish text-bodyRegular pr-40">
-                              {pokemon.description}
-                            </TableCell>
-                          </TooltipTrigger>
-                          <TooltipContent className="w-345 h-full bg-neutrals-1000 text-center font-mulish text-neutral-100">
-                            <p>{pokemon.description}</p>
-                          </TooltipContent>
+                          <TableCell className="max-w-[400px] truncate font-mulish text-bodyRegular pr-40">
+                            <TooltipTrigger asChild>
+                              <p className="truncate">{pokemon.description}</p>
+                            </TooltipTrigger>
+                            <TooltipContent className="w-345 h-full bg-neutrals-1000 text-center font-mulish text-neutral-100">
+                              <p>{pokemon.description}</p>
+                            </TooltipContent>
+                          </TableCell>
                         </Tooltip>
                       </TooltipProvider>
                       <TableCell className="font-mulish text-bodyRegular">
-                        {pokemon.base.Attack}
+                        Power Level {pokemon.base.Attack}
                       </TableCell>
                       <TableCell className="font-mulish text-bodyRegular">
                         {pokemon.base.HP} HP
