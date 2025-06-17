@@ -19,7 +19,7 @@ import pokemonData from "../data/pokemon_.json";
 import { buttonsVariant } from "../../src/lib/constants";
 import { TURN_MESSAGES } from "@/lib/constants";
 import type { TurnMessageParams } from "@/lib/constants";
-import { missChance } from "@/lib/constants";
+import { missChance, randomFactor, power, level } from "@/lib/constants";
 import { useMyPokemon } from "@/context/MyPokemonContext";
 import { cn } from "@/lib/utils";
 import {
@@ -127,13 +127,11 @@ function BattlePage() {
       return;
     }
 
-    const level = 50;
-    const power = 60;
+
     const numerator =
       ((2 * level) / 5 + 2) * power * (enemyAttack / playerDefense);
     const baseDamage = numerator / 50 + 2;
 
-    const randomFactor = Math.random() * (1.3 - 0.7) + 0.7;
     const totalDamage = Math.floor(baseDamage * randomFactor);
 
     setTimeout(() => {
