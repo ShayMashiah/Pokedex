@@ -1,5 +1,15 @@
 import { SortOption } from './types';
 
+export const level = 50;
+
+export const power = 60;
+
+export const missChance = 0.05;
+
+export const randomFactor = Math.random() * (1.3 - 0.7) + 0.7;
+
+export const baseMissChance = 0.05; 
+
 export const maxAttempts = 3;
 
 export const pageSizeOptions = [10, 20, 30];

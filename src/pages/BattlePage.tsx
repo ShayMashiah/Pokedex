@@ -19,6 +19,7 @@ import pokemonData from "../data/pokemon_.json";
 import { buttonsVariant } from "../../src/lib/constants";
 import { TURN_MESSAGES } from "@/lib/constants";
 import type { TurnMessageParams } from "@/lib/constants";
+import { missChance, randomFactor, power, level } from "@/lib/constants";
 import { useMyPokemon } from "@/context/MyPokemonContext";
 import { cn } from "@/lib/utils";
 import {
@@ -28,6 +29,7 @@ import {
   TooltipProvider,
 } from "@/components/ui/Table/tooltip";
 import { maxAttempts } from "@/lib/constants";
+
 
 function BattlePage() {
   const [isOpen, setIsOpen] = useState(false);
@@ -115,14 +117,25 @@ function BattlePage() {
     const enemyAttack = rivalPokemon.base.Attack;
     const playerDefense = selectedPokemon.defense;
 
-    const damage =
-      Math.floor(
-        (((2 * 50) / 5 + 2) * 60 * (enemyAttack / playerDefense)) / 50 + 2
-      ) *
-      (Math.random() * (1 - 0.85) + 0.85);
+    const didMiss = Math.random() < missChance;
+
+    if (didMiss) {
+      setTimeout(() => {
+        setPlayerTurn(true);
+        setTriedToCatch(false);
+      }, 1000);
+      return;
+    }
+
+
+    const numerator =
+      ((2 * level) / 5 + 2) * power * (enemyAttack / playerDefense);
+    const baseDamage = numerator / 50 + 2;
+
+    const totalDamage = Math.floor(baseDamage * randomFactor);
 
     setTimeout(() => {
-      setMyHp((prev) => Math.max(prev - Math.floor(damage), 0));
+      setMyHp((prev) => Math.max(prev - totalDamage, 0));
       setPlayerTurn(true);
       setTriedToCatch(false);
     }, 1000);
