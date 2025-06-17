@@ -330,10 +330,12 @@ function DialogContent({
           children
         )}
 
-        <DialogPrimitive.Close className="absolute top-12 right-24 opacity-70 transition-opacity hover:opacity-100 focus:outline-none">
-          <XIcon />
-          <span className="sr-only">Close</span>
-        </DialogPrimitive.Close>
+        {!props.hideCloseButton && (
+          <DialogPrimitive.Close className="absolute top-12 right-24 opacity-70 transition-opacity hover:opacity-100 focus:outline-none">
+            <XIcon />
+            <span className="sr-only">Close</span>
+          </DialogPrimitive.Close>
+        )}
       </DialogPrimitive.Content>
     </DialogPortal>
   );
