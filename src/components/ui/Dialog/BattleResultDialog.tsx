@@ -71,24 +71,26 @@ function BattleResultDialog({
 
   const ContinueBattleContent = () => (
     <>
-      <div className="py-12 px-24 h-481">
+      <div className="py-12 h-481">
         <DialogHeader>
-          <DialogTitle className="text-pokemonModalTitle text-primary-500 font-mulish">
+          <DialogTitle className="!text-pokemonModalTitle text-primary-500 font-mulish">
             {title}
           </DialogTitle>
         </DialogHeader>
       </div>
-      <div className="w-454 h-158 px-183">
-        {imageSrc && (
-          <img
-            src={imageSrc}
-            alt="Result image"
-            className="w-454 h-158 object-contain my-4 gap-5.5"
-          />
-        )}
+      <div className="flex flex-col px-24 pb-10 items-center justify-center ">
+        <div className="w-454">
+          {imageSrc && (
+            <img
+              src={imageSrc}
+              alt="Result image"
+              className="w-454 h-158 object-contain my-4 gap-5.5"
+            />
+          )}
+        </div>
       </div>
       <div className="px-16 pb-16">
-        <div className="bg-neutrals-900 space-y-4 max-w-440 font-mulish text-left text-neutrals-500 max-h-147">
+        <div className="bg-neutrals-900 space-y-4 max-w-454 font-mulish text-left text-neutrals-500 max-h-147">
           <p className="text-headingMdBold text-neutrals-500 font-mulish pl-24 py-24">
             Rewards Earned
           </p>
@@ -97,7 +99,7 @@ function BattleResultDialog({
               <span className="text-pokemonModalFields text-neutrals-400 w-36 h-18 font-mulish">
                 Speed
               </span>
-              <span className="text-textBaseRegular text-neutrals-500 font-mulish pb-24">
+              <span className="text-textBaseRegular text-neutrals-500 font-mulish pb-24 pt-8">
                 {caughtPokemon?.base.Speed}
               </span>
             </div>
@@ -105,7 +107,7 @@ function BattleResultDialog({
               <span className="text-pokemonModalFields text-neutrals-400 w-36 h-18 font-mulish">
                 Category
               </span>
-              <span className="text-textBaseRegular text-neutrals-500 font-mulish pb-24">
+              <span className="text-textBaseRegular text-neutrals-500 font-mulish pb-24 pt-8">
                 {caughtPokemon?.type}
               </span>
             </div>
@@ -113,7 +115,7 @@ function BattleResultDialog({
               <span className="text-pokemonModalFields text-neutrals-400 w-36 h-18 font-mulish">
                 Abilities
               </span>
-              <span className="text-textBaseRegular text-neutrals-500 font-mulish pb-24">
+              <span className="text-textBaseRegular text-neutrals-500 font-mulish pb-24 pt-8">
                 {caughtPokemon?.profile?.ability?.[0]?.[0]
                   ?.split(",")[0]
                   ?.trim() ?? "Unknown"}
@@ -130,13 +132,13 @@ function BattleResultDialog({
     <>
       <div className="py-12 px-24">
         <DialogHeader>
-          <DialogTitle className="text-headingXLBold text-primary-500 font-mulish">
+          <DialogTitle className="!text-pokemonModalTitle text-primary-500 font-mulish">
             {title}
           </DialogTitle>
         </DialogHeader>
       </div>
 
-      <div className="pt-16 px-183">
+      <div className="px-183">
         {imageSrc && (
           <img
             src={imageSrc}
@@ -183,12 +185,11 @@ function BattleResultDialog({
       <DialogContent
         className={cn(
           "text-center flex flex-col w-502 max-h-screen",
-          primaryButtonLabel === "Continue Battle" ? "h-481" : "h-308",
+          primaryButtonLabel === "Continue Battle" ? "max-h-502" : "h-308",
           className
         )}
         onInteractOutside={(e) => e.preventDefault()}
         hideCloseButton={true}
-
       >
         {primaryButtonLabel === "Continue Battle" ? (
           <ContinueBattleContent />
