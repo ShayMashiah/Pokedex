@@ -222,7 +222,7 @@ function BattlePage() {
             </Tooltip>
           </TooltipProvider>
 
-          <DropdownMenuContent>
+          <DropdownMenuContent side="bottom" align="start">
             <DropdownMenuItem className="py-8 px-8">
               <div className="flex items-center justify-between w-258 h-35 bg-primary-50">
                 <span className="text-captionRegular pl-8 font-mulish text-primary-400  h-19">
@@ -257,7 +257,7 @@ function BattlePage() {
                 >
                   <div className="flex flex-row items-center justify-between gap-4 w-full">
                     <div className="flex flex-row gap-4">
-                      <div className="bg-neutrals-900 rounded-full w-32 h-32 overflow-hidden flex items-center justify-center">
+                      <div className="bg-neutrals-900 rounded-full w-32 h-32 overflow-hidden flex items-center justify-center pr-4">
                         <img
                           src={pokemon.image}
                           alt={pokemon.name}

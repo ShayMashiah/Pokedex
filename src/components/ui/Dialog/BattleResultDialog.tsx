@@ -188,6 +188,7 @@ function BattleResultDialog({
         )}
         onInteractOutside={(e) => e.preventDefault()}
         hideCloseButton={true}
+
       >
         {primaryButtonLabel === "Continue Battle" ? (
           <ContinueBattleContent />
