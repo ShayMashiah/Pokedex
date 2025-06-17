@@ -186,6 +186,7 @@ function BattleResultDialog({
           primaryButtonLabel === "Continue Battle" ? "h-481" : "h-308",
           className
         )}
+        onInteractOutside={(e) => e.preventDefault()}
       >
         {primaryButtonLabel === "Continue Battle" ? (
           <ContinueBattleContent />

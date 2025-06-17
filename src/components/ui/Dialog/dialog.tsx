@@ -120,7 +120,7 @@ function DialogContent({
           description: p.description ?? "No description available.",
           height: p.profile?.height ?? "Unknown",
           weight: p.profile?.weight ?? "Unknown",
-          category: p.type ?? [],
+          category: p.type?.join(", ") ?? "Unknown",
           abilities:
             p.profile?.ability
               ?.map((a: string[]) => a[0].split(",")[0].trim())
@@ -161,14 +161,14 @@ function DialogContent({
             </div>
             <div className="px-16 pb-16">
               <div className="bg-neutrals-900  space-y-4 max-w-440 font-mulish text-sm text-neutrals-500">
-                <p className="p-24">{selectedPokemonModal.description}</p>
+                <p className="p-24 text-textBaseRegular text-neutrals-500">{selectedPokemonModal.description}</p>
                 <hr className="border-t border-neutrals-200" />
                 <div className="grid grid-cols-4 gap-24 p-24">
                   <div className="flex flex-col  gap-6">
                     <span className="text-pokemonModalFields text-neutrals-400 w-36 h-18 font-mulish">
                       Height
                     </span>
-                    <span className="text-pokemonModalStats font-mulish text-neutrals-500 ">
+                    <span className="text-textBaseRegular font-mulish text-neutrals-500 ">
                       {selectedPokemonModal.height}
                     </span>
                   </div>
@@ -176,7 +176,7 @@ function DialogContent({
                     <span className="text-pokemonModalFields text-neutrals-400 w-36 h-18 font-mulish">
                       Weight
                     </span>
-                    <span className="text-pokemonModalStats text-neutrals-500 font-mulish">
+                    <span className="text-textBaseRegular text-neutrals-500 font-mulish">
                       {selectedPokemonModal.weight}
                     </span>
                   </div>
@@ -184,15 +184,15 @@ function DialogContent({
                     <span className="text-pokemonModalFields text-neutrals-400 w-36 h-18 font-mulish">
                       Category
                     </span>
-                    <span className="text-pokemonModalStats text-neutrals-500 font-mulish">
+                    <span className="text-textBaseRegular text-neutrals-500 font-mulish">
                       {selectedPokemonModal.category}
                     </span>
                   </div>
                   <div className="flex flex-col gap-6">
-                    <span className="text-pokemonModalFields text-neutrals-400 w-36 h-18 font-mulish">
+                    <span className="text-pokemonModalFields text-neutrals-400 w-36  h-18 font-mulish">
                       Abilities
                     </span>
-                    <span className="text-pokemonModalStats  text-neutrals-500 font-mulish">
+                    <span className="text-textBaseRegular  text-neutrals-500 font-mulish">
                       {selectedPokemonModal.abilities}
                     </span>
                   </div>
