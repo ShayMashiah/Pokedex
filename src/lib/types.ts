@@ -11,6 +11,8 @@ export interface CustomDialogContentProps
   pokemons?: PokemonModal[];
   onSwitchPokemon?: (pokemon: PokemonModal) => void;
   disabledPokemonId?: number;
+  hideCloseButton?: boolean;
+
 
 }
 
