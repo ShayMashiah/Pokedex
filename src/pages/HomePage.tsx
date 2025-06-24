@@ -1,9 +1,13 @@
 import { Input } from "@/components/ui/Input/input";
 import PokemonNavbar from "@/components/ui/NavBar/PokemonNavbar";
 import PokemonTable from "@/components/ui/Table/PokemonTable";
-import PokemonData from "@/data/pokemon_.json";
 import { useEffect, useState } from "react";
-import { Tab, TAB_LABELS } from "@/lib/types";
+import {
+  Tab,
+  TAB_LABELS,
+  type BackendPokemon,
+  type Pokemon,
+} from "@/lib/types";
 import {
   DropdownMenu,
   DropdownMenuTrigger,
@@ -14,14 +18,16 @@ import { SortOption } from "@/lib/types";
 import { SORT_OPTIONS } from "@/lib/constants";
 import { useMyPokemon } from "@/context/MyPokemonContext";
 import { useLocation } from "react-router-dom";
+import axios from "axios";
+import { mapBackendToFrontend } from "@/lib/utils/mapMyPokemons";
 
 function HomePage() {
   const [isOpen, setIsOpen] = useState(false);
   const [selectedOption, setSelectedOption] = useState<SortOption>(
     SortOption.default
   );
-  const [pokemonData, setPokemonData] = useState(PokemonData);
-  const [tabPokemonData, setTabPokemonData] = useState(PokemonData);
+  const [pokemonData, setPokemonData] = useState<Pokemon[]>([]);
+  const [tabPokemonData, setTabPokemonData] = useState<Pokemon[]>([]);
   const [searchTerm, setSearchTerm] = useState("");
 
   const { myPokemons } = useMyPokemon();
@@ -31,18 +37,26 @@ function HomePage() {
   const [activeTab, setActiveTab] = useState<Tab>(initialTab);
 
   useEffect(() => {
-    let sourceData;
+    const fetchData = async () => {
+      try {
+        const res = await axios.get<BackendPokemon[]>(
+          "http://localhost:3000/api/v1/pokemons"
+        );
+        const allPokemons = res.data.map(mapBackendToFrontend);
 
-    if (activeTab === Tab.User) {
-      sourceData = PokemonData.filter((pokemon) =>
-        myPokemons.includes(pokemon.id)
-      );
-    } else {
-      sourceData = PokemonData;
-    }
+        const sourceData =
+          activeTab === Tab.User
+            ? allPokemons.filter((pokemon) => myPokemons.includes(pokemon.id))
+            : allPokemons;
 
-    setPokemonData(sourceData);
-    setTabPokemonData(sourceData);
+        setPokemonData(sourceData);
+        setTabPokemonData(sourceData);
+      } catch (error) {
+        console.error("❌ Failed to fetch pokemons:", error);
+      }
+    };
+
+    fetchData();
   }, [activeTab, myPokemons]);
 
   const handleSelect = (value: SortOption) => {
@@ -79,7 +93,7 @@ function HomePage() {
   const onInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const value = e.target.value.toLowerCase();
     setSearchTerm(value);
-    const filteredData = tabPokemonData.filter((pokemon) =>
+    const filteredData = tabPokemonData.filter((pokemon: Pokemon) =>
       pokemon.name.english.toLowerCase().includes(value)
     );
     setPokemonData(filteredData);
@@ -103,7 +117,10 @@ function HomePage() {
               className="font-roboto text-bodyRegular"
             />
             <DropdownMenu open={isOpen} onOpenChange={setIsOpen}>
-              <DropdownMenuTrigger isOpen={isOpen}   className="max-w-full inline-flex min-w-101">
+              <DropdownMenuTrigger
+                isOpen={isOpen}
+                className="max-w-full inline-flex min-w-101"
+              >
                 {selectedOption}
               </DropdownMenuTrigger>
               <DropdownMenuContent>
@@ -120,7 +137,7 @@ function HomePage() {
             </DropdownMenu>
           </div>
         </div>
-        <PokemonTable key={activeTab} data={pokemonData}/>
+        <PokemonTable key={activeTab} data={pokemonData} />
       </main>
     </div>
   );

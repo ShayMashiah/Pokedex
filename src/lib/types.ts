@@ -102,9 +102,6 @@ export interface Pokemon  {
   id: number;
   name: {
     english: string;
-    japanese?: string;
-    chinese?: string;
-    french?: string;
   };
   type: string[];
   base: {
@@ -116,15 +113,10 @@ export interface Pokemon  {
     Speed: number;
   };
   species?: string;
-  description?: string;
-  evolution?: {
-    prev?: string[];
-    next?: string[][] | [string, string][]; 
-  };
+  description: string;
   profile?: {
     height?: string;
     weight?: string;
-    egg?: string[];
     ability: string[][] | [[string, string]]; 
     gender: string;
   };
@@ -133,6 +125,30 @@ export interface Pokemon  {
     thumbnail: string;
     hires?: string;
   };
+};
+
+export type BackendPokemon = {
+  id: number;
+  nameEnglish: string;
+  type: string[];
+  hp: number;
+  attack: number;
+  defense: number;
+  spAttack: number;
+  spDefense: number;
+  speed: number;
+  species: string;
+  description: string;
+  height?: string | null;
+  weight?: string | null;
+  gender?: string | null;
+  ability1?: string | null;
+  ability1Hidden?: boolean | null;
+  ability2?: string | null;
+  ability2Hidden?: boolean | null;
+  sprite?: string | null;
+  thumbnail?: string | null;
+  hires?: string | null;
 };
 
 
