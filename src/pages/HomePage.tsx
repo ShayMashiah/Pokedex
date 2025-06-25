@@ -32,20 +32,26 @@ function HomePage() {
   const { data: allPokemons = [] } = useAllPokemons();
   const { data: userPokemons = [] } = useUserPokemons();
   const { data: searchResults = [] } = useSearchPokemon(
-    searchTerm,
+    searchTerm.trim(),
     activeTab === Tab.User ? userId : undefined
   );
 
   useEffect(() => {
-    const userIds = userPokemons.map((p) => p.id);
+    if (searchTerm) return;
 
+    const userIds = userPokemons.map((p) => p.id);
     const filtered =
       activeTab === Tab.User
         ? allPokemons.filter((p) => userIds.includes(p.id))
         : allPokemons;
 
-    setPokemonData(filtered);
-  }, [activeTab, allPokemons, userPokemons]);
+    setPokemonData((prev) => {
+      const isEqual =
+        prev.length === filtered.length &&
+        prev.every((p, i) => p.id === filtered[i].id);
+      return isEqual ? prev : filtered;
+    });
+  }, [activeTab, allPokemons, userPokemons, searchTerm]);
 
   const handleSelect = (value: SortOption) => {
     let sortedData = [...pokemonData];
