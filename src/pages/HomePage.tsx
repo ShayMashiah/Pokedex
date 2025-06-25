@@ -19,6 +19,7 @@ import { SORT_OPTIONS } from "@/lib/constants";
 import { useLocation } from "react-router-dom";
 import axios from "axios";
 import { mapBackendToFrontend } from "@/lib/utils/mapMyPokemons";
+import { userId } from "@/lib/constants";
 
 function HomePage() {
   const [isOpen, setIsOpen] = useState(false);
@@ -33,7 +34,6 @@ function HomePage() {
   const location = useLocation();
   const initialTab = location.state?.activeTab || Tab.All;
   const [activeTab, setActiveTab] = useState<Tab>(initialTab);
-  const userId = 61;
 
   useEffect(() => {
     const fetchData = async () => {

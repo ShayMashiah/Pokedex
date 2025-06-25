@@ -1,5 +1,7 @@
 import { SortOption } from './types';
 
+export const userId = 61;
+
 export const level = 50;
 
 export const power = 60;

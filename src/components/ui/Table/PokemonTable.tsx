@@ -1,4 +1,4 @@
-import { useMemo, useState, useEffect  } from "react";
+import { useMemo, useState, useEffect } from "react";
 import type { PokemonRow } from "@/lib/types";
 import { pageSizeOptions } from "../../../lib/constants";
 import { ChevronLeft, ChevronRight } from "lucide-react";
@@ -23,23 +23,41 @@ import {
   DialogTrigger,
 } from "@/components/ui/Dialog/dialog";
 import { Variant } from "@/lib/constants";
-import { useMyPokemon } from "@/context/MyPokemonContext";
 import pokeballIcon from "@/assets/pokador.png";
 import { SearchX } from "lucide-react";
+import axios from "axios";
+import { mapBackendToFrontend } from "@/lib/utils/mapMyPokemons";
+import { userId } from "@/lib/constants";
+import type { BackendPokemon } from "@/lib/types";
 
 type PokemonTableProps = {
   data: PokemonRow[];
 };
 
 function PokemonTable({ data }: PokemonTableProps) {
-  const { myPokemons } = useMyPokemon();
-
   const [selectedPokemon, setSelectedPokemon] = useState<PokemonRow | null>(
     null
   );
-
+  const [myPokemons, setMyPokemons] = useState<number[]>([]);
   const [currentPage, setCurrentPage] = useState(1);
   const [itemsPerPage, setItemsPerPage] = useState(10);
+
+  useEffect(() => {
+    const fetchUserPokemons = async () => {
+      try {
+        const res = await axios.get<BackendPokemon[]>(
+          `http://localhost:3000/api/v1/userpokemons/${userId}`
+        );
+        const mapped = res.data.map(mapBackendToFrontend);
+        const ids = mapped.map((p) => Number(p.id));
+        setMyPokemons(ids);
+      } catch (error) {
+        console.error("❌ Failed to fetch user pokemons:", error);
+      }
+    };
+
+    fetchUserPokemons();
+  }, []);
 
   useEffect(() => {
     setCurrentPage(1);
@@ -87,7 +105,10 @@ function PokemonTable({ data }: PokemonTableProps) {
                 >
                   <div className="flex flex-col items-center justify-center p-10 text-neutrals-1100 font-mulish">
                     <div className="mb-16 h-150 w-150  bg-primary-50 rounded-full  items-center justify-center flex ">
-                    <SearchX size={64} className="text-primary-300 h-70 w-70" />
+                      <SearchX
+                        size={64}
+                        className="text-primary-300 h-70 w-70"
+                      />
                     </div>
                     <span className="mt-2 text-lg font-medium">
                       No Pokemons were found
