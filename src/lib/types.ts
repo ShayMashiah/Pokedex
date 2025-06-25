@@ -118,7 +118,7 @@ export interface Pokemon  {
     height?: string;
     weight?: string;
     ability: string[][] | [[string, string]]; 
-    gender: string;
+    gender?: string;
   };
   image: {
     sprite: string;

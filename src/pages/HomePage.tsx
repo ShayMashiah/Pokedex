@@ -5,7 +5,6 @@ import { useEffect, useState } from "react";
 import {
   Tab,
   TAB_LABELS,
-  type BackendPokemon,
   type Pokemon,
 } from "@/lib/types";
 import {
@@ -17,9 +16,8 @@ import {
 import { SortOption } from "@/lib/types";
 import { SORT_OPTIONS } from "@/lib/constants";
 import { useLocation } from "react-router-dom";
-import axios from "axios";
-import { mapBackendToFrontend } from "@/lib/utils/mapMyPokemons";
-import { userId } from "@/lib/constants";
+import { useAllPokemons } from "@/lib/hooks/useAllPokemons";
+import { useUserPokemons } from "@/lib/hooks/useUserPokemons";
 
 function HomePage() {
   const [isOpen, setIsOpen] = useState(false);
@@ -29,42 +27,27 @@ function HomePage() {
   const [pokemonData, setPokemonData] = useState<Pokemon[]>([]);
   const [tabPokemonData, setTabPokemonData] = useState<Pokemon[]>([]);
   const [searchTerm, setSearchTerm] = useState("");
-  const [myPokemons, setMyPokemons] = useState<number[]>([]);
 
   const location = useLocation();
   const initialTab = location.state?.activeTab || Tab.All;
   const [activeTab, setActiveTab] = useState<Tab>(initialTab);
 
+  const { data: allPokemons = [] } = useAllPokemons();
+  const { data: userPokemons = [] } = useUserPokemons();
+
   useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const [allRes, userRes] = await Promise.all([
-          axios.get<BackendPokemon[]>("http://localhost:3000/api/v1/pokemons"),
-          axios.get<BackendPokemon[]>(
-            `http://localhost:3000/api/v1/userpokemons/${userId}`
-          ),
-        ]);
+  const userIds = userPokemons.map((p) => p.id);
 
-        const allPokemons = allRes.data.map(mapBackendToFrontend);
-        const userPokemonIds = userRes.data.map((p) => p.id);
-        setMyPokemons(userPokemonIds);
+  const filtered =
+    activeTab === Tab.User
+      ? allPokemons.filter((p) => userIds.includes(p.id))
+      : allPokemons;
 
-        const sourceData =
-          activeTab === Tab.User
-            ? allPokemons.filter((pokemon) =>
-                userPokemonIds.includes(pokemon.id)
-              )
-            : allPokemons;
+  setPokemonData(filtered);
+  setTabPokemonData(filtered);
+}, [activeTab, allPokemons, userPokemons]);
 
-        setPokemonData(sourceData);
-        setTabPokemonData(sourceData);
-      } catch (error) {
-        console.error("❌ Failed to fetch pokemons:", error);
-      }
-    };
 
-    fetchData();
-  }, [activeTab]);
 
   const handleSelect = (value: SortOption) => {
     let sortedData = [...pokemonData];

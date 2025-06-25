@@ -70,7 +70,7 @@ export function transformToPokemonModal(pokemon: Pokemon): PokemonModal {
     profile: {
       height: p.height ?? undefined,
       weight: p.weight ?? undefined,
-      gender: p.gender ?? "",
+      gender: p.gender ?? undefined,
       ability: [
         [p.ability1 ?? "", p.ability1Hidden ? "true" : "false"],
         [p.ability2 ?? "", p.ability2Hidden ? "true" : "false"],

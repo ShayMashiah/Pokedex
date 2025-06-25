@@ -25,10 +25,7 @@ import {
 import { Variant } from "@/lib/constants";
 import pokeballIcon from "@/assets/pokador.png";
 import { SearchX } from "lucide-react";
-import axios from "axios";
-import { mapBackendToFrontend } from "@/lib/utils/mapMyPokemons";
-import { userId } from "@/lib/constants";
-import type { BackendPokemon } from "@/lib/types";
+import { useUserPokemons } from "../../../lib/hooks/useUserPokemons";
 
 type PokemonTableProps = {
   data: PokemonRow[];
@@ -42,22 +39,14 @@ function PokemonTable({ data }: PokemonTableProps) {
   const [currentPage, setCurrentPage] = useState(1);
   const [itemsPerPage, setItemsPerPage] = useState(10);
 
-  useEffect(() => {
-    const fetchUserPokemons = async () => {
-      try {
-        const res = await axios.get<BackendPokemon[]>(
-          `http://localhost:3000/api/v1/userpokemons/${userId}`
-        );
-        const mapped = res.data.map(mapBackendToFrontend);
-        const ids = mapped.map((p) => Number(p.id));
-        setMyPokemons(ids);
-      } catch (error) {
-        console.error("❌ Failed to fetch user pokemons:", error);
-      }
-    };
+  const { data: userPokemons = [] } = useUserPokemons();
 
-    fetchUserPokemons();
-  }, []);
+  useEffect(() => {
+    if (userPokemons.length > 0) {
+      const ids = userPokemons.map((p) => Number(p.id));
+      setMyPokemons(ids);
+    }
+  }, [userPokemons]);
 
   useEffect(() => {
     setCurrentPage(1);
