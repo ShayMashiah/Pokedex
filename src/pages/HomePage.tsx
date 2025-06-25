@@ -2,11 +2,7 @@ import { Input } from "@/components/ui/Input/input";
 import PokemonNavbar from "@/components/ui/NavBar/PokemonNavbar";
 import PokemonTable from "@/components/ui/Table/PokemonTable";
 import { useEffect, useState } from "react";
-import {
-  Tab,
-  TAB_LABELS,
-  type Pokemon,
-} from "@/lib/types";
+import { Tab, TAB_LABELS, type Pokemon } from "@/lib/types";
 import {
   DropdownMenu,
   DropdownMenuTrigger,
@@ -18,6 +14,8 @@ import { SORT_OPTIONS } from "@/lib/constants";
 import { useLocation } from "react-router-dom";
 import { useAllPokemons } from "@/lib/hooks/useAllPokemons";
 import { useUserPokemons } from "@/lib/hooks/useUserPokemons";
+import { useSearchPokemon } from "@/lib/hooks/useSearchPokemon";
+import { userId } from "@/lib/constants";
 
 function HomePage() {
   const [isOpen, setIsOpen] = useState(false);
@@ -25,7 +23,6 @@ function HomePage() {
     SortOption.default
   );
   const [pokemonData, setPokemonData] = useState<Pokemon[]>([]);
-  const [tabPokemonData, setTabPokemonData] = useState<Pokemon[]>([]);
   const [searchTerm, setSearchTerm] = useState("");
 
   const location = useLocation();
@@ -34,20 +31,21 @@ function HomePage() {
 
   const { data: allPokemons = [] } = useAllPokemons();
   const { data: userPokemons = [] } = useUserPokemons();
+  const { data: searchResults = [] } = useSearchPokemon(
+    searchTerm,
+    activeTab === Tab.User ? userId : undefined
+  );
 
   useEffect(() => {
-  const userIds = userPokemons.map((p) => p.id);
+    const userIds = userPokemons.map((p) => p.id);
 
-  const filtered =
-    activeTab === Tab.User
-      ? allPokemons.filter((p) => userIds.includes(p.id))
-      : allPokemons;
+    const filtered =
+      activeTab === Tab.User
+        ? allPokemons.filter((p) => userIds.includes(p.id))
+        : allPokemons;
 
-  setPokemonData(filtered);
-  setTabPokemonData(filtered);
-}, [activeTab, allPokemons, userPokemons]);
-
-
+    setPokemonData(filtered);
+  }, [activeTab, allPokemons, userPokemons]);
 
   const handleSelect = (value: SortOption) => {
     let sortedData = [...pokemonData];
@@ -81,13 +79,10 @@ function HomePage() {
   };
 
   const onInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const value = e.target.value.toLowerCase();
-    setSearchTerm(value);
-    const filteredData = tabPokemonData.filter((pokemon: Pokemon) =>
-      pokemon.name.english.toLowerCase().includes(value)
-    );
-    setPokemonData(filteredData);
+    setSearchTerm(e.target.value.toLowerCase());
   };
+
+  const displayedPokemons = searchTerm ? searchResults : pokemonData;
 
   return (
     <div className="bg-neutrals-100 min-h-screen h-auto">
@@ -127,7 +122,7 @@ function HomePage() {
             </DropdownMenu>
           </div>
         </div>
-        <PokemonTable key={activeTab} data={pokemonData} />
+        <PokemonTable key={activeTab} data={displayedPokemons} />
       </main>
     </div>
   );
