@@ -16,7 +16,6 @@ import {
 } from "@/components/ui/DropDown/dropdown-menu";
 import { SortOption } from "@/lib/types";
 import { SORT_OPTIONS } from "@/lib/constants";
-import { useMyPokemon } from "@/context/MyPokemonContext";
 import { useLocation } from "react-router-dom";
 import axios from "axios";
 import { mapBackendToFrontend } from "@/lib/utils/mapMyPokemons";
@@ -29,24 +28,32 @@ function HomePage() {
   const [pokemonData, setPokemonData] = useState<Pokemon[]>([]);
   const [tabPokemonData, setTabPokemonData] = useState<Pokemon[]>([]);
   const [searchTerm, setSearchTerm] = useState("");
-
-  const { myPokemons } = useMyPokemon();
+  const [myPokemons, setMyPokemons] = useState<number[]>([]);
 
   const location = useLocation();
   const initialTab = location.state?.activeTab || Tab.All;
   const [activeTab, setActiveTab] = useState<Tab>(initialTab);
+  const userId = 61;
 
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const res = await axios.get<BackendPokemon[]>(
-          "http://localhost:3000/api/v1/pokemons"
-        );
-        const allPokemons = res.data.map(mapBackendToFrontend);
+        const [allRes, userRes] = await Promise.all([
+          axios.get<BackendPokemon[]>("http://localhost:3000/api/v1/pokemons"),
+          axios.get<BackendPokemon[]>(
+            `http://localhost:3000/api/v1/userpokemons/${userId}`
+          ),
+        ]);
+
+        const allPokemons = allRes.data.map(mapBackendToFrontend);
+        const userPokemonIds = userRes.data.map((p) => p.id);
+        setMyPokemons(userPokemonIds);
 
         const sourceData =
           activeTab === Tab.User
-            ? allPokemons.filter((pokemon) => myPokemons.includes(pokemon.id))
+            ? allPokemons.filter((pokemon) =>
+                userPokemonIds.includes(pokemon.id)
+              )
             : allPokemons;
 
         setPokemonData(sourceData);
@@ -57,7 +64,7 @@ function HomePage() {
     };
 
     fetchData();
-  }, [activeTab, myPokemons]);
+  }, [activeTab]);
 
   const handleSelect = (value: SortOption) => {
     let sortedData = [...pokemonData];
