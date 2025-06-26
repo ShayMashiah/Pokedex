@@ -39,10 +39,9 @@ function HomePage() {
   useEffect(() => {
     if (searchTerm) return;
 
-    const userIds = userPokemons.map((p) => p.id);
     const filtered =
       activeTab === Tab.User
-        ? allPokemons.filter((p) => userIds.includes(p.id))
+        ? userPokemons
         : allPokemons;
 
     setPokemonData((prev) => {
