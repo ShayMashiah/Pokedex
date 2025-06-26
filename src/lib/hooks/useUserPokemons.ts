@@ -4,8 +4,8 @@ import { mapBackendToFrontend } from "../utils/mapMyPokemons";
 import { userId } from "../constants";
 
 export const useUserPokemons = (
-  page: number,
-  limit: number,
+  page: number = 1,
+  limit: number = 10,
   search?: string,
   sortBy: string = "id",
   order: "asc" | "desc" = "asc"

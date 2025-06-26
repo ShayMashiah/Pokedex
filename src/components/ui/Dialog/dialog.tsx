@@ -7,9 +7,7 @@ import { Variant } from "../../../lib/constants";
 import type { CustomDialogContentProps } from "../../../lib/types";
 import { useNavigate } from "react-router-dom";
 import { useState } from "react";
-import { useMyPokemon } from "@/context/MyPokemonContext";
 import allPokemons from "@/data/pokemon_.json";
-import { mapMyPokemonsByIds } from "@/lib/utils/mapMyPokemons";
 
 function Dialog({
   ...props
@@ -56,33 +54,27 @@ function DialogContent({
   children,
   variant,
   pokemon,
+  pokemons,
   disabledPokemonId,
   ...props
 }: CustomDialogContentProps) {
-  const { myPokemons: myPokemonIds } = useMyPokemon();
-
-  const myPokemons = React.useMemo(
-    () => mapMyPokemonsByIds(myPokemonIds),
-    [myPokemonIds]
-  );
-
   const navigate = useNavigate();
   const perRow = 3;
-  let fullItems: typeof myPokemons = [];
-  let remainingItems: typeof myPokemons = [];
+  let fullItems: typeof pokemons = [];
+  let remainingItems: typeof pokemons = [];
 
   const [selectedPokemonForBattle, setselectedPokemonForBattle] = useState<
     number | null
   >(null);
 
   const handleStartBattle = () => {
-    const selected = myPokemons?.find((p) => p.id === selectedPokemonForBattle);
+    const selected = pokemons?.find((p) => p.id === selectedPokemonForBattle);
     if (!selected) return;
     navigate("/prebattle", { state: { selectedPokemon: selected } });
   };
 
   const handleSwitchPokemon = () => {
-    const selected = myPokemons?.find((p) => p.id === selectedPokemonForBattle);
+    const selected = pokemons?.find((p) => p.id === selectedPokemonForBattle);
     if (!selected || !props.onSwitchPokemon) return;
     props.onSwitchPokemon(selected);
   };
@@ -91,16 +83,14 @@ function DialogContent({
     setselectedPokemonForBattle(id);
   };
 
-  if (variant === Variant.MyPokemons && myPokemons) {
-    const fullRows = Math.floor(myPokemons.length / perRow);
+  if (
+    (variant === Variant.MyPokemons || variant === Variant.SwitchPokemon) &&
+    pokemons
+  ) {
+    const fullRows = Math.floor(pokemons.length / perRow);
     const lastRowStart = fullRows * perRow;
-    fullItems = myPokemons.slice(0, lastRowStart);
-    remainingItems = myPokemons.slice(lastRowStart);
-  } else if (variant === Variant.SwitchPokemon && myPokemons) {
-    const fullRows = Math.floor(myPokemons.length / perRow);
-    const lastRowStart = fullRows * perRow;
-    fullItems = myPokemons.slice(0, lastRowStart);
-    remainingItems = myPokemons.slice(lastRowStart);
+    fullItems = pokemons.slice(0, lastRowStart);
+    remainingItems = pokemons.slice(lastRowStart);
   }
 
   const selectedPokemonModal = React.useMemo(() => {
@@ -203,7 +193,7 @@ function DialogContent({
               </div>
             </div>
           </>
-        ) : variant === Variant.MyPokemons && myPokemons ? (
+        ) : variant === Variant.MyPokemons && pokemons ? (
           <>
             <DialogHeader className="items-start border-neutrals-light font-mulish">
               <DialogTitle className="font-mulish !text-headingLgMedium text-neutrals-500 py-24 px-10">
@@ -255,7 +245,7 @@ function DialogContent({
               </Button>
             </DialogFooter>
           </>
-        ) : variant === Variant.SwitchPokemon && myPokemons ? (
+        ) : variant === Variant.SwitchPokemon && pokemons ? (
           <>
             <DialogHeader className="items-start border-neutrals-light font-mulish">
               <DialogTitle className="font-mulish !text-headingLgMedium text-neutrals-500 py-24 px-10">
