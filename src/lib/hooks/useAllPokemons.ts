@@ -7,7 +7,7 @@ export const useAllPokemons = () => {
     queryKey: ["allPokemons"],
     queryFn: async () => {
       const data = await getAllPokemons();
-      return data.map(mapBackendToFrontend);
+      return data.data.map(mapBackendToFrontend);
     },
     staleTime: 1000 * 60 * 10,
   });
