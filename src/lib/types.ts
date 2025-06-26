@@ -3,6 +3,13 @@ import type { ComponentProps } from 'react';
 import { Variant } from '@/lib/constants';
 import  { buttonsVariant } from '@/lib/constants';
 
+export type GetAllPokemonsResponse = {
+  data: BackendPokemon[];
+  totalCount: number;
+  totalPages: number;
+  currentPage: number;
+};
+
 
 export interface CustomDialogContentProps
   extends ComponentProps<typeof DialogPrimitive.Content> {
