@@ -29,7 +29,8 @@ import {
   TooltipProvider,
 } from "@/components/ui/Table/tooltip";
 import { maxAttempts } from "@/lib/constants";
-
+import { usePokemonById } from "@/lib/hooks/usePokemonById";
+import { DATA_LENGTH } from "@/lib/constants";
 
 function BattlePage() {
   const [isOpen, setIsOpen] = useState(false);
@@ -59,6 +60,8 @@ function BattlePage() {
   const [showResultModal, setShowResultModal] = useState(false);
   const [hasSwitched, setHasSwitched] = useState(false);
   const [catchAttempts, setCatchAttempts] = useState(0);
+  const [rivalId, setRivalId] = useState<number | null>(null);
+  const { data: newRivalPokemon } = usePokemonById(rivalId ?? rivalPokemon.id);
 
   const messageColor = isFainted
     ? "text-extendedPalette-error-red"
@@ -67,11 +70,16 @@ function BattlePage() {
   const { myPokemons, addPokemon } = useMyPokemon();
 
   function generateNewRivalPokemon() {
-    const randomIndex = Math.floor(Math.random() * pokemonData.length);
-    const newRival = pokemonData[randomIndex] as Pokemon;
-    setRivalPokemon(newRival);
-    setEnemyHp(newRival.base.HP);
+    const randomId = Math.floor(Math.random() * DATA_LENGTH) + 1;
+    setRivalId(randomId);
   }
+
+  useEffect(() => {
+    if (newRivalPokemon) {
+      setRivalPokemon(newRivalPokemon);
+      setEnemyHp(newRivalPokemon.base.HP);
+    }
+  }, [newRivalPokemon]);
 
   useEffect(() => {
     const dead = myHp === 0;
@@ -126,7 +134,6 @@ function BattlePage() {
       }, 1000);
       return;
     }
-
 
     const numerator =
       ((2 * level) / 5 + 2) * power * (enemyAttack / playerDefense);
