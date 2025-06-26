@@ -15,12 +15,10 @@ import { Progress } from "../components/ui/ProgressBar/progress";
 import { FightButton } from "../components/ui/Button/FightButton";
 import { motion } from "framer-motion";
 import PokaballImg from "../assets/pokador.png";
-import pokemonData from "../data/pokemon_.json";
 import { buttonsVariant } from "../../src/lib/constants";
 import { TURN_MESSAGES } from "@/lib/constants";
 import type { TurnMessageParams } from "@/lib/constants";
 import { missChance, randomFactor, power, level } from "@/lib/constants";
-import { useMyPokemon } from "@/context/MyPokemonContext";
 import { cn } from "@/lib/utils";
 import {
   Tooltip,
@@ -31,6 +29,8 @@ import {
 import { maxAttempts } from "@/lib/constants";
 import { usePokemonById } from "@/lib/hooks/usePokemonById";
 import { DATA_LENGTH } from "@/lib/constants";
+import { useNewPokemonToMyPokemons } from "@/lib/hooks/useAddNewPokemonToMyPokemons";
+import { useUserPokemons } from "@/lib/hooks/useUserPokemons";
 
 function BattlePage() {
   const [isOpen, setIsOpen] = useState(false);
@@ -67,7 +67,8 @@ function BattlePage() {
     ? "text-extendedPalette-error-red"
     : "text-neutrals-500";
 
-  const { myPokemons, addPokemon } = useMyPokemon();
+  const { mutate: catchPokemon } = useNewPokemonToMyPokemons();
+  const { data: myPokemons } = useUserPokemons();
 
   function generateNewRivalPokemon() {
     const randomId = Math.floor(Math.random() * DATA_LENGTH) + 1;
@@ -162,20 +163,20 @@ function BattlePage() {
   };
 
   const myPokemonModels = useMemo(() => {
-    return pokemonData
-      .filter((p) => myPokemons.includes(p.id))
-      .map((pokemon) => ({
-        id: pokemon.id,
-        image: pokemon.image.thumbnail,
-        name: pokemon.name.english,
-        type: pokemon.type,
-        attack: pokemon.base.Attack,
-        defense: pokemon.base.Defense,
-        speed: pokemon.base.Speed,
-        hp: pokemon.base.HP,
-        hires: pokemon.image.hires,
-      }));
-  }, [pokemonData, myPokemons]);
+    if (!myPokemons?.data) return [];
+
+    return myPokemons.data.map((pokemon) => ({
+      id: pokemon.id,
+      image: pokemon.image.thumbnail,
+      name: pokemon.name.english,
+      type: pokemon.type,
+      attack: pokemon.base.Attack,
+      defense: pokemon.base.Defense,
+      speed: pokemon.base.Speed,
+      hp: pokemon.base.HP,
+      hires: pokemon.image.hires,
+    }));
+  }, [myPokemons]);
 
   const params: TurnMessageParams = {
     playerTurn,
@@ -190,7 +191,6 @@ function BattlePage() {
     playerName: fightingPokemon.name,
     currentName: playerTurn ? fightingPokemon.name : rivalPokemon.name.english,
   };
-
   const matchedMessage = TURN_MESSAGES.find((msg) => msg.condition(params));
   let turnMessage = matchedMessage?.getMessage(params) ?? "";
 
@@ -419,9 +419,12 @@ function BattlePage() {
               type={buttonsVariant.Catch}
               targetHp={enemyHp}
               onCatchSuccess={() => {
-                setIsCaught(true);
-                addPokemon(rivalPokemon.id);
-                setIsGameOver(true);
+                catchPokemon(rivalPokemon.id, {
+                  onSuccess: () => {
+                    setIsCaught(true);
+                    setIsGameOver(true);
+                  },
+                });
               }}
               onCatchFail={handleCatchFail}
             />

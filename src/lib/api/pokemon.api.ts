@@ -29,3 +29,12 @@ export const getPokemonById = async (id?: number): Promise<BackendPokemon> => {
   const res = await axios.get<BackendPokemon>(`${BASE_URL}/pokemons/${id}`);
   return res.data;
 };
+
+export const newPokemonToMyPokemons = async (userId: number, pokemonId: number) => {
+  const res = await axios.post(`${BASE_URL}/userpokemons`, {
+    userId,
+    pokemonId,
+  });
+  return res.data;
+};
+
