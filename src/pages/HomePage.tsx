@@ -26,14 +26,15 @@ function HomePage() {
   const [limit, setLimit] = useState(10);
   const [totalCount, setTotalCount] = useState(0);
   const [totalPages, setTotalPages] = useState(1);
+  const [sortBy, setSortBy] = useState("id");
+  const [order, setOrder] = useState<"asc" | "desc">("asc");
 
   const location = useLocation();
   const initialTab = location.state?.activeTab || Tab.All;
   const [activeTab, setActiveTab] = useState<Tab>(initialTab);
 
-  const { data: allPokemonsData } = useAllPokemons(page, limit, searchTerm);
-  const { data: userPokemonsData } = useUserPokemons(page, limit, searchTerm);
-
+  const { data: allPokemonsData } = useAllPokemons(page, limit, searchTerm, sortBy, order);
+  const { data: userPokemonsData } = useUserPokemons(page, limit, searchTerm, sortBy, order);
 
   useEffect(() => {
     if (activeTab === Tab.All && allPokemonsData) {
@@ -44,49 +45,52 @@ function HomePage() {
       setPokemonData(userPokemonsData.data);
       setTotalCount(userPokemonsData.totalCount);
       setTotalPages(userPokemonsData.totalPages);
-    }else {
+    } else {
       setPokemonData([]);
       setTotalCount(0);
       setTotalPages(1);
-  }
+    }
   }, [activeTab, allPokemonsData, userPokemonsData, searchTerm]);
 
   const handleSelect = (value: SortOption) => {
-    let sortedData = [...pokemonData];
+    setSelectedOption(value);
+    setIsOpen(false);
 
     switch (value) {
       case SortOption.AZ:
-        sortedData.sort((a, b) => a.name.english.localeCompare(b.name.english));
+        setSortBy("nameEnglish");
+        setOrder("asc");
         break;
       case SortOption.ZA:
-        sortedData.sort((a, b) => b.name.english.localeCompare(a.name.english));
+        setSortBy("nameEnglish");
+        setOrder("desc");
         break;
       case SortOption.PowerHighLow:
-        sortedData.sort((a, b) => b.base.Attack - a.base.Attack);
+        setSortBy("attack");
+        setOrder("desc");
         break;
       case SortOption.PowerLowHigh:
-        sortedData.sort((a, b) => a.base.Attack - b.base.Attack);
+        setSortBy("attack");
+        setOrder("asc");
         break;
       case SortOption.HPHighLow:
-        sortedData.sort((a, b) => b.base.HP - a.base.HP);
+        setSortBy("hp");
+        setOrder("desc");
         break;
       case SortOption.HPLowHigh:
-        sortedData.sort((a, b) => a.base.HP - b.base.HP);
+        setSortBy("hp");
+        setOrder("asc");
         break;
       default:
-        break;
+        setSortBy("id");
+        setOrder("asc");
     }
-
-    setPokemonData(sortedData);
-    setSelectedOption(value);
-    setIsOpen(false);
   };
 
   const onInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setSearchTerm(e.target.value.toLowerCase());
     setPage(1);
   };
-
 
   return (
     <div className="bg-neutrals-100 min-h-screen h-auto">

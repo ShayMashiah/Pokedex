@@ -1,40 +1,26 @@
 import axios from "axios";
 import { BASE_URL } from "../constants";
-import type { GetAllPokemonsResponse } from "../types";
+import type { GetAllPokemonsResponse, GetAllPokemonsParams } from "../types";
 
-export const getAllPokemons = async ({
-  page = 1,
-  limit = 10,
-  search = "",
-}: {
-  page?: number;
-  limit?: number;
-  search?: string;
-} = {}): Promise<GetAllPokemonsResponse> => {
+export const getAllPokemons = async (
+  params: GetAllPokemonsParams
+): Promise<GetAllPokemonsResponse> => {
   const res = await axios.get<GetAllPokemonsResponse>(`${BASE_URL}/pokemons`, {
-    params: { page, limit, search },
+    params,
   });
   return res.data;
 };
 
+export const getUserPokemons = async (
+  params: GetAllPokemonsParams & { userId: number }
+): Promise<GetAllPokemonsResponse> => {
+  const { userId, ...queryParams } = params;
 
-export const getUserPokemons = async ({
-  userId,
-  page = 1,
-  limit = 10,
-  search = "",
-}: {
-  userId: number;
-  page?: number;
-  limit?: number;
-  search?: string;
-}): Promise<GetAllPokemonsResponse> => {
   const res = await axios.get<GetAllPokemonsResponse>(
     `${BASE_URL}/userpokemons/${userId}`,
     {
-      params: { page, limit, search },
+      params: queryParams,
     }
   );
   return res.data;
 };
-

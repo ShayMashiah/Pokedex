@@ -27,8 +27,6 @@ export interface CustomDialogContentProps
   onSwitchPokemon?: (pokemon: PokemonModal) => void;
   disabledPokemonId?: number;
   hideCloseButton?: boolean;
-
-
 }
 
 export interface BattleBarProps  {

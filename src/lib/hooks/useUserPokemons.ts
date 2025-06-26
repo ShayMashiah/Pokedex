@@ -3,11 +3,17 @@ import { getUserPokemons } from "../api/pokemon.api";
 import { mapBackendToFrontend } from "../utils/mapMyPokemons";
 import { userId } from "../constants";
 
-export const useUserPokemons = (page: number, limit: number, search?: string) => {
+export const useUserPokemons = (
+  page: number,
+  limit: number,
+  search?: string,
+  sortBy: string = "id",
+  order: "asc" | "desc" = "asc"
+) => {
   return useQuery({
-    queryKey: ["userPokemons", page, limit, search],
+    queryKey: ["userPokemons",userId, page, limit, search, sortBy, order],
     queryFn: async () => {
-      const data = await getUserPokemons({ userId, page, limit, search });
+      const data = await getUserPokemons({ userId, page, limit, search , sortBy, order});
       return {
         ...data,
         data: data.data.map(mapBackendToFrontend),
