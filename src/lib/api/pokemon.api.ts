@@ -1,37 +1,40 @@
 import axios from "axios";
-import type { BackendPokemon } from "../types";
-import { userId } from "../constants";
 import { BASE_URL } from "../constants";
 import type { GetAllPokemonsResponse } from "../types";
 
-export const getAllPokemons = async (): Promise<GetAllPokemonsResponse> => {
-  const res = await axios.get<GetAllPokemonsResponse>(`${BASE_URL}/pokemons`);
+export const getAllPokemons = async ({
+  page = 1,
+  limit = 10,
+  search = "",
+}: {
+  page?: number;
+  limit?: number;
+  search?: string;
+} = {}): Promise<GetAllPokemonsResponse> => {
+  const res = await axios.get<GetAllPokemonsResponse>(`${BASE_URL}/pokemons`, {
+    params: { page, limit, search },
+  });
   return res.data;
 };
 
-export const getUserPokemons = async (): Promise<BackendPokemon[]> => {
-  const res = await axios.get<BackendPokemon[]>(`${BASE_URL}/userpokemons/${userId}`);
+
+export const getUserPokemons = async ({
+  userId,
+  page = 1,
+  limit = 10,
+  search = "",
+}: {
+  userId: number;
+  page?: number;
+  limit?: number;
+  search?: string;
+}): Promise<GetAllPokemonsResponse> => {
+  const res = await axios.get<GetAllPokemonsResponse>(
+    `${BASE_URL}/userpokemons/${userId}`,
+    {
+      params: { page, limit, search },
+    }
+  );
   return res.data;
-};
-
-export const searchPokemon = async (
-  name: string,
-  userId?: number
-): Promise<BackendPokemon[]> => {
-  try {
-    const url = userId
-      ? `${BASE_URL}/userpokemons/${userId}`
-      : `${BASE_URL}/pokemons`;
-
-    const res = await axios.get<BackendPokemon[]>(url, {
-      params: {
-        search: name,
-      },
-    });
-    return res.data;
-  } catch (error) {
-    console.error("Error fetching Pokemon:", error);
-    return [];
-  }
 };
 

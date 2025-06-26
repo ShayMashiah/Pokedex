@@ -10,6 +10,14 @@ export type GetAllPokemonsResponse = {
   currentPage: number;
 };
 
+export type GetAllPokemonsParams = {
+  limit?: number;
+  page?: number;
+  sortBy?: string | "id";
+  order?: 'asc' | 'desc';
+  search?: string;
+};
+
 
 export interface CustomDialogContentProps
   extends ComponentProps<typeof DialogPrimitive.Content> {
