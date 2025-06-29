@@ -10,8 +10,7 @@ import { cn } from "@/lib/utils";
 import { useState } from "react";
 import type { BattleResultModalProps } from "../../../lib/types";
 import { Variant } from "../../../lib/constants";
-import myPokemons from "../../../data/mypokemons_.json";
-
+import { useUserPokemons } from "@/lib/hooks/useUserPokemons";
 function BattleResultDialog({
   open,
   onOpenChange,
@@ -28,6 +27,8 @@ function BattleResultDialog({
   className,
 }: BattleResultModalProps) {
   const [isPokemonDialogOpen, setIsPokemonDialogOpen] = useState(false);
+
+  const { data: myPokemons } = useUserPokemons();
 
   function isPrimaryButtonDisabled(label: string, hasSwitched: boolean) {
     return label === "Switch Pokémon" && hasSwitched;
@@ -152,7 +153,7 @@ function BattleResultDialog({
       <Dialog open={isPokemonDialogOpen} onOpenChange={setIsPokemonDialogOpen}>
         <DialogContent
           variant={Variant.SwitchPokemon}
-          pokemons={myPokemons.map((p) => ({
+          pokemons={myPokemons?.data.map((p) => ({
             id: p.id,
             name: p.name.english,
             image: p.image?.thumbnail ?? "",
