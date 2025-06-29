@@ -1,5 +1,5 @@
 import { useMemo, useState, useEffect } from "react";
-import type { PokemonRow } from "@/lib/types";
+import type { PokemonRow, Tab } from "@/lib/types";
 import { pageSizeOptions } from "../../../lib/constants";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import {
@@ -35,6 +35,10 @@ type PokemonTableProps = {
   onPageChange: (newPage: number) => void;
   onPageSizeChange: (newSize: number) => void;
   itemsPerPage: number;
+  sortBy?: string;
+  order?: "asc" | "desc";
+  search?: string;
+  activeTab:  Tab;
 };
 
 function PokemonTable({
@@ -43,6 +47,10 @@ function PokemonTable({
   totalPages,
   currentPage,
   itemsPerPage,
+  sortBy = "id",
+  order = "asc",
+  search = "",
+  activeTab,
   onPageChange,
   onPageSizeChange,
 }: PokemonTableProps) {
@@ -50,7 +58,7 @@ function PokemonTable({
     null
   );
   const [myPokemons, setMyPokemons] = useState<number[]>([]);
-  const { data: userPokemonsData } = useUserPokemons(currentPage, itemsPerPage);
+  const { data: userPokemonsData } = useUserPokemons(currentPage, itemsPerPage, search, sortBy, order, activeTab);
 
   useEffect(() => {
     if (userPokemonsData && userPokemonsData.data.length > 0) {
@@ -210,7 +218,7 @@ function PokemonTable({
         </Table>
 
         {selectedPokemon && (
-          <DialogContent variant={Variant.PokeInfo} pokemon={selectedPokemon} />
+          <DialogContent variant={Variant.PokeInfo} pokemon={selectedPokemon} page={currentPage} limit={itemsPerPage} sortBy={sortBy} order={order} search={search} activeTab={activeTab}/>
         )}
       </Dialog>
     </div>

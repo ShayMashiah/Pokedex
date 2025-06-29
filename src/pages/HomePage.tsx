@@ -33,8 +33,20 @@ function HomePage() {
   const initialTab = location.state?.activeTab || Tab.All;
   const [activeTab, setActiveTab] = useState<Tab>(initialTab);
 
-  const { data: allPokemonsData } = useAllPokemons(page, limit, searchTerm, sortBy, order);
-  const { data: userPokemonsData } = useUserPokemons(page, limit, searchTerm, sortBy, order);
+  const { data: allPokemonsData } = useAllPokemons(
+    page,
+    limit,
+    searchTerm,
+    sortBy,
+    order
+  );
+  const { data: userPokemonsData } = useUserPokemons(
+    page,
+    limit,
+    searchTerm,
+    sortBy,
+    order
+  );
 
   useEffect(() => {
     if (activeTab === Tab.All && allPokemonsData) {
@@ -60,30 +72,37 @@ function HomePage() {
       case SortOption.AZ:
         setSortBy("nameEnglish");
         setOrder("asc");
+        setPage(1);
         break;
       case SortOption.ZA:
         setSortBy("nameEnglish");
         setOrder("desc");
+        setPage(1);
         break;
       case SortOption.PowerHighLow:
         setSortBy("attack");
         setOrder("desc");
+        setPage(1);
         break;
       case SortOption.PowerLowHigh:
         setSortBy("attack");
         setOrder("asc");
+        setPage(1);
         break;
       case SortOption.HPHighLow:
         setSortBy("hp");
         setOrder("desc");
+        setPage(1);
         break;
       case SortOption.HPLowHigh:
         setSortBy("hp");
         setOrder("asc");
+        setPage(1);
         break;
       default:
         setSortBy("id");
         setOrder("asc");
+        setPage(1);
     }
   };
 
@@ -94,7 +113,13 @@ function HomePage() {
 
   return (
     <div className="bg-neutrals-100 min-h-screen h-auto">
-      <PokemonNavbar activeItem={activeTab} onChange={setActiveTab} />
+      <PokemonNavbar
+        activeItem={activeTab}
+        onChange={(newTab) => {
+          setActiveTab(newTab);
+          setPage(1);
+        }}
+      />
 
       <main className="max-w-1440 mx-auto px-10">
         <div className="max-w-1376 mx-auto">
@@ -137,6 +162,10 @@ function HomePage() {
           totalPages={totalPages}
           currentPage={page}
           itemsPerPage={limit}
+          sortBy={sortBy}
+          order={order}
+          search={searchTerm}
+          activeTab={activeTab}
           onPageChange={setPage}
           onPageSizeChange={setLimit}
         />

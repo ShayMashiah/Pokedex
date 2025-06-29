@@ -3,8 +3,8 @@ import { getAllPokemons } from "../api/pokemon.api";
 import { mapBackendToFrontend } from "../utils/mapMyPokemons";
 
 export const useAllPokemons = (
-  page: number,
-  limit: number,
+  page: number = 1,
+  limit: number = 10,
   search?: string,
   sortBy: string = "id",
   order: "asc" | "desc" = "asc"
