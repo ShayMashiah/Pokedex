@@ -119,6 +119,11 @@ function HomePage() {
           setActiveTab(newTab);
           setPage(1);
         }}
+        page={page}
+        limit={limit}
+        sortBy={sortBy}
+        order={order}
+        search={searchTerm}
       />
 
       <main className="max-w-1440 mx-auto px-10">
