@@ -7,7 +7,9 @@ import { Variant } from "../../../lib/constants";
 import type { CustomDialogContentProps } from "../../../lib/types";
 import { useNavigate } from "react-router-dom";
 import { useState } from "react";
-import allPokemons from "@/data/pokemon_.json";
+import { useAllPokemons } from "@/lib/hooks/useAllPokemons";
+import { useUserPokemons } from "@/lib/hooks/useUserPokemons";
+import { Tab } from "../../../lib/types";
 
 function Dialog({
   ...props
@@ -56,6 +58,12 @@ function DialogContent({
   pokemon,
   pokemons,
   disabledPokemonId,
+  limit,
+  page,
+  sortBy,
+  order,
+  search,
+  activeTab,
   ...props
 }: CustomDialogContentProps) {
   const navigate = useNavigate();
@@ -93,11 +101,30 @@ function DialogContent({
     remainingItems = pokemons.slice(lastRowStart);
   }
 
+  const { data: allPokemons } = useAllPokemons(
+    page,
+    limit,
+    search,
+    sortBy,
+    order
+  );
+  const { data: userPokemons } = useUserPokemons(
+    page,
+    limit,
+    search,
+    sortBy,
+    order
+  );
+
   const selectedPokemonModal = React.useMemo(() => {
     if (!pokemon?.id) return null;
 
+    const source = activeTab === Tab.User ? userPokemons?.data : allPokemons?.data;
+
+    if (!source) return null;
+
     return (
-      allPokemons
+      source
         .map((p) => ({
           id: p.id,
           name: p.name?.english ?? "Unknown",
@@ -118,7 +145,7 @@ function DialogContent({
         }))
         .find((m) => m.id === pokemon.id) ?? null
     );
-  }, [pokemon]);
+  }, [pokemon, allPokemons, userPokemons, activeTab]);
 
   return (
     <DialogPortal>

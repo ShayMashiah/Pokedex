@@ -15,8 +15,7 @@ import { transformToPokemonModal } from "@/lib/utils/mapMyPokemons";
 import { useUserPokemons } from "@/lib/hooks/useUserPokemons";
 
 function PokemonNavbar({ activeItem, onChange }: PokemonNavbarProps) {
-
-  const { data: userPokemonsData } = useUserPokemons(); 
+  const { data: userPokemonsData } = useUserPokemons();
   const pokemonsData: PokemonModal[] =
     userPokemonsData?.data.map(transformToPokemonModal) || [];
 
@@ -25,7 +24,12 @@ function PokemonNavbar({ activeItem, onChange }: PokemonNavbarProps) {
       <NavigationMenu className="max-w-1440 mx-auto py-12 px-40 ">
         <div className="w-full mx-auto flex items-center justify-between">
           <NavigationMenuList className="flex items-center ">
-            <Link to="/">
+            <Link
+              to="/"
+              onClick={() => {
+                window.location.href = "/";
+              }}
+            >
               <img src={PokemonLogo} alt="Pokemon" className="w-149.44 h-55" />
             </Link>
 
