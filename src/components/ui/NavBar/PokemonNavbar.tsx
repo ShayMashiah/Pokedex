@@ -14,8 +14,22 @@ import type { PokemonModal } from "@/lib/types";
 import { transformToPokemonModal } from "@/lib/utils/mapMyPokemons";
 import { useUserPokemons } from "@/lib/hooks/useUserPokemons";
 
-function PokemonNavbar({ activeItem, onChange }: PokemonNavbarProps) {
-  const { data: userPokemonsData } = useUserPokemons();
+function PokemonNavbar({
+  activeItem,
+  onChange,
+  sortBy = "id",
+  order = "asc",
+  search = "",
+  page = 1,
+  limit = 10,
+}: PokemonNavbarProps) {
+  const { data: userPokemonsData } = useUserPokemons(
+    page,
+    limit,
+    search,
+    sortBy,
+    order
+  );
   const pokemonsData: PokemonModal[] =
     userPokemonsData?.data.map(transformToPokemonModal) || [];
 

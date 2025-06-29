@@ -89,6 +89,11 @@ export interface PokemonModal {
 export interface PokemonNavbarProps {
   activeItem: Tab;
   onChange: (value: Tab) => void;
+  page?: number ;
+  limit?: number;
+  sortBy?: string | "id";
+  order?: 'asc' | 'desc';
+  search?: string;
 }
 
 export const Tab = {
