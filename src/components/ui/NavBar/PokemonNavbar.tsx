@@ -10,28 +10,26 @@ import { Variant } from "../../../lib/constants";
 import { Dialog, DialogContent, DialogTrigger } from "../Dialog/dialog";
 import { Button } from "../Button/button";
 import { Link } from "react-router-dom";
-import { useMyPokemon } from "@/context/MyPokemonContext";
-import allPokemons from "@/data/pokemon_.json";
 import type { PokemonModal } from "@/lib/types";
 import { transformToPokemonModal } from "@/lib/utils/mapMyPokemons";
+import { useUserPokemons } from "@/lib/hooks/useUserPokemons";
 
 function PokemonNavbar({ activeItem, onChange }: PokemonNavbarProps) {
-
-  const { myPokemons } = useMyPokemon();
-
-  const pokemonsData: PokemonModal[] = myPokemons
-    .map((id) => {
-      const poke = allPokemons.find((p) => p.id === id);
-      return poke ? transformToPokemonModal(poke) : null;
-    })
-    .filter((pokemon): pokemon is PokemonModal => pokemon !== null);
+  const { data: userPokemonsData } = useUserPokemons();
+  const pokemonsData: PokemonModal[] =
+    userPokemonsData?.data.map(transformToPokemonModal) || [];
 
   return (
     <div className="w-full bg-neutrals-white">
       <NavigationMenu className="max-w-1440 mx-auto py-12 px-40 ">
         <div className="w-full mx-auto flex items-center justify-between">
           <NavigationMenuList className="flex items-center ">
-            <Link to="/">
+            <Link
+              to="/"
+              onClick={() => {
+                window.location.href = "/";
+              }}
+            >
               <img src={PokemonLogo} alt="Pokemon" className="w-149.44 h-55" />
             </Link>
 

@@ -27,6 +27,12 @@ export interface CustomDialogContentProps
   onSwitchPokemon?: (pokemon: PokemonModal) => void;
   disabledPokemonId?: number;
   hideCloseButton?: boolean;
+  page?: number;
+  limit?: number;
+  search?: string;
+  sortBy?: string;
+  order?: 'asc' | 'desc';
+  activeTab?: Tab;
 }
 
 export interface BattleBarProps  {
