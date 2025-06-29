@@ -21,11 +21,11 @@ function PokemonNavbar({
   order = "asc",
   search = "",
   page = 1,
-  limit = 10,
+  limit,
 }: PokemonNavbarProps) {
   const { data: userPokemonsData } = useUserPokemons(
     page,
-    limit,
+    limit = 30,
     search,
     sortBy,
     order

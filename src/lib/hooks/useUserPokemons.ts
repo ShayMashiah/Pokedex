@@ -6,7 +6,7 @@ import { Tab } from "../types";
 
 export const useUserPokemons = (
   page: number = 1,
-  limit: number = 10,
+  limit: number = 30,
   search?: string,
   sortBy: string = "id",
   order: "asc" | "desc" = "asc",
