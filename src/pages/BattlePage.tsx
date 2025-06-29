@@ -87,7 +87,6 @@ function BattlePage() {
     setPlayerDead(dead);
     if (dead) {
       setShowResultModal(true);
-      setCatchAttempts(0);
       setDeadPokemons((prev) => [...prev, fightingPokemon.id]);
     }
   }, [myHp, fightingPokemon.id]);
@@ -491,6 +490,7 @@ function BattlePage() {
         }}
         caughtPokemon={isCaught ? rivalPokemon : undefined}
         onSwitchPokemon={(pokemon) => {
+          setCatchAttempts(0);
           setShowResultModal(false);
           setFightingPokemon(pokemon);
           setMyHp(pokemon.hp ?? 100);
