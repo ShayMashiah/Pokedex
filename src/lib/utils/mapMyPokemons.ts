@@ -1,5 +1,5 @@
 import  pokemonData  from "@/data/pokemon_.json"; 
-import type { PokemonModal, Pokemon } from "@/lib/types";
+import type { PokemonModal, Pokemon, BackendPokemon } from "@/lib/types";
 
 export function mapMyPokemonsByIds(myPokemonIds: number[]) {
   if (!myPokemonIds || myPokemonIds.length === 0) return [];
@@ -49,3 +49,37 @@ export function transformToPokemonModal(pokemon: Pokemon): PokemonModal {
           .join(", ") ?? "",
     };
   }
+
+  export function mapBackendToFrontend(p: BackendPokemon): Pokemon {
+  return {
+    id: p.id,
+    name: {
+      english: p.nameEnglish,
+    },
+    type: p.type,
+    base: {
+      HP: p.hp,
+      Attack: p.attack,
+      Defense: p.defense,
+      "Sp. Attack": p.spAttack,
+      "Sp. Defense": p.spDefense,
+      Speed: p.speed,
+    },
+    species: p.species,
+    description: p.description,
+    profile: {
+      height: p.height ?? undefined,
+      weight: p.weight ?? undefined,
+      gender: p.gender ?? undefined,
+      ability: [
+        [p.ability1 ?? "", p.ability1Hidden ? "true" : "false"],
+        [p.ability2 ?? "", p.ability2Hidden ? "true" : "false"],
+      ],
+    },
+    image: {
+      sprite: p.sprite ?? "",
+      thumbnail: p.thumbnail ?? "",
+      hires: p.hires ?? undefined,
+    },
+  };
+}

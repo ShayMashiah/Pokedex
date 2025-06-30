@@ -15,12 +15,10 @@ import { Progress } from "../components/ui/ProgressBar/progress";
 import { FightButton } from "../components/ui/Button/FightButton";
 import { motion } from "framer-motion";
 import PokaballImg from "../assets/pokador.png";
-import pokemonData from "../data/pokemon_.json";
 import { buttonsVariant } from "../../src/lib/constants";
 import { TURN_MESSAGES } from "@/lib/constants";
 import type { TurnMessageParams } from "@/lib/constants";
 import { missChance, randomFactor, power, level } from "@/lib/constants";
-import { useMyPokemon } from "@/context/MyPokemonContext";
 import { cn } from "@/lib/utils";
 import {
   Tooltip,
@@ -29,7 +27,10 @@ import {
   TooltipProvider,
 } from "@/components/ui/Table/tooltip";
 import { maxAttempts } from "@/lib/constants";
-
+import { usePokemonById } from "@/lib/hooks/usePokemonById";
+import { DATA_LENGTH } from "@/lib/constants";
+import { useNewPokemonToMyPokemons } from "@/lib/hooks/useAddNewPokemonToMyPokemons";
+import { useUserPokemons } from "@/lib/hooks/useUserPokemons";
 
 function BattlePage() {
   const [isOpen, setIsOpen] = useState(false);
@@ -59,26 +60,33 @@ function BattlePage() {
   const [showResultModal, setShowResultModal] = useState(false);
   const [hasSwitched, setHasSwitched] = useState(false);
   const [catchAttempts, setCatchAttempts] = useState(0);
+  const [rivalId, setRivalId] = useState<number | null>(null);
+  const { data: newRivalPokemon } = usePokemonById(rivalId ?? rivalPokemon.id);
 
   const messageColor = isFainted
     ? "text-extendedPalette-error-red"
     : "text-neutrals-500";
 
-  const { myPokemons, addPokemon } = useMyPokemon();
+  const { mutate: catchPokemon } = useNewPokemonToMyPokemons();
+  const { data: myPokemons } = useUserPokemons();
 
   function generateNewRivalPokemon() {
-    const randomIndex = Math.floor(Math.random() * pokemonData.length);
-    const newRival = pokemonData[randomIndex] as Pokemon;
-    setRivalPokemon(newRival);
-    setEnemyHp(newRival.base.HP);
+    const randomId = Math.floor(Math.random() * DATA_LENGTH) + 1;
+    setRivalId(randomId);
   }
+
+  useEffect(() => {
+    if (newRivalPokemon) {
+      setRivalPokemon(newRivalPokemon);
+      setEnemyHp(newRivalPokemon.base.HP);
+    }
+  }, [newRivalPokemon]);
 
   useEffect(() => {
     const dead = myHp === 0;
     setPlayerDead(dead);
     if (dead) {
       setShowResultModal(true);
-      setCatchAttempts(0);
       setDeadPokemons((prev) => [...prev, fightingPokemon.id]);
     }
   }, [myHp, fightingPokemon.id]);
@@ -127,7 +135,6 @@ function BattlePage() {
       return;
     }
 
-
     const numerator =
       ((2 * level) / 5 + 2) * power * (enemyAttack / playerDefense);
     const baseDamage = numerator / 50 + 2;
@@ -155,20 +162,20 @@ function BattlePage() {
   };
 
   const myPokemonModels = useMemo(() => {
-    return pokemonData
-      .filter((p) => myPokemons.includes(p.id))
-      .map((pokemon) => ({
-        id: pokemon.id,
-        image: pokemon.image.thumbnail,
-        name: pokemon.name.english,
-        type: pokemon.type,
-        attack: pokemon.base.Attack,
-        defense: pokemon.base.Defense,
-        speed: pokemon.base.Speed,
-        hp: pokemon.base.HP,
-        hires: pokemon.image.hires,
-      }));
-  }, [pokemonData, myPokemons]);
+    if (!myPokemons?.data) return [];
+
+    return myPokemons.data.map((pokemon) => ({
+      id: pokemon.id,
+      image: pokemon.image.thumbnail,
+      name: pokemon.name.english,
+      type: pokemon.type,
+      attack: pokemon.base.Attack,
+      defense: pokemon.base.Defense,
+      speed: pokemon.base.Speed,
+      hp: pokemon.base.HP,
+      hires: pokemon.image.hires,
+    }));
+  }, [myPokemons]);
 
   const params: TurnMessageParams = {
     playerTurn,
@@ -183,7 +190,6 @@ function BattlePage() {
     playerName: fightingPokemon.name,
     currentName: playerTurn ? fightingPokemon.name : rivalPokemon.name.english,
   };
-
   const matchedMessage = TURN_MESSAGES.find((msg) => msg.condition(params));
   let turnMessage = matchedMessage?.getMessage(params) ?? "";
 
@@ -412,9 +418,12 @@ function BattlePage() {
               type={buttonsVariant.Catch}
               targetHp={enemyHp}
               onCatchSuccess={() => {
-                setIsCaught(true);
-                addPokemon(rivalPokemon.id);
-                setIsGameOver(true);
+                catchPokemon(rivalPokemon.id, {
+                  onSuccess: () => {
+                    setIsCaught(true);
+                    setIsGameOver(true);
+                  },
+                });
               }}
               onCatchFail={handleCatchFail}
             />
@@ -481,6 +490,7 @@ function BattlePage() {
         }}
         caughtPokemon={isCaught ? rivalPokemon : undefined}
         onSwitchPokemon={(pokemon) => {
+          setCatchAttempts(0);
           setShowResultModal(false);
           setFightingPokemon(pokemon);
           setMyHp(pokemon.hp ?? 100);

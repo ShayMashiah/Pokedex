@@ -3,6 +3,21 @@ import type { ComponentProps } from 'react';
 import { Variant } from '@/lib/constants';
 import  { buttonsVariant } from '@/lib/constants';
 
+export type GetAllPokemonsResponse = {
+  data: BackendPokemon[];
+  totalCount: number;
+  totalPages: number;
+  currentPage: number;
+};
+
+export type GetAllPokemonsParams = {
+  limit?: number;
+  page?: number;
+  sortBy?: string | "id";
+  order?: 'asc' | 'desc';
+  search?: string;
+};
+
 
 export interface CustomDialogContentProps
   extends ComponentProps<typeof DialogPrimitive.Content> {
@@ -12,8 +27,12 @@ export interface CustomDialogContentProps
   onSwitchPokemon?: (pokemon: PokemonModal) => void;
   disabledPokemonId?: number;
   hideCloseButton?: boolean;
-
-
+  page?: number;
+  limit?: number;
+  search?: string;
+  sortBy?: string;
+  order?: 'asc' | 'desc';
+  activeTab?: Tab;
 }
 
 export interface BattleBarProps  {
@@ -70,6 +89,11 @@ export interface PokemonModal {
 export interface PokemonNavbarProps {
   activeItem: Tab;
   onChange: (value: Tab) => void;
+  page?: number ;
+  limit?: number;
+  sortBy?: string | "id";
+  order?: 'asc' | 'desc';
+  search?: string;
 }
 
 export const Tab = {
@@ -86,8 +110,9 @@ export const TAB_LABELS: Record<Tab, string> = {
   [Tab.Null]: "No Pokemons",
 };
 
+export const DEFAULT_SORT_LABEL = "Sort By" as const;
+
 export const SortOption = {
-  default: "Sort By",
   AZ :"A-Z",
   ZA : "Z-A",
   PowerHighLow : "Power H-L",
@@ -102,9 +127,6 @@ export interface Pokemon  {
   id: number;
   name: {
     english: string;
-    japanese?: string;
-    chinese?: string;
-    french?: string;
   };
   type: string[];
   base: {
@@ -116,23 +138,42 @@ export interface Pokemon  {
     Speed: number;
   };
   species?: string;
-  description?: string;
-  evolution?: {
-    prev?: string[];
-    next?: string[][] | [string, string][]; 
-  };
+  description: string;
   profile?: {
     height?: string;
     weight?: string;
-    egg?: string[];
     ability: string[][] | [[string, string]]; 
-    gender: string;
+    gender?: string;
   };
   image: {
     sprite: string;
     thumbnail: string;
     hires?: string;
   };
+};
+
+export type BackendPokemon = {
+  id: number;
+  nameEnglish: string;
+  type: string[];
+  hp: number;
+  attack: number;
+  defense: number;
+  spAttack: number;
+  spDefense: number;
+  speed: number;
+  species: string;
+  description: string;
+  height?: string | null;
+  weight?: string | null;
+  gender?: string | null;
+  ability1?: string | null;
+  ability1Hidden?: boolean | null;
+  ability2?: string | null;
+  ability2Hidden?: boolean | null;
+  sprite?: string | null;
+  thumbnail?: string | null;
+  hires?: string | null;
 };
 
 
