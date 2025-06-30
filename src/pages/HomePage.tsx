@@ -14,11 +14,13 @@ import { SORT_OPTIONS } from "@/lib/constants";
 import { useLocation } from "react-router-dom";
 import { useUserPokemons } from "@/lib/hooks/useUserPokemons";
 import { useAllPokemons } from "@/lib/hooks/useAllPokemons";
+import { sortConfigMap } from "@/lib/constants";
+import { DEFAULT_SORT_LABEL } from "@/lib/types";
 
 function HomePage() {
   const [isOpen, setIsOpen] = useState(false);
-  const [selectedOption, setSelectedOption] = useState<SortOption>(
-    SortOption.default
+  const [selectedOption, setSelectedOption] = useState<SortOption | string>(
+    DEFAULT_SORT_LABEL
   );
   const [pokemonData, setPokemonData] = useState<Pokemon[]>([]);
   const [searchTerm, setSearchTerm] = useState("");
@@ -26,14 +28,27 @@ function HomePage() {
   const [limit, setLimit] = useState(10);
   const [totalCount, setTotalCount] = useState(0);
   const [totalPages, setTotalPages] = useState(1);
+  const [sortBy, setSortBy] = useState("id");
+  const [order, setOrder] = useState<"asc" | "desc">("asc");
 
   const location = useLocation();
   const initialTab = location.state?.activeTab || Tab.All;
   const [activeTab, setActiveTab] = useState<Tab>(initialTab);
 
-  const { data: allPokemonsData } = useAllPokemons(page, limit, searchTerm);
-  const { data: userPokemonsData } = useUserPokemons(page, limit, searchTerm);
-
+  const { data: allPokemonsData } = useAllPokemons(
+    page,
+    limit,
+    searchTerm,
+    sortBy,
+    order
+  );
+  const { data: userPokemonsData } = useUserPokemons(
+    page,
+    limit,
+    searchTerm,
+    sortBy,
+    order
+  );
 
   useEffect(() => {
     if (activeTab === Tab.All && allPokemonsData) {
@@ -44,42 +59,21 @@ function HomePage() {
       setPokemonData(userPokemonsData.data);
       setTotalCount(userPokemonsData.totalCount);
       setTotalPages(userPokemonsData.totalPages);
-    }else {
+    } else {
       setPokemonData([]);
       setTotalCount(0);
       setTotalPages(1);
-  }
+    }
   }, [activeTab, allPokemonsData, userPokemonsData, searchTerm]);
 
   const handleSelect = (value: SortOption) => {
-    let sortedData = [...pokemonData];
-
-    switch (value) {
-      case SortOption.AZ:
-        sortedData.sort((a, b) => a.name.english.localeCompare(b.name.english));
-        break;
-      case SortOption.ZA:
-        sortedData.sort((a, b) => b.name.english.localeCompare(a.name.english));
-        break;
-      case SortOption.PowerHighLow:
-        sortedData.sort((a, b) => b.base.Attack - a.base.Attack);
-        break;
-      case SortOption.PowerLowHigh:
-        sortedData.sort((a, b) => a.base.Attack - b.base.Attack);
-        break;
-      case SortOption.HPHighLow:
-        sortedData.sort((a, b) => b.base.HP - a.base.HP);
-        break;
-      case SortOption.HPLowHigh:
-        sortedData.sort((a, b) => a.base.HP - b.base.HP);
-        break;
-      default:
-        break;
-    }
-
-    setPokemonData(sortedData);
     setSelectedOption(value);
     setIsOpen(false);
+
+    const config = sortConfigMap[value] ?? { sortBy: "id", order: "asc" };
+    setSortBy(config.sortBy);
+    setOrder(config.order);
+    setPage(1);
   };
 
   const onInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -87,10 +81,20 @@ function HomePage() {
     setPage(1);
   };
 
-
   return (
     <div className="bg-neutrals-100 min-h-screen h-auto">
-      <PokemonNavbar activeItem={activeTab} onChange={setActiveTab} />
+      <PokemonNavbar
+        activeItem={activeTab}
+        onChange={(newTab) => {
+          setActiveTab(newTab);
+          setPage(1);
+        }}
+        page={page}
+        limit={limit}
+        sortBy={sortBy}
+        order={order}
+        search={searchTerm}
+      />
 
       <main className="max-w-1440 mx-auto px-10">
         <div className="max-w-1376 mx-auto">
@@ -133,6 +137,10 @@ function HomePage() {
           totalPages={totalPages}
           currentPage={page}
           itemsPerPage={limit}
+          sortBy={sortBy}
+          order={order}
+          search={searchTerm}
+          activeTab={activeTab}
           onPageChange={setPage}
           onPageSizeChange={setLimit}
         />

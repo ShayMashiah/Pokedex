@@ -27,8 +27,12 @@ export interface CustomDialogContentProps
   onSwitchPokemon?: (pokemon: PokemonModal) => void;
   disabledPokemonId?: number;
   hideCloseButton?: boolean;
-
-
+  page?: number;
+  limit?: number;
+  search?: string;
+  sortBy?: string;
+  order?: 'asc' | 'desc';
+  activeTab?: Tab;
 }
 
 export interface BattleBarProps  {
@@ -85,6 +89,11 @@ export interface PokemonModal {
 export interface PokemonNavbarProps {
   activeItem: Tab;
   onChange: (value: Tab) => void;
+  page?: number ;
+  limit?: number;
+  sortBy?: string | "id";
+  order?: 'asc' | 'desc';
+  search?: string;
 }
 
 export const Tab = {
@@ -101,8 +110,9 @@ export const TAB_LABELS: Record<Tab, string> = {
   [Tab.Null]: "No Pokemons",
 };
 
+export const DEFAULT_SORT_LABEL = "Sort By" as const;
+
 export const SortOption = {
-  default: "Sort By",
   AZ :"A-Z",
   ZA : "Z-A",
   PowerHighLow : "Power H-L",

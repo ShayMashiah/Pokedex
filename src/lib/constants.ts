@@ -1,5 +1,7 @@
 import { SortOption } from './types';
 
+export const DATA_LENGTH = 809;
+
 export const BASE_URL = "http://localhost:3000/api/v1";
 
 export const userId = 258;
@@ -27,6 +29,15 @@ export const SORT_OPTIONS = [
   { label: 'HP (Low to high)', value: SortOption.HPLowHigh },
 ];
 
+
+export const sortConfigMap: Record<SortOption, { sortBy: string; order: "asc" | "desc" }> = {
+  [SortOption.AZ]: { sortBy: "nameEnglish", order: "asc" },
+  [SortOption.ZA]: { sortBy: "nameEnglish", order: "desc" },
+  [SortOption.PowerHighLow]: { sortBy: "attack", order: "desc" },
+  [SortOption.PowerLowHigh]: { sortBy: "attack", order: "asc" },
+  [SortOption.HPHighLow]: { sortBy: "hp", order: "desc" },
+  [SortOption.HPLowHigh]: { sortBy: "hp", order: "asc" },
+};
 
 export interface TurnMessageParams {
   playerTurn: boolean;
