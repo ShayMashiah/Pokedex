@@ -110,8 +110,9 @@ export const TAB_LABELS: Record<Tab, string> = {
   [Tab.Null]: "No Pokemons",
 };
 
+export const DEFAULT_SORT_LABEL = "Sort By" as const;
+
 export const SortOption = {
-  default: "Sort By",
   AZ :"A-Z",
   ZA : "Z-A",
   PowerHighLow : "Power H-L",

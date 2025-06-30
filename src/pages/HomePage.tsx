@@ -14,11 +14,13 @@ import { SORT_OPTIONS } from "@/lib/constants";
 import { useLocation } from "react-router-dom";
 import { useUserPokemons } from "@/lib/hooks/useUserPokemons";
 import { useAllPokemons } from "@/lib/hooks/useAllPokemons";
+import { sortConfigMap } from "@/lib/constants";
+import { DEFAULT_SORT_LABEL } from "@/lib/types";
 
 function HomePage() {
   const [isOpen, setIsOpen] = useState(false);
-  const [selectedOption, setSelectedOption] = useState<SortOption>(
-    SortOption.default
+  const [selectedOption, setSelectedOption] = useState<SortOption | string>(
+    DEFAULT_SORT_LABEL
   );
   const [pokemonData, setPokemonData] = useState<Pokemon[]>([]);
   const [searchTerm, setSearchTerm] = useState("");
@@ -68,42 +70,10 @@ function HomePage() {
     setSelectedOption(value);
     setIsOpen(false);
 
-    switch (value) {
-      case SortOption.AZ:
-        setSortBy("nameEnglish");
-        setOrder("asc");
-        setPage(1);
-        break;
-      case SortOption.ZA:
-        setSortBy("nameEnglish");
-        setOrder("desc");
-        setPage(1);
-        break;
-      case SortOption.PowerHighLow:
-        setSortBy("attack");
-        setOrder("desc");
-        setPage(1);
-        break;
-      case SortOption.PowerLowHigh:
-        setSortBy("attack");
-        setOrder("asc");
-        setPage(1);
-        break;
-      case SortOption.HPHighLow:
-        setSortBy("hp");
-        setOrder("desc");
-        setPage(1);
-        break;
-      case SortOption.HPLowHigh:
-        setSortBy("hp");
-        setOrder("asc");
-        setPage(1);
-        break;
-      default:
-        setSortBy("id");
-        setOrder("asc");
-        setPage(1);
-    }
+    const config = sortConfigMap[value] ?? { sortBy: "id", order: "asc" };
+    setSortBy(config.sortBy);
+    setOrder(config.order);
+    setPage(1);
   };
 
   const onInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
