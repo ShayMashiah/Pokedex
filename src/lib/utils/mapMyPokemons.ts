@@ -1,33 +1,4 @@
-import  pokemonData  from "@/data/pokemon_.json"; 
 import type { PokemonModal, Pokemon, BackendPokemon } from "@/lib/types";
-
-export function mapMyPokemonsByIds(myPokemonIds: number[]) {
-  if (!myPokemonIds || myPokemonIds.length === 0) return [];
-
-  return myPokemonIds
-    .map((id) => pokemonData.find((poke) => poke.id === id))
-    .filter((p): p is typeof pokemonData[0] => p !== undefined)
-    .map((p) => ({
-      id: p.id,
-      name: p.name.english,
-      image: p.image?.thumbnail ?? "",
-      hires: p.image?.hires ?? "",
-      speed: p.base.Speed,
-      hp: p.base.HP,
-      attack: p.base.Attack,
-      defense: p.base.Defense,
-      description: p.description,
-      height: p.profile?.height ?? "Unknown",
-      weight: p.profile?.weight ?? "Unknown",
-      category: p.type ?? "Unknown",
-      abilities:
-        p.profile?.ability
-          ?.map((a: string[]) => a[0].split(",")[0].trim())
-          .join(", ") ?? "Unknown",
-    }));
-}
-
-
 
 export function transformToPokemonModal(pokemon: Pokemon): PokemonModal {
     return {

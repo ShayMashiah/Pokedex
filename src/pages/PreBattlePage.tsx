@@ -1,32 +1,35 @@
 import PokemonNavbar from "@/components/ui/NavBar/PokemonNavbar";
-import { Tab, type Pokemon } from "@/lib/types";
+import { Tab } from "@/lib/types";
 import { useLocation, useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
-import pokemonData from "../data/pokemon_.json";
 import background from "../assets/Background.png";
+import  { usePokemonById } from "@/lib/hooks/usePokemonById";
+import { DATA_LENGTH } from "@/lib/constants";
 
 function PreBattlePage() {
-  const [rivalPokemon, setRivalPokemon] = useState<Pokemon | null>(null);
+  const [rivalId, setRivalId] = useState<number>(1);
+
   const navigate = useNavigate();
 
   const location = useLocation();
   const { selectedPokemon } = location.state || {};
 
+  const { data: newRivalPokemon } = usePokemonById(rivalId);
+
   useEffect(() => {
-    const randomIndex = Math.floor(Math.random() * pokemonData.length);
-    const randomPokemon = pokemonData[randomIndex] as Pokemon;
-    setRivalPokemon(randomPokemon);
+    const randomId = Math.floor(Math.random() * DATA_LENGTH) + 1;
+    setRivalId(randomId);
   }, []);
 
   useEffect(() => {
-    if (!rivalPokemon) return;
+    if (!newRivalPokemon) return;
 
     const timeout = setTimeout(() => {
-      navigate("/battle", { state: { selectedPokemon, rivalPokemon } });
+      navigate("/battle", { state: { selectedPokemon, newRivalPokemon } });
     }, 3000);
 
     return () => clearTimeout(timeout);
-  }, [rivalPokemon, selectedPokemon]);
+  }, [newRivalPokemon, selectedPokemon]);
 
   if (!selectedPokemon) {
     return <div>No Pokémon selected!</div>;
@@ -63,10 +66,10 @@ function PreBattlePage() {
               />
             )}
 
-            {rivalPokemon && (
+            {newRivalPokemon && (
               <img
-                src={rivalPokemon.image?.hires}
-                alt={rivalPokemon.name?.english}
+                src={newRivalPokemon.image?.hires}
+                alt={newRivalPokemon.name?.english}
                 className="absolute bottom-82 right-130 z-10"
               />
             )}
