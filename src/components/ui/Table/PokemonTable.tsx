@@ -1,5 +1,5 @@
 import { useMemo, useState, useEffect } from "react";
-import type { PokemonRow } from "@/lib/types";
+import type { PokemonRow, Tab } from "@/lib/types";
 import { pageSizeOptions } from "../../../lib/constants";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import {
@@ -29,45 +29,49 @@ import { useUserPokemons } from "../../../lib/hooks/useUserPokemons";
 
 type PokemonTableProps = {
   data: PokemonRow[];
+  totalCount: number;
+  totalPages: number;
+  currentPage: number;
+  onPageChange: (newPage: number) => void;
+  onPageSizeChange: (newSize: number) => void;
+  itemsPerPage: number;
+  sortBy?: string;
+  order?: "asc" | "desc";
+  search?: string;
+  activeTab:  Tab;
 };
 
-function PokemonTable({ data }: PokemonTableProps) {
+function PokemonTable({
+  data,
+  totalCount,
+  totalPages,
+  currentPage,
+  itemsPerPage,
+  sortBy = "id",
+  order = "asc",
+  search = "",
+  activeTab,
+  onPageChange,
+  onPageSizeChange,
+}: PokemonTableProps) {
   const [selectedPokemon, setSelectedPokemon] = useState<PokemonRow | null>(
     null
   );
   const [myPokemons, setMyPokemons] = useState<number[]>([]);
-  const [currentPage, setCurrentPage] = useState(1);
-  const [itemsPerPage, setItemsPerPage] = useState(10);
-
-  const { data: userPokemons = [] } = useUserPokemons();
+  const { data: userPokemonsData } = useUserPokemons(currentPage, itemsPerPage, search, sortBy, order, activeTab);
 
   useEffect(() => {
-    if (userPokemons.length > 0) {
-      const ids = userPokemons.map((p) => Number(p.id));
+    if (userPokemonsData && userPokemonsData.data.length > 0) {
+      const ids = userPokemonsData.data.map((p) => Number(p.id));
       setMyPokemons(ids);
     }
-  }, [userPokemons]);
-
-  useEffect(() => {
-    setCurrentPage(1);
-  }, [data]);
-
-  const totalPages = useMemo(() => {
-    return Math.ceil(data.length / itemsPerPage);
-  }, [data.length, itemsPerPage]);
-
-  const paginatedData = useMemo(() => {
-    const startIndex = (currentPage - 1) * itemsPerPage;
-    const endIndex = currentPage * itemsPerPage;
-    return data.slice(startIndex, endIndex);
-  }, [data, currentPage, itemsPerPage]);
+  }, [userPokemonsData]);
 
   const displayRangeText = useMemo(() => {
     const startIndex = (currentPage - 1) * itemsPerPage + 1;
-    const endIndex = Math.min(currentPage * itemsPerPage, data.length);
-    const totalItems = data.length;
-    return `${startIndex}-${endIndex} of ${totalItems} items`;
-  }, [currentPage, itemsPerPage, data.length]);
+    const endIndex = Math.min(currentPage * itemsPerPage, totalCount);
+    return `${startIndex}-${endIndex} of ${totalCount} items`;
+  }, [currentPage, itemsPerPage, totalCount]);
 
   return (
     <div className="max-w-1376 mx-auto p-4">
@@ -86,7 +90,7 @@ function PokemonTable({ data }: PokemonTableProps) {
           </TableHeader>
 
           <TableBody>
-            {paginatedData.length === 0 ? (
+            {data.length === 0 ? (
               <TableRow className="bg-neutrals-white border-neutrals-100 h-158 text-neutrals-800 text-headingMdRegular">
                 <TableCell
                   colSpan={5}
@@ -106,7 +110,7 @@ function PokemonTable({ data }: PokemonTableProps) {
                 </TableCell>
               </TableRow>
             ) : (
-              paginatedData.map((pokemon: PokemonRow) => {
+              data.map((pokemon: PokemonRow) => {
                 const isMine = myPokemons.includes(pokemon.id);
                 return (
                   <DialogTrigger
@@ -173,8 +177,9 @@ function PokemonTable({ data }: PokemonTableProps) {
                 <select
                   value={itemsPerPage}
                   onChange={(e) => {
-                    setItemsPerPage(Number(e.target.value));
-                    setCurrentPage(1);
+                    const newSize = Number(e.target.value);
+                    onPageSizeChange(newSize);
+                    onPageChange(1);
                   }}
                   className=" rounded px-2 py-1 text-sm"
                 >
@@ -192,7 +197,7 @@ function PokemonTable({ data }: PokemonTableProps) {
                 </span>
 
                 <button
-                  onClick={() => setCurrentPage((p) => Math.max(p - 1, 1))}
+                  onClick={() => onPageChange(Math.max(currentPage - 1, 1))}
                   disabled={currentPage === 1}
                   className="disabled:opacity-50"
                 >
@@ -200,7 +205,7 @@ function PokemonTable({ data }: PokemonTableProps) {
                 </button>
                 <button
                   onClick={() =>
-                    setCurrentPage((p) => Math.min(p + 1, totalPages))
+                    onPageChange(Math.min(currentPage + 1, totalPages))
                   }
                   disabled={currentPage === totalPages}
                   className="disabled:opacity-50 gap-20"
@@ -213,7 +218,7 @@ function PokemonTable({ data }: PokemonTableProps) {
         </Table>
 
         {selectedPokemon && (
-          <DialogContent variant={Variant.PokeInfo} pokemon={selectedPokemon} />
+          <DialogContent variant={Variant.PokeInfo} pokemon={selectedPokemon} page={currentPage} limit={itemsPerPage} sortBy={sortBy} order={order} search={search} activeTab={activeTab}/>
         )}
       </Dialog>
     </div>

@@ -1,7 +1,7 @@
+import { useEffect, useState } from "react";
 import { Input } from "@/components/ui/Input/input";
 import PokemonNavbar from "@/components/ui/NavBar/PokemonNavbar";
 import PokemonTable from "@/components/ui/Table/PokemonTable";
-import { useEffect, useState } from "react";
 import { Tab, TAB_LABELS, type Pokemon } from "@/lib/types";
 import {
   DropdownMenu,
@@ -12,86 +12,89 @@ import {
 import { SortOption } from "@/lib/types";
 import { SORT_OPTIONS } from "@/lib/constants";
 import { useLocation } from "react-router-dom";
-import { useAllPokemons } from "@/lib/hooks/useAllPokemons";
 import { useUserPokemons } from "@/lib/hooks/useUserPokemons";
-import { useSearchPokemon } from "@/lib/hooks/useSearchPokemon";
-import { userId } from "@/lib/constants";
+import { useAllPokemons } from "@/lib/hooks/useAllPokemons";
+import { sortConfigMap } from "@/lib/constants";
+import { DEFAULT_SORT_LABEL } from "@/lib/types";
 
 function HomePage() {
   const [isOpen, setIsOpen] = useState(false);
-  const [selectedOption, setSelectedOption] = useState<SortOption>(
-    SortOption.default
+  const [selectedOption, setSelectedOption] = useState<SortOption | string>(
+    DEFAULT_SORT_LABEL
   );
   const [pokemonData, setPokemonData] = useState<Pokemon[]>([]);
   const [searchTerm, setSearchTerm] = useState("");
+  const [page, setPage] = useState(1);
+  const [limit, setLimit] = useState(10);
+  const [totalCount, setTotalCount] = useState(0);
+  const [totalPages, setTotalPages] = useState(1);
+  const [sortBy, setSortBy] = useState("id");
+  const [order, setOrder] = useState<"asc" | "desc">("asc");
 
   const location = useLocation();
   const initialTab = location.state?.activeTab || Tab.All;
   const [activeTab, setActiveTab] = useState<Tab>(initialTab);
 
-  const { data: allPokemons = [] } = useAllPokemons();
-  const { data: userPokemons = [] } = useUserPokemons();
-  const { data: searchResults = [] } = useSearchPokemon(
-    searchTerm.trim(),
-    activeTab === Tab.User ? userId : undefined
+  const { data: allPokemonsData } = useAllPokemons(
+    page,
+    limit,
+    searchTerm,
+    sortBy,
+    order
+  );
+  const { data: userPokemonsData } = useUserPokemons(
+    page,
+    limit,
+    searchTerm,
+    sortBy,
+    order
   );
 
   useEffect(() => {
-    if (searchTerm) return;
-
-    const filtered =
-      activeTab === Tab.User
-        ? userPokemons
-        : allPokemons;
-
-    setPokemonData((prev) => {
-      const isEqual =
-        prev.length === filtered.length &&
-        prev.every((p, i) => p.id === filtered[i].id);
-      return isEqual ? prev : filtered;
-    });
-  }, [activeTab, allPokemons, userPokemons, searchTerm]);
+    if (activeTab === Tab.All && allPokemonsData) {
+      setPokemonData(allPokemonsData.data);
+      setTotalCount(allPokemonsData.totalCount);
+      setTotalPages(allPokemonsData.totalPages);
+    } else if (activeTab === Tab.User && userPokemonsData) {
+      setPokemonData(userPokemonsData.data);
+      setTotalCount(userPokemonsData.totalCount);
+      setTotalPages(userPokemonsData.totalPages);
+    } else {
+      setPokemonData([]);
+      setTotalCount(0);
+      setTotalPages(1);
+    }
+  }, [activeTab, allPokemonsData, userPokemonsData, searchTerm]);
 
   const handleSelect = (value: SortOption) => {
-    let sortedData = [...pokemonData];
-
-    switch (value) {
-      case SortOption.AZ:
-        sortedData.sort((a, b) => a.name.english.localeCompare(b.name.english));
-        break;
-      case SortOption.ZA:
-        sortedData.sort((a, b) => b.name.english.localeCompare(a.name.english));
-        break;
-      case SortOption.PowerHighLow:
-        sortedData.sort((a, b) => b.base.Attack - a.base.Attack);
-        break;
-      case SortOption.PowerLowHigh:
-        sortedData.sort((a, b) => a.base.Attack - b.base.Attack);
-        break;
-      case SortOption.HPHighLow:
-        sortedData.sort((a, b) => b.base.HP - a.base.HP);
-        break;
-      case SortOption.HPLowHigh:
-        sortedData.sort((a, b) => a.base.HP - b.base.HP);
-        break;
-      default:
-        break;
-    }
-
-    setPokemonData(sortedData);
     setSelectedOption(value);
     setIsOpen(false);
+
+    const config = sortConfigMap[value] ?? { sortBy: "id", order: "asc" };
+    setSortBy(config.sortBy);
+    setOrder(config.order);
+    setPage(1);
   };
 
   const onInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setSearchTerm(e.target.value.toLowerCase());
+    setPage(1);
   };
-
-  const displayedPokemons = searchTerm ? searchResults : pokemonData;
 
   return (
     <div className="bg-neutrals-100 min-h-screen h-auto">
-      <PokemonNavbar activeItem={activeTab} onChange={setActiveTab} />
+      <PokemonNavbar
+        activeItem={activeTab}
+        onChange={(newTab) => {
+          setActiveTab(newTab);
+          setPage(1);
+        }}
+        page={page}
+        limit={limit}
+        sortBy={sortBy}
+        order={order}
+        search={searchTerm}
+      />
 
       <main className="max-w-1440 mx-auto px-10">
         <div className="max-w-1376 mx-auto">
@@ -127,9 +130,23 @@ function HomePage() {
             </DropdownMenu>
           </div>
         </div>
-        <PokemonTable key={activeTab} data={displayedPokemons} />
+        <PokemonTable
+          key={activeTab}
+          data={pokemonData}
+          totalCount={totalCount}
+          totalPages={totalPages}
+          currentPage={page}
+          itemsPerPage={limit}
+          sortBy={sortBy}
+          order={order}
+          search={searchTerm}
+          activeTab={activeTab}
+          onPageChange={setPage}
+          onPageSizeChange={setLimit}
+        />
       </main>
     </div>
   );
 }
+
 export default HomePage;

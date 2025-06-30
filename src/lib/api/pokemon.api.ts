@@ -1,37 +1,40 @@
 import axios from "axios";
-import type { BackendPokemon } from "../types";
-import { userId } from "../constants";
 import { BASE_URL } from "../constants";
-import type { GetAllPokemonsResponse } from "../types";
+import type { GetAllPokemonsResponse, GetAllPokemonsParams } from "../types";
+import type { BackendPokemon } from "../types";
 
-export const getAllPokemons = async (): Promise<GetAllPokemonsResponse> => {
-  const res = await axios.get<GetAllPokemonsResponse>(`${BASE_URL}/pokemons`);
+export const getAllPokemons = async (
+  params: GetAllPokemonsParams
+): Promise<GetAllPokemonsResponse> => {
+  const res = await axios.get<GetAllPokemonsResponse>(`${BASE_URL}/pokemons`, {
+    params,
+  });
   return res.data;
 };
 
-export const getUserPokemons = async (): Promise<BackendPokemon[]> => {
-  const res = await axios.get<BackendPokemon[]>(`${BASE_URL}/userpokemons/${userId}`);
+export const getUserPokemons = async (
+  params: GetAllPokemonsParams & { userId: number }
+): Promise<GetAllPokemonsResponse> => {
+  const { userId, ...queryParams } = params;
+  const res = await axios.get<GetAllPokemonsResponse>(
+    `${BASE_URL}/userpokemons/${userId}`,
+    {
+      params: queryParams,
+    }
+  );
   return res.data;
 };
 
-export const searchPokemon = async (
-  name: string,
-  userId?: number
-): Promise<BackendPokemon[]> => {
-  try {
-    const url = userId
-      ? `${BASE_URL}/userpokemons/${userId}`
-      : `${BASE_URL}/pokemons`;
+export const getPokemonById = async (id?: number): Promise<BackendPokemon> => {
+  const res = await axios.get<BackendPokemon>(`${BASE_URL}/pokemons/${id}`);
+  return res.data;
+};
 
-    const res = await axios.get<BackendPokemon[]>(url, {
-      params: {
-        search: name,
-      },
-    });
-    return res.data;
-  } catch (error) {
-    console.error("Error fetching Pokemon:", error);
-    return [];
-  }
+export const newPokemonToMyPokemons = async (userId: number, pokemonId: number) => {
+  const res = await axios.post(`${BASE_URL}/userpokemons`, {
+    userId,
+    pokemonId,
+  });
+  return res.data;
 };
 
