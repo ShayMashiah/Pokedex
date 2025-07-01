@@ -33,6 +33,7 @@ function Input({
       />
 
       <input
+        id ="search-section"
         type="text"
         value={value}
         onChange={onChange}
