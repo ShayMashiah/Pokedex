@@ -4,7 +4,7 @@ describe("Search section interaction", () => {
   });
 
   it("lets the user type characters into the search input", () => {
-    cy.get("#search-section")  
+    cy.get('[data-cy="search-section"]')
       .click()                
       .type("Pikachu")        
       .should("have.value", "pikachu"); 
