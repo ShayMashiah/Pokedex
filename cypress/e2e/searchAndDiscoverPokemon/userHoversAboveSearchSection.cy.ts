@@ -4,7 +4,7 @@ describe("Search section hover effect", () => {
   });
 
   it("applies border color on hover", () => {
-    cy.get("#search-section")
+    cy.get('[data-cy="search-section"]')
       .trigger("mouseover")
       .should("have.css", "border-color", "rgb(168, 174, 181)"); 
   });
