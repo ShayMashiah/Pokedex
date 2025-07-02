@@ -47,7 +47,6 @@ function BattlePage() {
   const location = useLocation();
   const { selectedPokemon } = location.state || {};
   const { newRivalPokemon: initialRivalPokemon } = location.state || {};
-  console.log(initialRivalPokemon);
   const [rivalPokemon, setRivalPokemon] =
     useState<Pokemon>(initialRivalPokemon);
   const [usedPokemons, setUsedPokemons] = useState<number[]>([

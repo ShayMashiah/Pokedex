@@ -38,7 +38,7 @@ type PokemonTableProps = {
   sortBy?: string;
   order?: "asc" | "desc";
   search?: string;
-  activeTab:  Tab;
+  activeTab: Tab;
 };
 
 function PokemonTable({
@@ -58,7 +58,14 @@ function PokemonTable({
     null
   );
   const [myPokemons, setMyPokemons] = useState<number[]>([]);
-  const { data: userPokemonsData } = useUserPokemons(currentPage, itemsPerPage, search, sortBy, order, activeTab);
+  const { data: userPokemonsData } = useUserPokemons(
+    currentPage,
+    itemsPerPage,
+    search,
+    sortBy,
+    order,
+    activeTab
+  );
 
   useEffect(() => {
     if (userPokemonsData && userPokemonsData.data.length > 0) {
@@ -76,7 +83,10 @@ function PokemonTable({
   return (
     <div className="max-w-1376 mx-auto p-4">
       <Dialog>
-        <Table data-cy="pokemon-table"  className="rounded-xl overflow-hidden w-1376 border border-neutrals-200">
+        <Table
+          data-cy="pokemon-table"
+          className="rounded-xl overflow-hidden w-1376 border border-neutrals-200"
+        >
           <TableHeader>
             <TableRow className="bg-primary-50 border border-naturals-100 font-mulish text-bodyBold">
               <TableHead className="w-408 h-48 pt-4 pl-66 ">
@@ -135,6 +145,7 @@ function PokemonTable({
                           </span>
                           {isMine && (
                             <img
+                              data-cy="pokeball-icon"
                               src={pokeballIcon}
                               alt="My Pokemon"
                               className="w-24 h-24 ml-8"
@@ -175,6 +186,7 @@ function PokemonTable({
               <div className="flex items-center text-neutrals-650 gap-14">
                 <span>Rows per page:</span>
                 <select
+                  data-cy="rows-per-page-select"
                   value={itemsPerPage}
                   onChange={(e) => {
                     const newSize = Number(e.target.value);
@@ -184,7 +196,7 @@ function PokemonTable({
                   className=" rounded px-2 py-1 text-sm"
                 >
                   {pageSizeOptions.map((size) => (
-                    <option key={size} value={size}>
+                    <option data-cy="rows-per-page-option" key={size} value={size}>
                       {size}
                     </option>
                   ))}
@@ -201,7 +213,7 @@ function PokemonTable({
                   disabled={currentPage === 1}
                   className="disabled:opacity-50"
                 >
-                  <ChevronLeft size={16} />
+                  <ChevronLeft size={16} data-cy="pagination-previous"/>
                 </button>
                 <button
                   onClick={() =>
@@ -210,7 +222,7 @@ function PokemonTable({
                   disabled={currentPage === totalPages}
                   className="disabled:opacity-50 gap-20"
                 >
-                  <ChevronRight size={16} />
+                  <ChevronRight size={16} data-cy="pagination-next" />
                 </button>
               </div>
             </div>
@@ -218,7 +230,16 @@ function PokemonTable({
         </Table>
 
         {selectedPokemon && (
-          <DialogContent variant={Variant.PokeInfo} pokemon={selectedPokemon} page={currentPage} limit={itemsPerPage} sortBy={sortBy} order={order} search={search} activeTab={activeTab}/>
+          <DialogContent
+            variant={Variant.PokeInfo}
+            pokemon={selectedPokemon}
+            page={currentPage}
+            limit={itemsPerPage}
+            sortBy={sortBy}
+            order={order}
+            search={search}
+            activeTab={activeTab}
+          />
         )}
       </Dialog>
     </div>
