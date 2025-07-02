@@ -1,5 +1,3 @@
-// src/components/ui/dropdown-menu.stories.tsx
-// src/components/ui/dropdown-menu.stories.tsx
 import type { Meta, StoryObj } from "@storybook/react";
 import {
   DropdownMenu,

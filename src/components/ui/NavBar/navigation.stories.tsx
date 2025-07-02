@@ -1,18 +1,24 @@
 import type { Meta, StoryObj } from "@storybook/react";
-import  PokemonNavbar  from "./PokemonNavbar";
+import PokemonNavbar from "./PokemonNavbar";
 
 const meta: Meta<typeof PokemonNavbar> = {
-  title: "UI/PokemonNavbar",
+  title: "UI/Navbar",
   component: PokemonNavbar,
   parameters: {
-    layout: "fullscreen", 
+    layout: "fullscreen",
   },
 };
 
 export default meta;
-
 type Story = StoryObj<typeof PokemonNavbar>;
 
 export const Default: Story = {
-  render: () => <PokemonNavbar />,
+  render: () => (
+    <PokemonNavbar
+      activeItem="all"
+      onChange={(value) => {
+        console.log("Selected:", value);
+      }}
+    />
+  ),
 };
