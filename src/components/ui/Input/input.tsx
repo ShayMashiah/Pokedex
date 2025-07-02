@@ -33,6 +33,7 @@ function Input({
       />
 
       <input
+        data-cy ="search-section"
         type="text"
         value={value}
         onChange={onChange}

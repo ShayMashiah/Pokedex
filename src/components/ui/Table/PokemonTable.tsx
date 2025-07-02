@@ -76,7 +76,7 @@ function PokemonTable({
   return (
     <div className="max-w-1376 mx-auto p-4">
       <Dialog>
-        <Table className="rounded-xl overflow-hidden w-1376 border border-neutrals-200">
+        <Table data-cy="pokemon-table"  className="rounded-xl overflow-hidden w-1376 border border-neutrals-200">
           <TableHeader>
             <TableRow className="bg-primary-50 border border-naturals-100 font-mulish text-bodyBold">
               <TableHead className="w-408 h-48 pt-4 pl-66 ">
