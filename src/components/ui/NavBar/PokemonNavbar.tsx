@@ -49,6 +49,7 @@ function PokemonNavbar({
 
             <NavigationMenuItem>
               <button
+                data-cy="tab-all-pokemons"
                 onClick={() => onChange(Tab.All)}
                 className={`w-120 h-38 rounded-s px-4 py-2 flex items-center text-bodyRegular text-primary-300 justify-center hover:bg-primary-50 ml-40 ${
                   activeItem === Tab.All
@@ -62,6 +63,7 @@ function PokemonNavbar({
 
             <NavigationMenuItem>
               <button
+                data-cy="tab-my-pokemons"
                 onClick={() => onChange(Tab.User)}
                 className={`w-120 h-38 rounded-s flex items-center text-bodyRegular text-primary-300 justify-center  hover:bg-primary-50 ml-16   ${
                   activeItem === Tab.User

@@ -89,7 +89,9 @@ function PokemonTable({
         >
           <TableHeader>
             <TableRow className="bg-primary-50 border border-naturals-100 font-mulish text-bodyBold">
-              <TableHead className="w-408 h-48 pt-4 pl-66 ">
+              <TableHead
+                className="w-408 h-48 pt-4 pl-66 "
+              >
                 Pokemon name
               </TableHead>
               <TableHead className="w-170 h-48 pt-4">ID</TableHead>
@@ -134,13 +136,14 @@ function PokemonTable({
                           <div className="py-9 pl-16 pr-13.5 ">
                             <div className="bg-neutrals-900 rounded-full w-54 h-54 overflow-hidden flex items-center justify-center">
                               <img
+                                data-cy="pokemon-picture"
                                 src={pokemon.image?.thumbnail ?? ""}
                                 alt={pokemon.name.english}
                                 className="  object-cover w-44 h-44"
                               />
                             </div>
                           </div>
-                          <span className="text-headingMdRegular font-mulish">
+                          <span data-cy="pokemon-name" className="text-headingMdRegular font-mulish">
                             {pokemon.name.english}
                           </span>
                           {isMine && (
@@ -153,12 +156,12 @@ function PokemonTable({
                           )}
                         </div>
                       </TableCell>
-                      <TableCell className="text-bodyRegular font-mulish">
+                      <TableCell data-cy="pokemon-id" className="text-bodyRegular font-mulish">
                         #{String(pokemon.id).padStart(4, "0")}
                       </TableCell>
                       <TooltipProvider>
                         <Tooltip>
-                          <TableCell className="max-w-[400px] truncate font-mulish text-bodyRegular pr-40">
+                          <TableCell data-cy="pokemon-description" className="max-w-[400px] truncate font-mulish text-bodyRegular pr-40">
                             <TooltipTrigger asChild>
                               <p className="truncate">{pokemon.description}</p>
                             </TooltipTrigger>
@@ -168,10 +171,10 @@ function PokemonTable({
                           </TableCell>
                         </Tooltip>
                       </TooltipProvider>
-                      <TableCell className="font-mulish text-bodyRegular">
+                      <TableCell data-cy="pokemon-power" className="font-mulish text-bodyRegular">
                         Power Level {pokemon.base.Attack}
                       </TableCell>
-                      <TableCell className="font-mulish text-bodyRegular">
+                      <TableCell data-cy="pokemon-hp" className="font-mulish text-bodyRegular">
                         {pokemon.base.HP} HP
                       </TableCell>
                     </TableRow>
@@ -196,7 +199,11 @@ function PokemonTable({
                   className=" rounded px-2 py-1 text-sm"
                 >
                   {pageSizeOptions.map((size) => (
-                    <option data-cy="rows-per-page-option" key={size} value={size}>
+                    <option
+                      data-cy="rows-per-page-option"
+                      key={size}
+                      value={size}
+                    >
                       {size}
                     </option>
                   ))}
@@ -204,7 +211,7 @@ function PokemonTable({
               </div>
 
               <div className="flex text-neutrals-650 gap-32">
-                <span className="text-muted-foreground text-sm">
+                <span data-cy="display-range-text"className="text-muted-foreground text-sm">
                   {displayRangeText}
                 </span>
 
@@ -213,7 +220,7 @@ function PokemonTable({
                   disabled={currentPage === 1}
                   className="disabled:opacity-50"
                 >
-                  <ChevronLeft size={16} data-cy="pagination-previous"/>
+                  <ChevronLeft size={16} data-cy="pagination-previous" />
                 </button>
                 <button
                   onClick={() =>
