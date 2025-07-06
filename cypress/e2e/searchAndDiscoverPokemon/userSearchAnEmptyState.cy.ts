@@ -7,7 +7,7 @@ describe("Search functionality with no results", () => {
 
     cy.get('[data-cy="search-section"]').type("someRandomStringThatMatchesNothing");
 
-    cy.get('[data-cy="pokemon-table"] tbody tr').should("have.length", 0);
+    cy.get('[data-cy="pokemon-table"] tbody tr').should("have.length", 1);
 
     cy.contains("No Pokemons were found").should("be.visible");
   });

@@ -119,7 +119,8 @@ function DialogContent({
   const selectedPokemonModal = React.useMemo(() => {
     if (!pokemon?.id) return null;
 
-    const source = activeTab === Tab.User ? userPokemons?.data : allPokemons?.data;
+    const source =
+      activeTab === Tab.User ? userPokemons?.data : allPokemons?.data;
 
     if (!source) return null;
 
@@ -152,6 +153,7 @@ function DialogContent({
       <DialogOverlay />
       <DialogPrimitive.Content
         data-slot="dialog-content"
+        data-cy="dialog-content"
         className={cn(
           "bg-neutrals-white data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 data-[state=closed]:zoom-out-95 data-[state=open]:zoom-in-95 fixed top-[50%] left-[50%] z-50 grid w-502 max-w-[calc(100%-2rem)] translate-x-[-50%] translate-y-[-50%] gap-4 rounded-lg border p-6 shadow-lg duration-200 sm:max-w-lg",
           variant === Variant.PokeInfo && "p-6",
@@ -165,11 +167,17 @@ function DialogContent({
               <div className="text-start text-muted-foreground text-subheadingRegular  text-neutrals-200 w-48 h-26">
                 #{String(selectedPokemonModal.id).padStart(4, "0")}
               </div>
-              <DialogTitle className="!text-pokemonModalTitle h-26 pt-10 text-neutrals-500 font-mulish">
+              <DialogTitle
+                data-cy="pokemon-name"
+                className="!text-pokemonModalTitle h-26 pt-10 text-neutrals-500 font-mulish"
+              >
                 {selectedPokemonModal.name ?? "Unknown"}
               </DialogTitle>
             </DialogHeader>
-            <div className="w-470 py-16 px-16 flex items-center justify-center">
+            <div
+              data-cy="pokemon-img"
+              className="w-470 py-16 px-16 flex items-center justify-center"
+            >
               <img
                 src={selectedPokemonModal.image}
                 alt={selectedPokemonModal.name}
@@ -179,11 +187,17 @@ function DialogContent({
 
             <div className="px-16 pb-16">
               <div className="bg-neutrals-900  space-y-4 max-w-470 font-mulish text-sm text-neutrals-500">
-                <p className="p-24 text-textBaseRegular text-neutrals-500">
+                <p
+                  data-cy="pokemon-description"
+                  className="p-24 text-textBaseRegular text-neutrals-500"
+                >
                   {selectedPokemonModal.description}
                 </p>
                 <hr className="border-t border-neutrals-200" />
-                <div className="grid grid-cols-4 gap-24 p-24 ">
+                <div
+                  data-cy="pokemon-stats"
+                  className="grid grid-cols-4 gap-24 p-24 "
+                >
                   <div className="flex flex-col  gap-6">
                     <span className="text-pokemonModalFields text-neutrals-400 w-36 h-18 font-mulish">
                       Height
@@ -231,6 +245,7 @@ function DialogContent({
             <div className="grid grid-cols-3 gap-2 justify-items-center">
               {fullItems.map((p) => (
                 <button
+                  data-cy="pokemon-item"
                   key={p.id}
                   onClick={() => onSelectPokemon?.(p.id)}
                   className="rounded-full border-2 mt-16 border-transparent hover:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-500 transition"
@@ -250,9 +265,10 @@ function DialogContent({
               <div className="flex justify-center gap-76 pt-10">
                 {remainingItems.map((p) => (
                   <button
+                    data-cy="pokemon-item"
                     key={p.id}
                     onClick={() => onSelectPokemon?.(p.id)}
-                    className="rounded-full border-2 border-transparent hover:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-500 transition"
+                    className="rounded-full border-2 border-transparent hover:border-blue-500 focus:outline-none focus:ring-2 selected:ring-blue-500 transition"
                   >
                     <div className="bg-neutrals-900 w-102.35 h-102.35 rounded-full flex items-center justify-center">
                       <img
@@ -267,7 +283,7 @@ function DialogContent({
             )}
 
             <DialogFooter className="flex justify-center border-t border-neutrals-light py-16">
-              <Button variant="primary" size="xlg" onClick={handleStartBattle}>
+              <Button data-cy="start-battle-button" variant="primary" size="xlg" onClick={handleStartBattle}>
                 Start battle
               </Button>
             </DialogFooter>
@@ -285,6 +301,7 @@ function DialogContent({
                 const isDisabled = p.id === disabledPokemonId;
                 return (
                   <button
+                    data-cy="pokemon-item"
                     key={p.id}
                     onClick={() => !isDisabled && onSelectPokemon?.(p.id)}
                     disabled={isDisabled}
@@ -313,6 +330,7 @@ function DialogContent({
                   const isDisabled = p.id === disabledPokemonId;
                   return (
                     <button
+                      data-cy="pokemon-item"
                       key={p.id}
                       onClick={() => !isDisabled && onSelectPokemon?.(p.id)}
                       disabled={isDisabled}
@@ -338,6 +356,7 @@ function DialogContent({
 
             <DialogFooter className="flex justify-center border-t border-neutrals-light py-16">
               <Button
+                data-cy="start-battle-button"
                 variant="primary"
                 size="xlg"
                 onClick={handleSwitchPokemon}
@@ -352,7 +371,7 @@ function DialogContent({
 
         {!props.hideCloseButton && (
           <DialogPrimitive.Close className="absolute top-12 right-24 opacity-70 transition-opacity hover:opacity-100 focus:outline-none">
-            <XIcon />
+            <XIcon data-cy="close-dialog-button" />
             <span className="sr-only">Close</span>
           </DialogPrimitive.Close>
         )}

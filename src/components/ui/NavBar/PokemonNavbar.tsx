@@ -82,6 +82,7 @@ function PokemonNavbar({
                 variant="primary"
                 size="xlg"
                 className="text-subheadingRegular font-mulish text-neutrals-white"
+                data-cy="start-fight-button"
               >
                 Start a Fight
               </Button>

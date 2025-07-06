@@ -30,6 +30,7 @@ function DropdownMenuTrigger({
 }) {
   return (
     <DropdownMenuPrimitive.Trigger
+      data-cy="sort-by-button"
       data-slot="dropdown-menu-trigger"
       className={cn(
         "flex items-center justify-between",
@@ -66,6 +67,7 @@ function DropdownMenuContent({
   return (
     <DropdownMenuPrimitive.Portal>
       <DropdownMenuPrimitive.Content
+        data-cy="dropdown-menu-content"
         data-slot="dropdown-menu-content"
         sideOffset={sideOffset}
         className={cn(
@@ -118,6 +120,7 @@ function DropdownMenuItem({
 }) {
   return (
     <DropdownMenuPrimitive.Item
+      data-cy="dropdown-menu-item"
       data-slot="dropdown-menu-item"
       data-inset={inset}
       data-variant={variant}

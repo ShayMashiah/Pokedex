@@ -12,7 +12,6 @@ export const useUserPokemons = (
   order: "asc" | "desc" = "asc",
   activeTab?: Tab
 ) => {
-    console.log(activeTab)
 
   return useQuery({
     queryKey: ["userPokemons", userId, limit, search, sortBy, order, page, activeTab],
