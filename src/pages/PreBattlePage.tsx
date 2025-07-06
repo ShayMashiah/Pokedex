@@ -3,7 +3,7 @@ import { Tab } from "@/lib/types";
 import { useLocation, useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
 import background from "../assets/Background.png";
-import  { usePokemonById } from "@/lib/hooks/usePokemonById";
+import { usePokemonById } from "@/lib/hooks/usePokemonById";
 import { DATA_LENGTH } from "@/lib/constants";
 
 function PreBattlePage() {
@@ -60,8 +60,9 @@ function PreBattlePage() {
 
             {selectedPokemon?.image && (
               <img
+                data-cy="battle-left-pokemon"
                 src={selectedPokemon.hires}
-                alt="Selected Pokemon"
+                alt={selectedPokemon.name}
                 className="absolute top-82 left-130 z-10"
               />
             )}
