@@ -8,7 +8,6 @@ import type { FightButtonProps } from "@/lib/types";
 import { useState } from "react";
 import { baseMissChance, randomFactor, buttonsVariant } from "@/lib/constants";
 
-
 const shakeAnimation = {
   shake: {
     x: [0, -6, 6, -6, 6, 0],
@@ -49,7 +48,7 @@ function FightButton({
     defenderDefense,
     level = 50,
     power = 60,
-    accuracy = 100, 
+    accuracy = 100,
     evasion = 0,
   }: {
     attackerAttack: number;
@@ -65,7 +64,7 @@ function FightButton({
       (1 - baseMissChance) * (accuracyModifier / evasionModifier);
 
     if (Math.random() > finalHitChance) {
-      return 0; 
+      return 0;
     }
 
     const numerator =
@@ -77,7 +76,6 @@ function FightButton({
 
   const handleClick = () => {
     if (!isAttack) {
-
       const catchRate = (targetHp ?? 100) <= 0.2 * rivalHp ? 0.2 : 0.1;
       const didCatch = Math.random() < catchRate;
 
@@ -98,7 +96,9 @@ function FightButton({
 
   return (
     <motion.button
+      data-cy={isAttack ? "attack-button" : "catch-button"}
       animate={isShaking ? "shake" : "none"}
+      data-is-shaking={isShaking || undefined}
       variants={shakeAnimation}
       onClick={handleClick}
       style={bgStyle}

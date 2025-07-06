@@ -36,6 +36,7 @@ export interface CustomDialogContentProps
 }
 
 export interface BattleBarProps  {
+  datacy?: string;
   name: string;
   speed: number;
   currentHP: number;
