@@ -6,7 +6,12 @@ const meta: Meta<typeof Progress> = {
   component: Progress,
   tags: ["autodocs"],
   args: {
-    value: 50,
+    name: "Pikachu",
+    speed: 55,
+    currentHP: 50,
+    maxHP: 100,
+    isTurn: true,
+    isFainted: false,
   },
 };
 
@@ -15,18 +20,18 @@ type Story = StoryObj<typeof Progress>;
 
 export const LowProgress: Story = {
   args: {
-    value: 20,
+    currentHP: 20,
   },
 };
 
 export const MediumProgress: Story = {
   args: {
-    value: 50,
+    currentHP: 50,
   },
 };
 
 export const HighProgress: Story = {
   args: {
-    value: 80,
+    currentHP: 80,
   },
 };

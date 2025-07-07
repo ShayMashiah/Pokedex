@@ -9,7 +9,7 @@
     "preview": "vite preview",
     "storybook": "storybook dev -p 6006",
     "build-storybook": "storybook build"
-  },
+    },
   "dependencies": {
     "@bahmutov/cypress-esbuild-preprocessor": "^2.2.5",
     "@radix-ui/react-dialog": "1.1.14",
