@@ -311,7 +311,10 @@ function BattlePage() {
             "absolute top-90 left-1 w-633 h-119 px-[25px] py-[24px] rounded-tr-[12px] rounded-br-[12px] border-t-[5px] border-r-[5px] border-b-[5px] border-l-0 border-solid [border-image-source:theme(backgroundImage.gradient-default)] [border-image-slice:1]  backdrop-blur-sm bg-white/30 z-10 flex items-center"
           }
         >
-          <p className={`${messageColor} text-headingLgBold font-mulish`}>
+          <p
+            data-cy="battle-message"
+            className={`${messageColor} text-headingLgBold font-mulish`}
+          >
             {turnMessage}
           </p>
         </div>
@@ -341,6 +344,7 @@ function BattlePage() {
         />
 
         <Progress
+          datacy="my-pokemon-bar"
           name={fightingPokemon.name}
           speed={fightingPokemon.speed ?? 0}
           currentHP={myHp}
@@ -377,6 +381,7 @@ function BattlePage() {
 
         {isCaught && (
           <motion.img
+            data-cy="pokeball-animation"
             src={PokaballImg}
             alt="Pokeball"
             className="absolute top-101 right-295 w-206 h-206"
@@ -386,6 +391,7 @@ function BattlePage() {
         )}
 
         <Progress
+          datacy="opponent-bar"
           name={rivalPokemon.name.english}
           speed={rivalPokemon.base.Speed}
           currentHP={enemyHp}
@@ -396,7 +402,10 @@ function BattlePage() {
         />
 
         {playerTurn && !playerDead && !enemyDead && !isGameOver && (
-          <div className="absolute bottom-24 right-24 flex gap-24 p-4">
+          <div
+            data-cy="battle-buttons"
+            className="absolute bottom-24 right-24 flex gap-24 p-4"
+          >
             <FightButton
               type={buttonsVariant.Attack}
               attackerAttack={fightingPokemon.attack}
