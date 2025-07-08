@@ -53,7 +53,7 @@ function PokemonNavbar({
                 onClick={() => onChange(Tab.All)}
                 className={`w-120 h-38 rounded-s px-4 py-2 flex items-center text-bodyRegular text-primary-300 justify-center hover:bg-primary-50 ml-40 ${
                   activeItem === Tab.All
-                    ? "bg-primary-50 font-bold text-bodyRegular"
+                    ? "bg-primary-50  font-bold font-mulish  "
                     : ""
                 }`}
               >
@@ -67,7 +67,7 @@ function PokemonNavbar({
                 onClick={() => onChange(Tab.User)}
                 className={`w-120 h-38 rounded-s flex items-center text-bodyRegular text-primary-300 justify-center  hover:bg-primary-50 ml-16   ${
                   activeItem === Tab.User
-                    ? "bg-primary-50 font-bold text-bodyRegular"
+                    ? "bg-primary-50 font-bold font-mulish "
                     : ""
                 }`}
               >

@@ -61,7 +61,7 @@ function BattleResultDialog({
           </Button>
 
           {secondaryButtonLabel && onSecondaryAction && (
-            <Button variant="secondary" size="l" onClick={onSecondaryAction}>
+            <Button variant="secondary" size="l" className="subheadingRegular" onClick={onSecondaryAction}>
               {secondaryButtonLabel}
             </Button>
           )}

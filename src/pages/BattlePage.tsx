@@ -199,11 +199,11 @@ function BattlePage() {
         activeItem={Tab.Null}
         onChange={() => console.log("Battle mode")}
       />
-      <div className="w-full text-center mt-20 mb-6">
+      <div className=" text-center mt-24 mb-6">
         <h1 className="text-headingXXLgBold font-mulish text-neutrals-400">
-          Fighting Area
+          Fighting arena
         </h1>
-        <p className="text-textBaseRegular mt-2 text-neutrals-400">
+        <p className="text-textBaseRegular font-mulish mt-8 text-neutrals-400">
           Press fight button until your or your enemy power will end
         </p>
       </div>
@@ -220,7 +220,7 @@ function BattlePage() {
                   <DropdownMenuTrigger
                     isOpen={isOpen}
                     className={cn(
-                      "text-textBodyRegular font-roboto mb-12 w-300",
+                      "text-textBodyRegular font-roboto mb-12 w-300 pl-12",
                       hasSwitched && "opacity-50 cursor-not-allowed"
                     )}
                     disabled={hasSwitched}
@@ -305,24 +305,30 @@ function BattlePage() {
         </DropdownMenu>
       </div>
 
-      <div className="relative flex max-w-1360 mx-auto h-750 overflow-hidden">
-        <div
-          className={
-            "absolute top-90 left-1 w-633 h-119 px-[25px] py-[24px] rounded-tr-[12px] rounded-br-[12px] border-t-[5px] border-r-[5px] border-b-[5px] border-l-0 border-solid [border-image-source:theme(backgroundImage.gradient-default)] [border-image-slice:1]  backdrop-blur-sm bg-white/30 z-10 flex items-center"
-          }
-        >
-          <p
-            data-cy="battle-message"
-            className={`${messageColor} text-headingLgBold font-mulish`}
+      <div className="relative flex max-w-1360 mx-auto overflow-hidden">
+          <div
+            className={
+              "absolute top-90 left-1 w-633 h-119 px-[25px] py-[24px]  border-t-[5px] border-r-[5px] border-b-[5px] rounded-r-[12px] overflow-hidden border-l-0 backdrop-blur-sm bg-white/70 z-10"
+            }
+            style={{
+              borderImageSource:
+                "linear-gradient(90deg, #40DCD9 30%, #62E345 100%)",
+              borderImageSlice: 1,
+
+            }}
           >
-            {turnMessage}
-          </p>
+            <p
+              data-cy="battle-message"
+              className={`${messageColor} text-headingLgBold font-mulish`}
+            >
+              {turnMessage}
+            </p>
         </div>
 
         <img
           src={BattleBackground}
           alt="Background"
-          className="w-full h-full object-cover"
+          className="w-full h-full object-cover mb-40"
         />
 
         <motion.img
@@ -351,7 +357,7 @@ function BattlePage() {
           maxHP={fightingPokemon.hp ?? 0}
           isTurn={playerTurn}
           isFainted={playerDead}
-          className="absolute bottom-24 left-24"
+          className="absolute bottom-64 left-24"
         />
 
         <motion.img
@@ -404,7 +410,7 @@ function BattlePage() {
         {playerTurn && !playerDead && !enemyDead && !isGameOver && (
           <div
             data-cy="battle-buttons"
-            className="absolute bottom-24 right-24 flex gap-24 p-4"
+            className="absolute bottom-64 right-24 flex gap-24 p-4"
           >
             <FightButton
               type={buttonsVariant.Attack}

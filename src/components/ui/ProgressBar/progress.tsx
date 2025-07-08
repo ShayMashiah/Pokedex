@@ -32,7 +32,7 @@ function Progress({
           ? "bg-gradient-fainted"
           : isTurn
           ? "bg-gradient-default"
-          : "bg-gradient-disabled",
+          : "bg-gradient-disabled opacity-80",
         className
       )}
     >
@@ -47,7 +47,8 @@ function Progress({
             data-cy={`${datacy}-indicator`}
             className={cn(
               "h-full transition-transform rounded-xs border border-primary-500",
-              getIndicatorColor(percentage)
+              getIndicatorColor(percentage),
+              !isTurn && "opacity-50"
             )}
             style={{ transform: `translateX(-${100 - percentage}%)` }}
           />
@@ -56,8 +57,7 @@ function Progress({
 
       <div className="flex justify-between pr-8 pl-8 pb-8">
         <span className="opacity-90 text-subheadingMedium font-mulish">
-          Speed.{" "}
-          <span className="text-headingMdBold font-mulish">{speed}</span>
+          Speed. <span className="text-headingMdBold font-mulish">{speed}</span>
         </span>
         <span className="text-headingMdBold font-mulish">
           {currentHP}/{maxHP}

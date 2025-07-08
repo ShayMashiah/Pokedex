@@ -41,17 +41,17 @@ function PreBattlePage() {
         activeItem={Tab.Null}
         onChange={() => console.log("Battle mode")}
       />
-      <div className="max-w-1360  mx-auto">
-        <div className=" text-center mt-48 mb-6">
+      <div className="max-w-1360  mx-auto ">
+        <div className=" text-center mt-36 mb-6">
           <h1 className="text-headingXXLgBold font-mulish text-neutrals-400">
-            Fighting Arena
+            Fighting arena
           </h1>
-          <p className="text-textBaseRegular font-mulish mt-2 text-neutrals-400">
+          <p className="text-textBaseRegular font-mulish mt-8 text-neutrals-400">
             Press fight button until your or your enemy power will end
           </p>
         </div>
         <div className="relative flex justify-center items-center w-full mt-24">
-          <div className="relative flex h-755 w-full overflow-hidden">
+          <div className="relative flex h-755 w-full overflow-hidden mb-40">
             <img
               src={background}
               alt="Battle Background"

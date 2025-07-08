@@ -96,9 +96,9 @@ function HomePage() {
         search={searchTerm}
       />
 
-      <main className="max-w-1440 mx-auto px-10">
+      <main className="max-w-1440 mx-auto px-32">
         <div className="max-w-1376 mx-auto">
-          <h1 className="text-headingLgMedium font-mulish text-neutrals-400 mt-32 mb-10">
+          <h1 className="text-headingLgMedium font-mulish text-neutrals-400 mt-32 mb-10 ">
             {TAB_LABELS[activeTab]}
           </h1>
 
@@ -114,14 +114,14 @@ function HomePage() {
                 isOpen={isOpen}
                 className="max-w-full inline-flex min-w-101"
               >
-                {selectedOption}
+                <p className="pl-12 font-roboto">{selectedOption}</p>
               </DropdownMenuTrigger>
               <DropdownMenuContent>
                 {SORT_OPTIONS.map((option) => (
                   <DropdownMenuItem
                     key={option.value}
                     onSelect={() => handleSelect(option.value)}
-                    className="h-38 w-206 font-mulish text-bodyRegular text-neutrals-500 border-k py-8 pl-8 cursor-pointer"
+                    className="h-38 w-206 text-bodyRegular text-neutrals-500 border-k py-8 pl-8 cursor-pointer"
                   >
                     {option.label}
                   </DropdownMenuItem>

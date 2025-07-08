@@ -193,7 +193,7 @@ function DialogContent({
                 >
                   {selectedPokemonModal.description}
                 </p>
-                <hr className="border-t border-neutrals-200" />
+                <hr className="border-t border-neutrals-200 mx-24" />
                 <div
                   data-cy="pokemon-stats"
                   className="grid grid-cols-4 gap-24 p-24 "
