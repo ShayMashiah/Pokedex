@@ -5,12 +5,15 @@ import { useEffect, useState } from "react";
 import background from "../assets/Background.png";
 import { usePokemonById } from "@/lib/hooks/usePokemonById";
 import { DATA_LENGTH } from "@/lib/constants";
+import { Skeleton } from "@/components/ui/Skeleton/skeleton";
 
 function PreBattlePage() {
   const [rivalId, setRivalId] = useState<number>(1);
+  const [myImageLoaded, setMyImageLoaded] = useState(false);
+  const [rivalImageLoaded, setRivalImageLoaded] = useState(false);
+  const [backgroundLoaded, setBackgroundLoaded] = useState(false);
 
   const navigate = useNavigate();
-
   const location = useLocation();
   const { selectedPokemon } = location.state || {};
 
@@ -22,27 +25,38 @@ function PreBattlePage() {
   }, []);
 
   useEffect(() => {
-    if (!newRivalPokemon) return;
+    if (
+      myImageLoaded &&
+      rivalImageLoaded &&
+      backgroundLoaded &&
+      newRivalPokemon
+    ) {
+      const timeout = setTimeout(() => {
+        navigate("/battle", { state: { selectedPokemon, newRivalPokemon } });
+      }, 2000);
 
-    const timeout = setTimeout(() => {
-      navigate("/battle", { state: { selectedPokemon, newRivalPokemon } });
-    }, 3000);
-
-    return () => clearTimeout(timeout);
-  }, [newRivalPokemon, selectedPokemon]);
+      return () => clearTimeout(timeout);
+    }
+  }, [
+    myImageLoaded,
+    rivalImageLoaded,
+    backgroundLoaded,
+    newRivalPokemon,
+    selectedPokemon,
+  ]);
 
   if (!selectedPokemon) {
     return <div>No Pokémon selected!</div>;
   }
 
+  const isReady = myImageLoaded && rivalImageLoaded && backgroundLoaded;
+
   return (
-    <div className="bg-neutrals-100 mx-auto min-h-screen ">
-      <PokemonNavbar
-        activeItem={Tab.Null}
-        onChange={() => console.log("Battle mode")}
-      />
-      <div className="max-w-1360  mx-auto ">
-        <div className=" text-center mt-36 mb-6">
+    <div className="bg-neutrals-100 mx-auto min-h-screen relative">
+      <PokemonNavbar activeItem={Tab.Null} onChange={() => {}} />
+
+      <div className="max-w-1360 mx-auto">
+        <div className="text-center mt-36 mb-6">
           <h1 className="text-headingXXLgBold font-mulish text-neutrals-400">
             Fighting arena
           </h1>
@@ -50,32 +64,43 @@ function PreBattlePage() {
             Press fight button until your or your enemy power will end
           </p>
         </div>
+
         <div className="relative flex justify-center items-center w-full mt-24">
+          {!isReady && (
+            <Skeleton className="absolute top-0 left-0 w-full h-755 z-0 bg-neutrals-200" />
+          )}
           <div className="relative flex h-755 w-full overflow-hidden mb-40">
             <img
               src={background}
               alt="Battle Background"
-              className="absolute top-0 left-0 w-full h-full object-cover z-0"
+              onLoad={() => setBackgroundLoaded(true)}
+              className={
+                isReady
+                  ? "absolute top-0 left-0 w-full h-full object-cover z-0"
+                  : "hidden"
+              }
             />
-
-            {selectedPokemon?.image && (
+            {selectedPokemon?.hires && (
               <img
                 data-cy="battle-left-pokemon"
                 src={selectedPokemon.hires}
                 alt={selectedPokemon.name}
-                className="absolute top-82 left-130 z-10"
+                onLoad={() => setMyImageLoaded(true)}
+                className={isReady ? "absolute top-82 left-130 z-10" : "hidden"}
               />
             )}
 
-            {newRivalPokemon && (
+            {newRivalPokemon?.image?.hires && (
               <img
-                src={newRivalPokemon.image?.hires}
+                src={newRivalPokemon.image.hires}
                 alt={newRivalPokemon.name?.english}
-                className="absolute bottom-82 right-130 z-10"
+                onLoad={() => setRivalImageLoaded(true)}
+                className={
+                  isReady ? "absolute bottom-82 right-130 z-10" : "hidden"
+                }
               />
             )}
           </div>
-          ;
         </div>
       </div>
     </div>

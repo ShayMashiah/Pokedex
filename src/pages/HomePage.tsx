@@ -35,20 +35,22 @@ function HomePage() {
   const initialTab = location.state?.activeTab || Tab.All;
   const [activeTab, setActiveTab] = useState<Tab>(initialTab);
 
-  const { data: allPokemonsData } = useAllPokemons(
+  const { data: allPokemonsData, isLoading: isLoadingAll  } = useAllPokemons(
     page,
     limit,
     searchTerm,
     sortBy,
     order
   );
-  const { data: userPokemonsData } = useUserPokemons(
+  const { data: userPokemonsData, isLoading: isLoadingUser  } = useUserPokemons(
     page,
     limit,
     searchTerm,
     sortBy,
     order
   );
+
+  const loading = activeTab === Tab.All ? isLoadingAll : isLoadingUser;
 
   useEffect(() => {
     if (activeTab === Tab.All && allPokemonsData) {
@@ -143,7 +145,7 @@ function HomePage() {
           activeTab={activeTab}
           onPageChange={setPage}
           onPageSizeChange={setLimit}
-        
+          loading={loading}
         />
       </main>
     </div>

@@ -26,6 +26,7 @@ import { Variant } from "@/lib/constants";
 import pokeballIcon from "@/assets/pokador.png";
 import { SearchX } from "lucide-react";
 import { useUserPokemons } from "../../../lib/hooks/useUserPokemons";
+import { Skeleton } from "@/components/ui/Skeleton/skeleton";
 
 type PokemonTableProps = {
   data: PokemonRow[];
@@ -39,6 +40,7 @@ type PokemonTableProps = {
   order?: "asc" | "desc";
   search?: string;
   activeTab: Tab;
+  loading: boolean;
 };
 
 function PokemonTable({
@@ -51,12 +53,22 @@ function PokemonTable({
   order = "asc",
   search = "",
   activeTab,
+  loading,
   onPageChange,
   onPageSizeChange,
 }: PokemonTableProps) {
   const [selectedPokemon, setSelectedPokemon] = useState<PokemonRow | null>(
     null
   );
+
+  const [imagesLoadedMap, setImagesLoadedMap] = useState<
+    Record<number, boolean>
+  >({});
+
+  const handleImageLoad = (id: number) => {
+    setImagesLoadedMap((prev) => ({ ...prev, [id]: true }));
+  };
+
   const [myPokemons, setMyPokemons] = useState<number[]>([]);
   const { data: userPokemonsData } = useUserPokemons(
     currentPage,
@@ -100,7 +112,27 @@ function PokemonTable({
           </TableHeader>
 
           <TableBody>
-            {data.length === 0 ? (
+            {loading ? (
+              Array.from({ length: itemsPerPage }).map((_, idx) => (
+                <TableRow key={`skeleton-${idx}`} className="animate-pulse h-72 w-1376">
+                  <TableCell>
+                    <div className="bg-neutrals-200 rounded-full w-44 h-44" />
+                  </TableCell>
+                  <TableCell>
+                    <div className="bg-neutrals-200 h-6 w-20 rounded" />
+                  </TableCell>
+                  <TableCell>
+                    <div className="bg-neutrals-200 h-6 w-full max-w-xs rounded" />
+                  </TableCell>
+                  <TableCell>
+                    <div className="bg-neutrals-200 h-6 w-20 rounded" />
+                  </TableCell>
+                  <TableCell>
+                    <div className="bg-neutrals-200 h-6 w-20 rounded" />
+                  </TableCell>
+                </TableRow>
+              ))
+            ) : data.length === 0 ? (
               <TableRow className="bg-neutrals-white border-neutrals-100 h-158 text-neutrals-800 text-headingMdRegular">
                 <TableCell
                   colSpan={5}
@@ -122,22 +154,29 @@ function PokemonTable({
             ) : (
               data.map((pokemon: PokemonRow) => {
                 const isMine = myPokemons.includes(pokemon.id);
+                const imageLoaded = imagesLoadedMap[pokemon.id] ?? false;
+
                 return (
                   <DialogTrigger
                     asChild
                     key={pokemon.id}
                     onClick={() => setSelectedPokemon(pokemon)}
                   >
-                    <TableRow className="bg-neutrals-white text-neutrals-300  border-neutrals-100 hover:bg-primary-50 cursor-pointer w-1376 h-72">
+                    <TableRow className="bg-neutrals-white text-neutrals-300 border-neutrals-100 hover:bg-primary-50 cursor-pointer w-1376 h-72">
                       <TableCell>
                         <div className="flex items-center">
-                          <div className="py-9 pl-16 pr-16 ">
-                            <div className="bg-neutrals-900 rounded-full w-54 h-54 overflow-hidden flex items-center justify-center">
+                          <div className="py-9 pl-16 pr-16">
+                            <div className="bg-neutrals-900 rounded-full w-54 h-54 overflow-hidden flex items-center justify-center relative">
+                              {!imageLoaded && (
+                                <Skeleton className="absolute inset-0 w-full h-full rounded-full bg-neutrals-200" />
+                              )}
                               <img
-                                data-cy="pokemon-picture"
                                 src={pokemon.image?.thumbnail ?? ""}
                                 alt={pokemon.name.english}
-                                className="  object-cover w-44 h-44"
+                                onLoad={() => handleImageLoad(pokemon.id)}
+                                className={`w-44 h-44 rounded-full object-cover transition-opacity duration-300 ${
+                                  imageLoaded ? "opacity-100" : "opacity-0"
+                                }`}
                               />
                             </div>
                           </div>
@@ -182,7 +221,7 @@ function PokemonTable({
                         data-cy="pokemon-power"
                         className="font-mulish text-bodyRegular"
                       >
-                        Power Level {pokemon.base.Attack}
+                        Level {pokemon.base.Attack}
                       </TableCell>
                       <TableCell
                         data-cy="pokemon-hp"
@@ -201,7 +240,7 @@ function PokemonTable({
             <div className="pb-38">
               <div className="flex justify-between items-center py-10 px-10 font-roboto text-captionRegular rounded-b-k  bg-neutrals-white ">
                 <div className="flex items-center text-neutrals-650 gap-14">
-                  <span >Rows per page:</span>
+                  <span>Rows per page:</span>
                   <select
                     data-cy="rows-per-page-select"
                     value={itemsPerPage}
@@ -226,11 +265,7 @@ function PokemonTable({
                 </div>
 
                 <div className="flex text-neutrals-650 gap-32">
-                  <span
-                    data-cy="display-range-text"
-                  >
-                    {displayRangeText}
-                  </span>
+                  <span data-cy="display-range-text">{displayRangeText}</span>
 
                   <button
                     onClick={() => onPageChange(Math.max(currentPage - 1, 1))}

@@ -10,6 +10,7 @@ import { useState } from "react";
 import { useAllPokemons } from "@/lib/hooks/useAllPokemons";
 import { useUserPokemons } from "@/lib/hooks/useUserPokemons";
 import { Tab } from "../../../lib/types";
+import { Skeleton } from "../Skeleton/skeleton";
 
 function Dialog({
   ...props
@@ -75,6 +76,12 @@ function DialogContent({
     number | null
   >(null);
 
+  const [loadedImages, setLoadedImages] = useState<Record<number, boolean>>({});
+
+  const handleImageLoad = (id: number) => {
+    setLoadedImages((prev) => ({ ...prev, [id]: true }));
+  };
+
   const handleStartBattle = () => {
     const selected = pokemons?.find((p) => p.id === selectedPokemonForBattle);
     if (!selected) return;
@@ -88,7 +95,7 @@ function DialogContent({
   };
 
   const onSelectPokemon = (id: number) => {
-    setselectedPokemonForBattle(id);
+    setselectedPokemonForBattle((prev) => (prev === id ? null : id));
   };
 
   if (
@@ -242,48 +249,86 @@ function DialogContent({
               </DialogTitle>
             </DialogHeader>
 
-            <div className="grid grid-cols-3 gap-2 justify-items-center">
-              {fullItems.map((p) => (
-                <button
-                  data-cy="pokemon-item"
-                  key={p.id}
-                  onClick={() => onSelectPokemon?.(p.id)}
-                  className="rounded-full border-2 mt-16 border-transparent hover:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-500 transition"
-                >
-                  <div className="bg-neutrals-900 w-102.35 h-102.35 rounded-full flex items-center justify-center">
-                    <img
-                      src={p.image}
-                      alt={p.name}
-                      className="object-cover w-76 h-76"
-                    />
-                  </div>
-                </button>
-              ))}
-            </div>
-
-            {remainingItems.length > 0 && (
-              <div className="flex justify-center gap-76 pt-10">
-                {remainingItems.map((p) => (
+            <div className="max-h-[250px] overflow-y-auto px-10">
+              <div className="grid grid-cols-3 gap-2 justify-items-center">
+                {fullItems.map((p) => (
                   <button
                     data-cy="pokemon-item"
                     key={p.id}
                     onClick={() => onSelectPokemon?.(p.id)}
-                    className="rounded-full border-2 border-transparent hover:border-blue-500 focus:outline-none focus:ring-2 selected:ring-blue-500 transition"
+                    className={cn(
+                      "rounded-full border-2 mt-16 transition",
+                      selectedPokemonForBattle === p.id
+                        ? "border-blue-500 ring-2 ring-blue-500"
+                        : "border-transparent hover:border-blue-500 focus:ring-blue-500"
+                    )}
                   >
-                    <div className="bg-neutrals-900 w-102.35 h-102.35 rounded-full flex items-center justify-center">
+                    <div className="bg-neutrals-900 w-102.35 h-102.35 rounded-full flex items-center justify-center relative">
+                      {!loadedImages[p.id] && (
+                        <Skeleton className="absolute inset-0 w-full h-full rounded-full bg-neutrals-200" />
+                      )}
                       <img
                         src={p.image}
                         alt={p.name}
-                        className="object-cover w-76 h-76"
+                        onLoad={() => handleImageLoad(p.id)}
+                        className={cn(
+                          "object-cover w-76 h-76 transition-opacity duration-300",
+                          loadedImages[p.id] ? "opacity-100" : "opacity-0"
+                        )}
                       />
                     </div>
                   </button>
                 ))}
               </div>
-            )}
+
+              {remainingItems.length > 0 && (
+                <div className="flex justify-center gap-76 pt-10 pb-8">
+                  {remainingItems.map((p) => {
+                    const isDisabled = p.id === disabledPokemonId;
+                    return (
+                      <button
+                        data-cy="pokemon-item"
+                        key={p.id}
+                        onClick={() => !isDisabled && onSelectPokemon?.(p.id)}
+                        disabled={isDisabled}
+                        className={cn(
+                          "rounded-full border-2 mt-16 transition",
+                          selectedPokemonForBattle === p.id
+                            ? "border-blue-500 ring-2 ring-blue-500"
+                            : "border-transparent hover:border-blue-500 focus:ring-blue-500",
+                          isDisabled &&
+                            "opacity-50 cursor-not-allowed pointer-events-none"
+                        )}
+                      >
+                        <div className="bg-neutrals-900 w-102.35 h-102.35 rounded-full flex items-center justify-center relative">
+                          {!loadedImages[p.id] && (
+                            <Skeleton className="absolute inset-0 w-full h-full rounded-full bg-neutrals-200" />
+                          )}
+                          <img
+                            src={p.image}
+                            alt={p.name}
+                            onLoad={() => handleImageLoad(p.id)}
+                            className={cn(
+                              "object-cover w-76 h-76 transition-opacity duration-300",
+                              loadedImages[p.id] ? "opacity-100" : "opacity-0"
+                            )}
+                          />
+                        </div>
+                      </button>
+                    );
+                  })}
+                </div>
+              )}
+            </div>
 
             <DialogFooter className="flex justify-center border-t border-neutrals-light py-16">
-              <Button data-cy="start-battle-button" variant="primary" size="xlg" onClick={handleStartBattle}>
+              <Button
+                data-cy="start-battle-button"
+                variant="primary"
+                size="xlg"
+                onClick={handleStartBattle}
+                disabled={!selectedPokemonForBattle}
+              >
                 Start battle
               </Button>
             </DialogFooter>
@@ -296,37 +341,9 @@ function DialogContent({
               </DialogTitle>
             </DialogHeader>
 
-            <div className="grid grid-cols-3 gap-2 justify-items-center">
-              {fullItems.map((p) => {
-                const isDisabled = p.id === disabledPokemonId;
-                return (
-                  <button
-                    data-cy="pokemon-item"
-                    key={p.id}
-                    onClick={() => !isDisabled && onSelectPokemon?.(p.id)}
-                    disabled={isDisabled}
-                    className={cn(
-                      "rounded-full border-2 mt-16 transition",
-                      isDisabled
-                        ? "opacity-50 cursor-not-allowed border-transparent"
-                        : "hover:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-500"
-                    )}
-                  >
-                    <div className="bg-neutrals-900 w-102.35 h-102.35 rounded-full flex items-center justify-center">
-                      <img
-                        src={p.image}
-                        alt={p.name}
-                        className="object-cover w-76 h-76"
-                      />
-                    </div>
-                  </button>
-                );
-              })}
-            </div>
-
-            {remainingItems.length > 0 && (
-              <div className="flex justify-center gap-76 pt-10">
-                {remainingItems.map((p) => {
+            <div className="max-h-[250px] overflow-y-auto px-10">
+              <div className="grid grid-cols-3 gap-2 justify-items-center">
+                {fullItems.map((p) => {
                   const isDisabled = p.id === disabledPokemonId;
                   return (
                     <button
@@ -335,24 +352,63 @@ function DialogContent({
                       onClick={() => !isDisabled && onSelectPokemon?.(p.id)}
                       disabled={isDisabled}
                       className={cn(
-                        "rounded-full border-2 transition",
-                        isDisabled
-                          ? "opacity-50 cursor-not-allowed border-transparent"
-                          : "hover:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                        "rounded-full border-2 mt-16 transition",
+                        selectedPokemonForBattle === p.id
+                          ? "border-blue-500 ring-2 ring-blue-500"
+                          : "border-transparent hover:border-blue-500 focus:ring-blue-500",
+                        isDisabled &&
+                          "opacity-50 cursor-not-allowed pointer-events-none"
                       )}
                     >
-                      <div className="bg-neutrals-900 w-102.35 h-102.35 rounded-full flex items-center justify-center">
+                      <div className="bg-neutrals-900 w-102.35 h-102.35 rounded-full flex items-center justify-center relative">
+                        {!loadedImages[p.id] && (
+                          <Skeleton className="absolute inset-0 w-full h-full rounded-full bg-neutrals-200" />
+                        )}
                         <img
                           src={p.image}
                           alt={p.name}
-                          className="object-cover w-76 h-76"
+                          onLoad={() => handleImageLoad(p.id)}
+                          className={cn(
+                            "object-cover w-76 h-76 transition-opacity duration-300",
+                            loadedImages[p.id] ? "opacity-100" : "opacity-0"
+                          )}
                         />
                       </div>
                     </button>
                   );
                 })}
               </div>
-            )}
+
+              {remainingItems.length > 0 && (
+                <div className="flex justify-center gap-76 pt-10 pb-8">
+                  {remainingItems.map((p) => {
+                    const isDisabled = p.id === disabledPokemonId;
+                    return (
+                      <button
+                        data-cy="pokemon-item"
+                        key={p.id}
+                        onClick={() => !isDisabled && onSelectPokemon?.(p.id)}
+                        disabled={isDisabled}
+                        className={cn(
+                          "rounded-full border-2 transition",
+                          isDisabled
+                            ? "opacity-50 cursor-not-allowed border-transparent"
+                            : "hover:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                        )}
+                      >
+                        <div className="bg-neutrals-900 w-102.35 h-102.35 rounded-full flex items-center justify-center">
+                          <img
+                            src={p.image}
+                            alt={p.name}
+                            className="object-cover w-76 h-76"
+                          />
+                        </div>
+                      </button>
+                    );
+                  })}
+                </div>
+              )}
+            </div>
 
             <DialogFooter className="flex justify-center border-t border-neutrals-light py-16">
               <Button
@@ -370,7 +426,10 @@ function DialogContent({
         )}
 
         {!props.hideCloseButton && (
-          <DialogPrimitive.Close className="absolute top-12 right-24 opacity-70 transition-opacity hover:opacity-100 focus:outline-none">
+          <DialogPrimitive.Close
+            onClick={() => setselectedPokemonForBattle(null)}
+            className="absolute top-12 right-24 opacity-70 transition-opacity hover:opacity-100 focus:outline-none"
+          >
             <XIcon data-cy="close-dialog-button" />
             <span className="sr-only">Close</span>
           </DialogPrimitive.Close>

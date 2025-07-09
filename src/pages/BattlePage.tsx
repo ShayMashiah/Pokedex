@@ -68,7 +68,7 @@ function BattlePage() {
     : "text-neutrals-500";
 
   const { mutate: catchPokemon } = useNewPokemonToMyPokemons();
-  const { data: myPokemons } = useUserPokemons();
+  const { data: myPokemons } = useUserPokemons(1, 0, "", "id", "asc");
 
   function generateNewRivalPokemon() {
     const randomId = Math.floor(Math.random() * DATA_LENGTH) + 1;
@@ -241,7 +241,11 @@ function BattlePage() {
             </Tooltip>
           </TooltipProvider>
 
-          <DropdownMenuContent side="bottom" align="start">
+          <DropdownMenuContent
+            side="bottom"
+            align="start"
+            className="max-h-[400px] overflow-y-auto"
+          >
             <DropdownMenuItem className="py-8 px-8">
               <div className="flex items-center justify-between w-258 h-35 bg-primary-50">
                 <span className="text-captionRegular pl-8 font-mulish text-primary-400  h-19">
@@ -306,23 +310,22 @@ function BattlePage() {
       </div>
 
       <div className="relative flex max-w-1360 mx-auto overflow-hidden">
-          <div
-            className={
-              "absolute top-90 left-1 w-633 h-119 px-[25px] py-[24px]  border-t-[5px] border-r-[5px] border-b-[5px] rounded-r-[12px] overflow-hidden border-l-0 backdrop-blur-sm bg-white/70 z-10"
-            }
-            style={{
-              borderImageSource:
-                "linear-gradient(90deg, #40DCD9 30%, #62E345 100%)",
-              borderImageSlice: 1,
-
-            }}
+        <div
+          className={
+            "absolute top-90 left-1 w-633 h-119 px-[25px] py-[24px]  border-t-[5px] border-r-[5px] border-b-[5px] rounded-r-[12px] overflow-hidden border-l-0 backdrop-blur-sm bg-white/70 z-10"
+          }
+          style={{
+            borderImageSource:
+              "linear-gradient(90deg, #40DCD9 30%, #62E345 100%)",
+            borderImageSlice: 1,
+          }}
+        >
+          <p
+            data-cy="battle-message"
+            className={`${messageColor} text-headingLgBold font-mulish`}
           >
-            <p
-              data-cy="battle-message"
-              className={`${messageColor} text-headingLgBold font-mulish`}
-            >
-              {turnMessage}
-            </p>
+            {turnMessage}
+          </p>
         </div>
 
         <img
