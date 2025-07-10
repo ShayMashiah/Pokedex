@@ -16,6 +16,7 @@ import { useUserPokemons } from "@/lib/hooks/useUserPokemons";
 import { useAllPokemons } from "@/lib/hooks/useAllPokemons";
 import { sortConfigMap } from "@/lib/constants";
 import { DEFAULT_SORT_LABEL } from "@/lib/types";
+import { useDebounce } from "@/lib/hooks/useDebounce";
 
 function HomePage() {
   const [isOpen, setIsOpen] = useState(false);
@@ -34,18 +35,20 @@ function HomePage() {
   const location = useLocation();
   const initialTab = location.state?.activeTab || Tab.All;
   const [activeTab, setActiveTab] = useState<Tab>(initialTab);
+  const debouncedSearchTerm = useDebounce(searchTerm, 300);
 
-  const { data: allPokemonsData, isLoading: isLoadingAll  } = useAllPokemons(
+  const { data: allPokemonsData, isLoading: isLoadingAll } = useAllPokemons(
     page,
     limit,
-    searchTerm,
+    debouncedSearchTerm,
     sortBy,
     order
   );
-  const { data: userPokemonsData, isLoading: isLoadingUser  } = useUserPokemons(
+
+  const { data: userPokemonsData, isLoading: isLoadingUser } = useUserPokemons(
     page,
     limit,
-    searchTerm,
+    debouncedSearchTerm,
     sortBy,
     order
   );

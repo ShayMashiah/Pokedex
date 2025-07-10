@@ -62,16 +62,25 @@ function BattlePage() {
   const [catchAttempts, setCatchAttempts] = useState(0);
   const [rivalId, setRivalId] = useState<number | null>(null);
   const { data: newRivalPokemon } = usePokemonById(rivalId ?? rivalPokemon.id);
+  const [messageColor, setMessageColor] = useState("text-neutrals-500");
 
-  const messageColor = isFainted
-    ? "text-extendedPalette-error-red"
-    : "text-neutrals-500";
+  useEffect(() => {
+    if (isFainted) {
+      setMessageColor("text-extendedPalette-error-red");
+    } else {
+      setMessageColor("text-neutrals-500");
+    }
+  }, [isFainted]);
 
   const { mutate: catchPokemon } = useNewPokemonToMyPokemons();
   const { data: myPokemons } = useUserPokemons(1, 0, "", "id", "asc");
+  const myPokemonIds = myPokemons?.data?.map((p) => p.id) ?? [];
 
-  function generateNewRivalPokemon() {
-    const randomId = Math.floor(Math.random() * DATA_LENGTH) + 1;
+  function generateNewRivalPokemon(excludedIds: number[]) {
+    let randomId = Math.floor(Math.random() * DATA_LENGTH) + 1;
+    while (excludedIds.includes(randomId)) {
+      randomId = Math.floor(Math.random() * DATA_LENGTH) + 1;
+    }
     setRivalId(randomId);
   }
 
@@ -488,16 +497,19 @@ function BattlePage() {
         onPrimaryAction={() => {
           setShowResultModal(false);
           setIsCaught(false);
-          setIsFainted(false);
           setIsGameOver(false);
           setPlayerDead(false);
           setEnemyDead(false);
+          setTriedToCatch(false);
+          setCatchAttempts(0);
           setPlayerTurn(true);
+          setIsFainted(false);
+          setEnemyHp(rivalPokemon.base.HP);
 
           if (isCaught) {
-            generateNewRivalPokemon();
+            generateNewRivalPokemon(myPokemonIds);
           } else if (enemyDead) {
-            generateNewRivalPokemon();
+            generateNewRivalPokemon(myPokemonIds);
           } else {
             setEnemyHp(rivalPokemon.base.HP);
           }

@@ -4,13 +4,17 @@ import { XIcon } from "lucide-react";
 import { cn } from "../../../lib/utils";
 import { Button } from "../Button/button";
 import { Variant } from "../../../lib/constants";
-import type { CustomDialogContentProps } from "../../../lib/types";
+import type {
+  CustomDialogContentProps,
+  PokemonModal,
+} from "../../../lib/types";
 import { useNavigate } from "react-router-dom";
 import { useState } from "react";
 import { useAllPokemons } from "@/lib/hooks/useAllPokemons";
 import { useUserPokemons } from "@/lib/hooks/useUserPokemons";
 import { Tab } from "../../../lib/types";
 import { Skeleton } from "../Skeleton/skeleton";
+import { transformToPokemonModal } from "@/lib/utils/mapMyPokemons";
 
 function Dialog({
   ...props
@@ -82,6 +86,15 @@ function DialogContent({
     setLoadedImages((prev) => ({ ...prev, [id]: true }));
   };
 
+  const { data: allPokemons } = useAllPokemons(
+    page,
+    limit,
+    search,
+    sortBy,
+    order
+  );
+  const { data: userPokemons } = useUserPokemons(1, 0, search, sortBy, order);
+
   const handleStartBattle = () => {
     const selected = pokemons?.find((p) => p.id === selectedPokemonForBattle);
     if (!selected) return;
@@ -89,7 +102,10 @@ function DialogContent({
   };
 
   const handleSwitchPokemon = () => {
-    const selected = pokemons?.find((p) => p.id === selectedPokemonForBattle);
+    const allDisplayed = [...(fullItems || []), ...(remainingItems || [])];
+    const selected = allDisplayed.find(
+      (p) => p.id === selectedPokemonForBattle
+    );
     if (!selected || !props.onSwitchPokemon) return;
     props.onSwitchPokemon(selected);
   };
@@ -98,30 +114,21 @@ function DialogContent({
     setselectedPokemonForBattle((prev) => (prev === id ? null : id));
   };
 
+
   if (
     (variant === Variant.MyPokemons || variant === Variant.SwitchPokemon) &&
-    pokemons
+    userPokemons?.data
   ) {
-    const fullRows = Math.floor(pokemons.length / perRow);
-    const lastRowStart = fullRows * perRow;
-    fullItems = pokemons.slice(0, lastRowStart);
-    remainingItems = pokemons.slice(lastRowStart);
-  }
+    const pokemonModels: PokemonModal[] = userPokemons.data.map(
+      transformToPokemonModal
+    );
 
-  const { data: allPokemons } = useAllPokemons(
-    page,
-    limit,
-    search,
-    sortBy,
-    order
-  );
-  const { data: userPokemons } = useUserPokemons(
-    page,
-    limit,
-    search,
-    sortBy,
-    order
-  );
+    const fullRows = Math.floor(pokemonModels.length / perRow);
+    const lastRowStart = fullRows * perRow;
+
+    fullItems = pokemonModels.slice(0, lastRowStart);
+    remainingItems = pokemonModels.slice(lastRowStart);
+  }
 
   const selectedPokemonModal = React.useMemo(() => {
     if (!pokemon?.id) return null;
@@ -145,7 +152,7 @@ function DialogContent({
           description: p.description ?? "No description available.",
           height: p.profile?.height ?? "Unknown",
           weight: p.profile?.weight ?? "Unknown",
-          category: p.type?.join(", ") ?? "Unknown",
+          category: p.type ?? "Unknown",
           abilities:
             p.profile?.ability
               ?.map((a: string[]) => a[0].split(",")[0].trim())
@@ -249,7 +256,7 @@ function DialogContent({
               </DialogTitle>
             </DialogHeader>
 
-            <div className="max-h-[250px] overflow-y-auto px-10">
+            <div className="max-h-[370px] overflow-y-auto px-10">
               <div className="grid grid-cols-3 gap-2 justify-items-center">
                 {fullItems.map((p) => (
                   <button
@@ -341,7 +348,7 @@ function DialogContent({
               </DialogTitle>
             </DialogHeader>
 
-            <div className="max-h-[250px] overflow-y-auto px-10">
+            <div className="max-h-[370px] overflow-y-auto px-10">
               <div className="grid grid-cols-3 gap-2 justify-items-center">
                 {fullItems.map((p) => {
                   const isDisabled = p.id === disabledPokemonId;
@@ -390,17 +397,26 @@ function DialogContent({
                         onClick={() => !isDisabled && onSelectPokemon?.(p.id)}
                         disabled={isDisabled}
                         className={cn(
-                          "rounded-full border-2 transition",
-                          isDisabled
-                            ? "opacity-50 cursor-not-allowed border-transparent"
-                            : "hover:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                          "rounded-full border-2 mt-16 transition",
+                          selectedPokemonForBattle === p.id
+                            ? "border-blue-500 ring-2 ring-blue-500"
+                            : "border-transparent hover:border-blue-500 focus:ring-blue-500",
+                          isDisabled &&
+                            "opacity-50 cursor-not-allowed pointer-events-none"
                         )}
                       >
-                        <div className="bg-neutrals-900 w-102.35 h-102.35 rounded-full flex items-center justify-center">
+                        <div className="bg-neutrals-900 w-102.35 h-102.35 rounded-full flex items-center justify-center relative">
+                          {!loadedImages[p.id] && (
+                            <Skeleton className="absolute inset-0 w-full h-full rounded-full bg-neutrals-200" />
+                          )}
                           <img
                             src={p.image}
                             alt={p.name}
-                            className="object-cover w-76 h-76"
+                            onLoad={() => handleImageLoad(p.id)}
+                            className={cn(
+                              "object-cover w-76 h-76 transition-opacity duration-300",
+                              loadedImages[p.id] ? "opacity-100" : "opacity-0"
+                            )}
                           />
                         </div>
                       </button>
@@ -416,6 +432,7 @@ function DialogContent({
                 variant="primary"
                 size="xlg"
                 onClick={handleSwitchPokemon}
+                disabled={!selectedPokemonForBattle}
               >
                 Start battle
               </Button>

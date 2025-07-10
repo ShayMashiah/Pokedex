@@ -20,12 +20,11 @@ function PokemonNavbar({
   onChange,
   sortBy = "id",
   order = "asc",
-  search = "",
 }: PokemonNavbarProps) {
   const { data: userPokemonsData } = useUserPokemons(
     1,
     0,
-    search,
+    "",
     sortBy,
     order
   );
@@ -60,18 +59,18 @@ function PokemonNavbar({
               </button>
             </NavigationMenuItem>
 
-            <NavigationMenuItem>
+            <NavigationMenuItem className="ml-16">  
               <button
                 data-cy="tab-my-pokemons"
                 onClick={() => onChange(Tab.User)}
-                className={`w-120 h-38 rounded-s flex items-center justify-center gap-2 text-bodyRegular text-primary-300 hover:bg-primary-50 ml-16 ${
+                className={`w-155 h-38 rounded-s flex items-center justify-center px-4 py-2 text-bodyRegular text-primary-300 hover:bg-primary-50 ${
                   activeItem === Tab.User
                     ? "bg-primary-50 font-bold font-mulish"
                     : ""
                 }`}
               >
                 My Pokemons
-                <img src={PokeballIcon}  alt="pokeball-icon" className="w-24 h-24 pl-2 " />
+                <img src={PokeballIcon}  alt="pokeball-icon" className="w-24 h-24 pl-4  " />
               </button>
             </NavigationMenuItem>
           </NavigationMenuList>

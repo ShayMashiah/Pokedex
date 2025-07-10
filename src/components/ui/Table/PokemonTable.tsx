@@ -1,7 +1,7 @@
 import { useMemo, useState, useEffect } from "react";
 import type { PokemonRow, Tab } from "@/lib/types";
 import { pageSizeOptions } from "../../../lib/constants";
-import { ChevronLeft, ChevronRight } from "lucide-react";
+import { ChevronLeft, ChevronRight, Loader2 } from "lucide-react";
 import {
   Table,
   TableHeader,
@@ -60,10 +60,25 @@ function PokemonTable({
   const [selectedPokemon, setSelectedPokemon] = useState<PokemonRow | null>(
     null
   );
-
   const [imagesLoadedMap, setImagesLoadedMap] = useState<
     Record<number, boolean>
   >({});
+  const [hasInitiallyLoaded, setHasInitiallyLoaded] = useState(false);
+  const [previousData, setPreviousData] = useState<PokemonRow[]>([]);
+  const [isPaginating, setIsPaginating] = useState(false);
+
+  const handlePageChange = (newPage: number) => {
+    setIsPaginating(true);
+    onPageChange(newPage);
+  };
+
+  useEffect(() => {
+    if (!loading) {
+      setIsPaginating(false);
+    }
+  }, [loading]);
+
+  const shouldShowSkeleton = loading && !isPaginating;
 
   const handleImageLoad = (id: number) => {
     setImagesLoadedMap((prev) => ({ ...prev, [id]: true }));
@@ -86,11 +101,20 @@ function PokemonTable({
     }
   }, [userPokemonsData]);
 
+  useEffect(() => {
+    if (!loading && data.length > 0) {
+      setHasInitiallyLoaded(true);
+      setPreviousData(data);
+    }
+  }, [data, loading]);
+
   const displayRangeText = useMemo(() => {
     const startIndex = (currentPage - 1) * itemsPerPage + 1;
     const endIndex = Math.min(currentPage * itemsPerPage, totalCount);
     return `${startIndex}-${endIndex} of ${totalCount} items`;
   }, [currentPage, itemsPerPage, totalCount]);
+
+  const displayData = loading && previousData.length > 0 ? previousData : data;
 
   return (
     <div className="max-w-1376 mx-auto">
@@ -112,27 +136,15 @@ function PokemonTable({
           </TableHeader>
 
           <TableBody>
-            {loading ? (
-              Array.from({ length: itemsPerPage }).map((_, idx) => (
-                <TableRow key={`skeleton-${idx}`} className="animate-pulse h-72 w-1376">
-                  <TableCell>
-                    <div className="bg-neutrals-200 rounded-full w-44 h-44" />
-                  </TableCell>
-                  <TableCell>
-                    <div className="bg-neutrals-200 h-6 w-20 rounded" />
-                  </TableCell>
-                  <TableCell>
-                    <div className="bg-neutrals-200 h-6 w-full max-w-xs rounded" />
-                  </TableCell>
-                  <TableCell>
-                    <div className="bg-neutrals-200 h-6 w-20 rounded" />
-                  </TableCell>
-                  <TableCell>
-                    <div className="bg-neutrals-200 h-6 w-20 rounded" />
-                  </TableCell>
-                </TableRow>
-              ))
-            ) : data.length === 0 ? (
+            {shouldShowSkeleton ? (
+              <TableRow>
+                <TableCell colSpan={5}>
+                  <div className="flex justify-center bg-neutrals-white border-neutrals-100 items-center py-20 w-full">
+                    <Loader2 className="h-150 w-150 animate-spin text-neutrals-200" />
+                  </div>
+                </TableCell>
+              </TableRow>
+            ) : !loading && displayData.length === 0 ? (
               <TableRow className="bg-neutrals-white border-neutrals-100 h-158 text-neutrals-800 text-headingMdRegular">
                 <TableCell
                   colSpan={5}
@@ -152,7 +164,7 @@ function PokemonTable({
                 </TableCell>
               </TableRow>
             ) : (
-              data.map((pokemon: PokemonRow) => {
+              displayData.map((pokemon: PokemonRow) => {
                 const isMine = myPokemons.includes(pokemon.id);
                 const imageLoaded = imagesLoadedMap[pokemon.id] ?? false;
 
@@ -162,7 +174,13 @@ function PokemonTable({
                     key={pokemon.id}
                     onClick={() => setSelectedPokemon(pokemon)}
                   >
-                    <TableRow className="bg-neutrals-white text-neutrals-300 border-neutrals-100 hover:bg-primary-50 cursor-pointer w-1376 h-72">
+                    <TableRow
+                      className={`bg-neutrals-white text-neutrals-300 border-neutrals-100 hover:bg-primary-50 cursor-pointer w-1376 h-72 ${
+                        loading && hasInitiallyLoaded
+                          ? "opacity-70"
+                          : "opacity-100"
+                      } transition-opacity duration-200`}
+                    >
                       <TableCell>
                         <div className="flex items-center">
                           <div className="py-9 pl-16 pr-16">
@@ -268,7 +286,9 @@ function PokemonTable({
                   <span data-cy="display-range-text">{displayRangeText}</span>
 
                   <button
-                    onClick={() => onPageChange(Math.max(currentPage - 1, 1))}
+                    onClick={() =>
+                      handlePageChange(Math.max(currentPage - 1, 1))
+                    }
                     disabled={currentPage === 1}
                     className="disabled:opacity-50"
                   >
@@ -276,7 +296,7 @@ function PokemonTable({
                   </button>
                   <button
                     onClick={() =>
-                      onPageChange(Math.min(currentPage + 1, totalPages))
+                      handlePageChange(Math.min(currentPage + 1, totalPages))
                     }
                     disabled={currentPage === totalPages}
                     className="disabled:opacity-50 gap-20"

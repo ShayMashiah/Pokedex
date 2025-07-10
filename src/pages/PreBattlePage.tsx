@@ -1,14 +1,15 @@
+import { useEffect, useState } from "react";
+import { useNavigate, useLocation } from "react-router-dom";
 import PokemonNavbar from "@/components/ui/NavBar/PokemonNavbar";
 import { Tab } from "@/lib/types";
-import { useLocation, useNavigate } from "react-router-dom";
-import { useEffect, useState } from "react";
-import background from "../assets/Background.png";
 import { usePokemonById } from "@/lib/hooks/usePokemonById";
+import { useUserPokemons } from "@/lib/hooks/useUserPokemons";
 import { DATA_LENGTH } from "@/lib/constants";
 import { Skeleton } from "@/components/ui/Skeleton/skeleton";
+import background from "../assets/Background.png";
 
 function PreBattlePage() {
-  const [rivalId, setRivalId] = useState<number>(1);
+  const [rivalId, setRivalId] = useState<number | null>(null);
   const [myImageLoaded, setMyImageLoaded] = useState(false);
   const [rivalImageLoaded, setRivalImageLoaded] = useState(false);
   const [backgroundLoaded, setBackgroundLoaded] = useState(false);
@@ -17,12 +18,24 @@ function PreBattlePage() {
   const location = useLocation();
   const { selectedPokemon } = location.state || {};
 
-  const { data: newRivalPokemon } = usePokemonById(rivalId);
+  const { data: userPokemonsData } = useUserPokemons(1, 0, "", "id", "asc");
+
+  const pickRivalId = (excludedIds: number[]) => {
+    let randomId = Math.floor(Math.random() * DATA_LENGTH) + 1;
+    while (excludedIds.includes(randomId)) {
+      randomId = Math.floor(Math.random() * DATA_LENGTH) + 1;
+    }
+    return randomId;
+  };
 
   useEffect(() => {
-    const randomId = Math.floor(Math.random() * DATA_LENGTH) + 1;
-    setRivalId(randomId);
-  }, []);
+    if (!userPokemonsData) return;
+    const userPokemonIds = userPokemonsData.data.map((p) => Number(p.id));
+    const rival = pickRivalId(userPokemonIds);
+    setRivalId(rival);
+  }, [userPokemonsData]);
+
+  const { data: newRivalPokemon } = usePokemonById(rivalId ?? 1);
 
   useEffect(() => {
     if (
@@ -106,4 +119,5 @@ function PreBattlePage() {
     </div>
   );
 }
+
 export default PreBattlePage;
