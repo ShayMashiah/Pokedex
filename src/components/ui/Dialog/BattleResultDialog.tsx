@@ -61,7 +61,12 @@ function BattleResultDialog({
           </Button>
 
           {secondaryButtonLabel && onSecondaryAction && (
-            <Button variant="secondary" size="l" className="subheadingRegular" onClick={onSecondaryAction}>
+            <Button
+              variant="secondary"
+              size="l"
+              className="subheadingRegular"
+              onClick={onSecondaryAction}
+            >
               {secondaryButtonLabel}
             </Button>
           )}
@@ -95,7 +100,7 @@ function BattleResultDialog({
           <p className="text-headingMdBold text-neutrals-500 font-mulish pl-24 py-24">
             Rewards Earned
           </p>
-          <div className="grid grid-cols-4 gap-30 px-24 max-h-143">
+          <div className="grid grid-cols-3 px-24 max-h-143">
             <div className="flex flex-col ">
               <span className="text-pokemonModalFields text-neutrals-400 w-36 h-18 font-mulish">
                 Speed
@@ -104,7 +109,7 @@ function BattleResultDialog({
                 {caughtPokemon?.base.Speed}
               </span>
             </div>
-            <div className="flex flex-col pl-20 pb-24">
+            <div className="flex flex-col  pb-24">
               <span className="text-pokemonModalFields text-neutrals-400 w-36 h-18 font-mulish">
                 Category
               </span>
@@ -112,14 +117,13 @@ function BattleResultDialog({
                 {caughtPokemon?.type?.[0] ?? "Unknown"}
               </span>
             </div>
-            <div className="flex flex-col pl-70 pb-24">
-              <span className="text-pokemonModalFields text-neutrals-400 w-36 h-18 font-mulish">
+            <div className="flex flex-col  pb-24">
+              <span className="text-pokemonModalFields text-neutrals-400 font-mulish">
                 Abilities
               </span>
-              <span className="text-textBaseRegular text-neutrals-500 font-mulish pb-24 pt-8">
-                {caughtPokemon?.profile?.ability?.[0]?.[0]
-                  ?.split(",")[0]
-                  ?.trim() ?? "Unknown"}
+              <span className="text-textBaseRegular text-neutrals-500 font-mulish pb-24 pt-8 whitespace-nowrap">
+                {caughtPokemon?.profile?.ability?.[0]?.[0]?.split(",")[0] ??
+                  "Unknown"}
               </span>
             </div>
           </div>
