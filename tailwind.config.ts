@@ -22,14 +22,21 @@ export default {
         'gradient-default': 'linear-gradient(90deg, #5BE2F7 0%, #50DDA0 100%)',
         'gradient-disabled': 'linear-gradient(0deg, rgba(168, 161, 161, 0.4), rgba(168, 161, 161, 0.4)), linear-gradient(90deg, #5BE2F7 0%, #50DDA0 100%)',
         'gradient-fainted': 'linear-gradient(90deg, rgba(247, 91, 91, 0.57) 0%, rgba(221, 113, 80, 0.46) 100%)',
-      }
+      },
+      keyframes: {
+        shimmer: {
+          "0%": { transform: "translateY(-100%)" },
+          "100%": { transform: "translateY(100%)" },
+        },
+      },
+      animation: {
+        shimmer: "shimmer 1.5s linear infinite",
+      },
     },
   },
-  plugins: [
-  ],
+  plugins: [],
   safelist: [
     'data-[state=open]:block',
     'data-[state=open]:hidden',
   ],
 }
- 

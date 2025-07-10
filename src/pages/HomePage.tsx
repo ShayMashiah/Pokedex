@@ -16,6 +16,7 @@ import { useUserPokemons } from "@/lib/hooks/useUserPokemons";
 import { useAllPokemons } from "@/lib/hooks/useAllPokemons";
 import { sortConfigMap } from "@/lib/constants";
 import { DEFAULT_SORT_LABEL } from "@/lib/types";
+import { useDebounce } from "@/lib/hooks/useDebounce";
 
 function HomePage() {
   const [isOpen, setIsOpen] = useState(false);
@@ -34,21 +35,25 @@ function HomePage() {
   const location = useLocation();
   const initialTab = location.state?.activeTab || Tab.All;
   const [activeTab, setActiveTab] = useState<Tab>(initialTab);
+  const debouncedSearchTerm = useDebounce(searchTerm, 300);
 
-  const { data: allPokemonsData } = useAllPokemons(
+  const { data: allPokemonsData, isLoading: isLoadingAll } = useAllPokemons(
     page,
     limit,
-    searchTerm,
+    debouncedSearchTerm,
     sortBy,
     order
   );
-  const { data: userPokemonsData } = useUserPokemons(
+
+  const { data: userPokemonsData, isLoading: isLoadingUser } = useUserPokemons(
     page,
     limit,
-    searchTerm,
+    debouncedSearchTerm,
     sortBy,
     order
   );
+
+  const loading = activeTab === Tab.All ? isLoadingAll : isLoadingUser;
 
   useEffect(() => {
     if (activeTab === Tab.All && allPokemonsData) {
@@ -96,9 +101,9 @@ function HomePage() {
         search={searchTerm}
       />
 
-      <main className="max-w-1440 mx-auto px-10">
+      <main className="max-w-1440 mx-auto px-32">
         <div className="max-w-1376 mx-auto">
-          <h1 className="text-headingLgMedium font-mulish text-neutrals-400 mt-32 mb-10">
+          <h1 className="text-headingLgMedium font-mulish text-neutrals-400 mt-32 mb-10 ">
             {TAB_LABELS[activeTab]}
           </h1>
 
@@ -114,14 +119,14 @@ function HomePage() {
                 isOpen={isOpen}
                 className="max-w-full inline-flex min-w-101"
               >
-                {selectedOption}
+                <p className="pl-12 font-roboto">{selectedOption}</p>
               </DropdownMenuTrigger>
               <DropdownMenuContent>
                 {SORT_OPTIONS.map((option) => (
                   <DropdownMenuItem
                     key={option.value}
                     onSelect={() => handleSelect(option.value)}
-                    className="h-38 w-206 font-mulish text-bodyRegular text-neutrals-500 border-k py-8 pl-8 cursor-pointer"
+                    className="h-38 w-206 text-bodyRegular text-neutrals-500 border-k py-8 pl-8 cursor-pointer"
                   >
                     {option.label}
                   </DropdownMenuItem>
@@ -143,7 +148,7 @@ function HomePage() {
           activeTab={activeTab}
           onPageChange={setPage}
           onPageSizeChange={setLimit}
-        
+          loading={loading}
         />
       </main>
     </div>

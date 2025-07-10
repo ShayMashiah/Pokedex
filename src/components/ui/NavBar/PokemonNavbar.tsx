@@ -13,20 +13,18 @@ import { Link } from "react-router-dom";
 import type { PokemonModal } from "@/lib/types";
 import { transformToPokemonModal } from "@/lib/utils/mapMyPokemons";
 import { useUserPokemons } from "@/lib/hooks/useUserPokemons";
+import PokeballIcon from "@/assets/pokador.png";
 
 function PokemonNavbar({
   activeItem,
   onChange,
   sortBy = "id",
   order = "asc",
-  search = "",
-  page = 1,
-  limit = 10,
 }: PokemonNavbarProps) {
   const { data: userPokemonsData } = useUserPokemons(
-    page,
-    limit,
-    search,
+    1,
+    0,
+    "",
     sortBy,
     order
   );
@@ -53,7 +51,7 @@ function PokemonNavbar({
                 onClick={() => onChange(Tab.All)}
                 className={`w-120 h-38 rounded-s px-4 py-2 flex items-center text-bodyRegular text-primary-300 justify-center hover:bg-primary-50 ml-40 ${
                   activeItem === Tab.All
-                    ? "bg-primary-50 font-bold text-bodyRegular"
+                    ? "bg-primary-50  font-bold font-mulish  "
                     : ""
                 }`}
               >
@@ -61,17 +59,18 @@ function PokemonNavbar({
               </button>
             </NavigationMenuItem>
 
-            <NavigationMenuItem>
+            <NavigationMenuItem className="ml-16">  
               <button
                 data-cy="tab-my-pokemons"
                 onClick={() => onChange(Tab.User)}
-                className={`w-120 h-38 rounded-s flex items-center text-bodyRegular text-primary-300 justify-center  hover:bg-primary-50 ml-16   ${
+                className={`w-155 h-38 rounded-s flex items-center justify-center px-4 py-2 text-bodyRegular text-primary-300 hover:bg-primary-50 ${
                   activeItem === Tab.User
-                    ? "bg-primary-50 font-bold text-bodyRegular"
+                    ? "bg-primary-50 font-bold font-mulish"
                     : ""
                 }`}
               >
                 My Pokemons
+                <img src={PokeballIcon}  alt="pokeball-icon" className="w-24 h-24 pl-4  " />
               </button>
             </NavigationMenuItem>
           </NavigationMenuList>

@@ -61,7 +61,7 @@ function BattleResultDialog({
           </Button>
 
           {secondaryButtonLabel && onSecondaryAction && (
-            <Button variant="secondary" size="l" onClick={onSecondaryAction}>
+            <Button variant="secondary" size="l" className="subheadingRegular" onClick={onSecondaryAction}>
               {secondaryButtonLabel}
             </Button>
           )}
@@ -104,15 +104,15 @@ function BattleResultDialog({
                 {caughtPokemon?.base.Speed}
               </span>
             </div>
-            <div className="flex flex-col pl-20">
+            <div className="flex flex-col pl-20 pb-24">
               <span className="text-pokemonModalFields text-neutrals-400 w-36 h-18 font-mulish">
                 Category
               </span>
               <span className="text-textBaseRegular text-neutrals-500 font-mulish pb-24 pt-8">
-                {caughtPokemon?.type}
+                {caughtPokemon?.type?.[0] ?? "Unknown"}
               </span>
             </div>
-            <div className="flex flex-col pl-70">
+            <div className="flex flex-col pl-70 pb-24">
               <span className="text-pokemonModalFields text-neutrals-400 w-36 h-18 font-mulish">
                 Abilities
               </span>
