@@ -17,6 +17,8 @@ import { useAllPokemons } from "@/lib/hooks/useAllPokemons";
 import { sortConfigMap } from "@/lib/constants";
 import { DEFAULT_SORT_LABEL } from "@/lib/types";
 import { useDebounce } from "@/lib/hooks/useDebounce";
+import { exportToExcel } from "@/lib/utils/exportToExcel";
+import { Button } from "@/components/ui/Button/button";
 
 function HomePage() {
   const [isOpen, setIsOpen] = useState(false);
@@ -48,6 +50,22 @@ function HomePage() {
   const { data: userPokemonsData, isLoading: isLoadingUser } = useUserPokemons(
     page,
     limit,
+    debouncedSearchTerm,
+    sortBy,
+    order
+  );
+
+  const { data: allPokemonsFull } = useAllPokemons(
+    1,
+    0,
+    debouncedSearchTerm,
+    sortBy,
+    order
+  );
+
+  const { data: userPokemonsFull } = useUserPokemons(
+    1,
+    0,
     debouncedSearchTerm,
     sortBy,
     order
@@ -114,25 +132,48 @@ function HomePage() {
               value={searchTerm}
               className="font-roboto text-bodyRegular"
             />
-            <DropdownMenu open={isOpen} onOpenChange={setIsOpen}>
-              <DropdownMenuTrigger
-                isOpen={isOpen}
-                className="max-w-full inline-flex min-w-101"
+            <div className="flex gap-8">
+              <Button
+                onClick={() =>
+                  exportToExcel(
+                    activeTab === Tab.All
+                      ? allPokemonsFull?.data ?? []
+                      : userPokemonsFull?.data ?? []
+                  )
+                }
+                variant="secondary"
+                className="!text-bodyRegular font-roboto !rounded-k border-neutrals-200 hover:border-neutrals-500 text-neutrals-500 bg-neutrals-100 px-12 w-155 h-38 flex items-center justify-center gap-3"
+                data-cy="export-to-excel-button"
+                disabled={loading || pokemonData.length === 0}
               >
-                <p className="pl-12 font-roboto">{selectedOption}</p>
-              </DropdownMenuTrigger>
-              <DropdownMenuContent>
-                {SORT_OPTIONS.map((option) => (
-                  <DropdownMenuItem
-                    key={option.value}
-                    onSelect={() => handleSelect(option.value)}
-                    className="h-38 w-206 text-bodyRegular text-neutrals-500 border-k py-8 pl-8 cursor-pointer"
-                  >
-                    {option.label}
-                  </DropdownMenuItem>
-                ))}
-              </DropdownMenuContent>
-            </DropdownMenu>
+                Export to Excel
+                <img
+                  src="/src/assets/export.svg"
+                  alt="Export"
+                  className="w-14 h-14"
+                />
+              </Button>
+
+              <DropdownMenu open={isOpen} onOpenChange={setIsOpen}>
+                <DropdownMenuTrigger
+                  isOpen={isOpen}
+                  className="max-w-full inline-flex min-w-101"
+                >
+                  <p className="pl-12 font-roboto">{selectedOption}</p>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent>
+                  {SORT_OPTIONS.map((option) => (
+                    <DropdownMenuItem
+                      key={option.value}
+                      onSelect={() => handleSelect(option.value)}
+                      className="h-38 w-206 text-bodyRegular text-neutrals-500 border-k py-8 pl-8 cursor-pointer"
+                    >
+                      {option.label}
+                    </DropdownMenuItem>
+                  ))}
+                </DropdownMenuContent>
+              </DropdownMenu>
+            </div>
           </div>
         </div>
         <PokemonTable
