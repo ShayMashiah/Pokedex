@@ -180,6 +180,7 @@ function BattleResultDialog({
             setIsPokemonDialogOpen(false);
             onSwitchPokemon?.(pokemon);
           }}
+          onInteractOutside={(e) => e.preventDefault()}
         />
       </Dialog>
     </>

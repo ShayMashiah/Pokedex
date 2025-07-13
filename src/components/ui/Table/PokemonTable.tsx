@@ -319,6 +319,7 @@ function PokemonTable({
             order={order}
             search={search}
             activeTab={activeTab}
+            onInteractOutside={(e) => e.preventDefault()}
           />
         )}
       </Dialog>
