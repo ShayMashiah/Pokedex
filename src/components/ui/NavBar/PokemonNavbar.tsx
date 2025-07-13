@@ -21,13 +21,7 @@ function PokemonNavbar({
   sortBy = "id",
   order = "asc",
 }: PokemonNavbarProps) {
-  const { data: userPokemonsData } = useUserPokemons(
-    1,
-    0,
-    "",
-    sortBy,
-    order
-  );
+  const { data: userPokemonsData } = useUserPokemons(1, 0, "", sortBy, order);
   const pokemonsData: PokemonModal[] =
     userPokemonsData?.data.map(transformToPokemonModal) || [];
 
@@ -59,7 +53,7 @@ function PokemonNavbar({
               </button>
             </NavigationMenuItem>
 
-            <NavigationMenuItem className="ml-16">  
+            <NavigationMenuItem className="ml-16">
               <button
                 data-cy="tab-my-pokemons"
                 onClick={() => onChange(Tab.User)}
@@ -70,7 +64,11 @@ function PokemonNavbar({
                 }`}
               >
                 My Pokemons
-                <img src={PokeballIcon}  alt="pokeball-icon" className="w-24 h-24 pl-4  " />
+                <img
+                  src={PokeballIcon}
+                  alt="pokeball-icon"
+                  className="w-24 h-24 pl-4  "
+                />
               </button>
             </NavigationMenuItem>
           </NavigationMenuList>
@@ -91,6 +89,7 @@ function PokemonNavbar({
             <DialogContent
               variant={Variant.MyPokemons}
               pokemons={pokemonsData}
+              onInteractOutside={(e) => e.preventDefault()}
             />
           </Dialog>
         </div>
