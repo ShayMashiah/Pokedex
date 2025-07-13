@@ -233,7 +233,7 @@ function DialogContent({
                       Category
                     </span>
                     <span className="text-textBaseRegular text-neutrals-500 font-mulish">
-                      {selectedPokemonModal.category}
+                      {selectedPokemonModal.category[0]}
                     </span>
                   </div>
                   <div className="flex flex-col gap-6">
